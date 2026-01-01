@@ -1,0 +1,20 @@
+{
+  "app": {
+    "title": "FindThaGame",
+    "tagline": "Encuentra el juego que tu mente no puede"
+  },
+  "search": {
+    "placeholder": "Escribe un recuerdo...",
+    "button": "Buscar"
+  },
+  "filters": {
+    "platform": "Plataforma",
+    "genre": "Género",
+    "year": "Años"
+  },
+  "results": {
+    "loading": "Escaneando base de datos...",
+    "error": "Conexión perdida.",
+    "empty": "No se encontró evidencia."
+  }
+}

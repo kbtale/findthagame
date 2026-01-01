@@ -1,0 +1,20 @@
+{
+  "app": {
+    "title": "FindThaGame",
+    "tagline": "Find the videogame that your mind can't"
+  },
+  "search": {
+    "placeholder": "Type a memory...",
+    "button": "Search"
+  },
+  "filters": {
+    "platform": "Platform",
+    "genre": "Genre",
+    "year": "Year Range"
+  },
+  "results": {
+    "loading": "Scanning database...",
+    "error": "Connection lost.",
+    "empty": "No evidence found."
+  }
+}
