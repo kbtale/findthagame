@@ -32,7 +32,7 @@ export const buildIgdbQuery = (params: QueryParams): string => {
   // Define the SELECT statement.
   // The semicolon ';' is required at the end of every Apicalypse statement.
   const fields = [
-'name',
+    'name',
     'summary',
     'storyline',
     'first_release_date',
