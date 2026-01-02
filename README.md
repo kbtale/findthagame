@@ -13,8 +13,6 @@
 
 </div>
 
----
-
 ## How the Scoring Works
 
 The system calculates a **Total Score** for each game to determine its ranking. Instead of filtering games out, it adds or subtracts points based on how well they match the input.
@@ -68,8 +66,6 @@ Where $A_{bonus}$ contains:
 - **Age Rating:** $+0.2$ points if it matches.
 - **Tie Breaker:** Adds `rating / 1000` to sort games with equal scores.
 
----
-
 ## Getting Started
 
 ### Prerequisites
@@ -98,6 +94,6 @@ Where $A_{bonus}$ contains:
 
     npm run dev
 
-## 📄 License
+## License
 
 MIT
