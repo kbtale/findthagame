@@ -48,6 +48,8 @@ export interface IGDBGame {
   involved_companies?: IGDBCompany[];
   age_ratings?: {
     id: number;
+    organization: number;
     rating_category: number;
   }[];
+  alternative_names?: IGDBNamedItem[];
 }

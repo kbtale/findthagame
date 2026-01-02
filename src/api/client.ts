@@ -2,7 +2,6 @@
  * src/api/client.ts
  *
  * The main communication channel between the React App and the Vercel Proxy.
- * UPDATED: Uses Axios for global rate limiting and timeouts.
  */
 
 import axios, { AxiosError } from 'axios';
@@ -56,17 +55,26 @@ export const searchGames = async (filters: FilterState): Promise<GameResult[]> =
       : undefined;
 
     const platformNames = game.platforms?.map((p) => p.name) || [];
-    const genreNames = game.genres?.map((p) => p.name) || [];
+    const genreNames = game.genres?.map((g) => g.name) || [];
     const companyNames = game.involved_companies?.map((c) => c.company.name) || [];
 
-    // 3. FIXED: Process screenshot URLs (add https and resize)
+    // Process screenshot URLs (add https and resize)
     const screenshotUrls = game.screenshots?.map((s) =>
       `https:${s.url.replace('t_thumb', 't_screenshot_medium')}`
     ) || [];
 
-    const themeNames = game.themes?.map((t) => t.name) || [];
-    const modeNames = game.game_modes?.map((m) => m.name) || [];
-    const perspectiveNames = game.player_perspectives?.map((p) => p.name) || [];
+    const themeNames = game.themes?.map((t) => t.name) || []
+    const modeNames = game.game_modes?.map((m) => m.name) || []
+    const perspectiveNames = game.player_perspectives?.map((p) => p.name) || []
+    const keywords = game.keywords?.map((k) => k.name) || []
+    const totalRating = game.total_rating ? Math.round(game.total_rating) : undefined
+    const alternativeNames = game.alternative_names?.map(an => an.name) || []
+    const ageRatings = game.age_ratings?.map((ar) => ({
+        id: ar.id,
+        category: ar.organization,
+        rating: ar.rating_category
+      })) || []
+
 
     return {
       id: game.id,
@@ -74,6 +82,7 @@ export const searchGames = async (filters: FilterState): Promise<GameResult[]> =
       coverUrl: coverUrl,
       year: year,
       platforms: platformNames,
+      // Default to zero
       matchScore: game.match_score || 0,
       genres: genreNames,
       themes: themeNames,
@@ -82,6 +91,15 @@ export const searchGames = async (filters: FilterState): Promise<GameResult[]> =
       summary: game.summary,
       gameModes: modeNames,
       perspectives: perspectiveNames,
+      storyline: game.storyline,
+      // Round ratings to avoid long decimals in UI
+      rating: totalRating,
+      // Default to 0 (Main Game) if missing, though IGDB usually provides this
+      category: game.category ?? 0,
+      status: game.status,
+      keywords: keywords,
+      ageRatings: ageRatings,
+      alternativeNames: alternativeNames
     };
   });
 };

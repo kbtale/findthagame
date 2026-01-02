@@ -85,16 +85,69 @@ export const PERSPECTIVES = [
   { id: 7, name: 'Virtual Reality' },
 ];
 
-export const AGE_RATINGS = [
-  { id: 8, name: 'ESRB: E (Everyone)' },
-  { id: 9, name: 'ESRB: E10+ (Everyone 10+)' },
-  { id: 10, name: 'ESRB: T (Teen)' },
-  { id: 11, name: 'ESRB: M (Mature)' },
-  { id: 1, name: 'PEGI: 3' },
-  { id: 2, name: 'PEGI: 7' },
-  { id: 3, name: 'PEGI: 12' },
-  { id: 4, name: 'PEGI: 16' },
-  { id: 5, name: 'PEGI: 18' },
+export const AGE_RATING_ORGANIZATIONS = [
+  { id: 1, name: 'ESRB' },
+  { id: 2, name: 'PEGI' },
+  { id: 3, name: 'CERO' },
+  { id: 4, name: 'USK' },
+  { id: 5, name: 'GRAC' },
+  { id: 6, name: 'CLASS IND' },
+  { id: 7, name: 'ACB' },
+];
+
+export const AGE_RATING_VALUES = [
+  // ESRB & General (Organization ID: 1)
+  { id: 6,  name: 'RP' },
+  { id: 7,  name: 'EC' },
+  { id: 8,  name: 'E' },
+  { id: 9,  name: 'E10' },
+  { id: 10, name: 'T' },
+  { id: 11, name: 'M' },
+  { id: 12, name: 'AO' },
+
+  // PEGI (Organization ID: 2)
+  { id: 1,  name: 'Three' },
+  { id: 2,  name: 'Seven' },
+  { id: 3,  name: 'Twelve' },
+  { id: 4,  name: 'Sixteen' },
+  { id: 5,  name: 'Eighteen' },
+
+  // CERO (Organization ID: 3)
+  { id: 13, name: 'CERO A' },
+  { id: 14, name: 'CERO B' },
+  { id: 15, name: 'CERO C' },
+  { id: 16, name: 'CERO D' },
+  { id: 17, name: 'CERO Z' },
+
+  // USK (Organization ID: 4)
+  { id: 18, name: 'USK 0' },
+  { id: 19, name: 'USK 6' },
+  { id: 20, name: 'USK 12' },
+  { id: 21, name: 'USK 16' },
+  { id: 22, name: 'USK 18' },
+
+  // GRAC (Organization ID: 5)
+  { id: 23, name: 'GRAC ALL' },
+  { id: 24, name: 'GRAC Twelve' },
+  { id: 25, name: 'GRAC Fifteen' },
+  { id: 26, name: 'GRAC Eighteen' },
+  { id: 27, name: 'GRAC TESTING' },
+
+  // CLASS IND (Organization ID: 6)
+  { id: 28, name: 'CLASS IND L' },
+  { id: 29, name: 'CLASS IND Ten' },
+  { id: 30, name: 'CLASS IND Twelve' },
+  { id: 31, name: 'CLASS IND Fourteen' },
+  { id: 32, name: 'CLASS IND Sixteen' },
+  { id: 33, name: 'CLASS IND Eighteen' },
+
+  // ACB (Organization ID: 7)
+  { id: 34, name: 'ACB G' },
+  { id: 35, name: 'ACB PG' },
+  { id: 36, name: 'ACB M' },
+  { id: 37, name: 'ACB MA15' },
+  { id: 38, name: 'ACB R18' },
+  { id: 39, name: 'ACB RC' },
 ];
 
 export const GAME_CATEGORIES = [
@@ -103,10 +156,16 @@ export const GAME_CATEGORIES = [
   { id: 2, name: 'Expansion' },
   { id: 3, name: 'Bundle' },
   { id: 4, name: 'Standalone Expansion' },
+  { id: 5, name: 'Mod' },
+  { id: 6, name: 'Episode' },
+  { id: 7, name: 'Season' },
   { id: 8, name: 'Remake' },
   { id: 9, name: 'Remaster' },
   { id: 10, name: 'Expanded Game' },
   { id: 11, name: 'Port' },
+  { id: 12, name: 'Fork' },
+  { id: 13, name: 'Pack' },
+  { id: 14, name: 'Update' },
 ];
 
 export const GAME_STATUSES = [
