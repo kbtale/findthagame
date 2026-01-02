@@ -32,7 +32,6 @@ export interface IGDBGame {
   name: string;
   summary?: string;
   storyline?: string;
-  // Optional because unreleased or obscure games might not have a date.
   first_release_date?: number;
   category: number;
   status?: number;
