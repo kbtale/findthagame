@@ -1,106 +1,211 @@
 /**
  * api/_utils/scoring.ts
  *
- * This utility calculates a "Confidence Score" for each game result.
- * It ranks results based on how many Memory Anchors (Platform, Perspective, etc.) match.
+ * Additive Relevance Algorithm for ranking game search results.
  */
 
-interface ScorableGame {
-  name: string;
-  first_release_date?: number;
-  platforms?: { id: number }[];
-  genres?: { id: number }[];
-  themes?: { id: number }[];
-  game_modes?: { id: number }[];
-  player_perspectives?: { id: number }[];
-}
+import type { IGDBGame, IGDBNamedItem } from '@/models/IGDBTypes';
+import type { QueryParams } from './queryBuilder';
 
-interface ScoringFilters {
-  search: string;
-  platformId?: number | null;
-  genreIds?: number[];
-  themeIds?: number[];
-  gameModeId?: number | null;
-  perspectiveId?: number | null;
-  yearRange?: [number, number];
-}
+// ═══════════════════════════════════════════════════════════════════
+// CONFIGURATION
+// ═══════════════════════════════════════════════════════════════════
+
+const Weights = {
+  // Text matching weights: how much each type of text match contributes to the score.
+  text: {
+    exactName: 3.0,    
+    partialName: 1.5,
+    keyword: 0.8,      
+    altName: 0.5,
+    context: 0.3,
+  },
+  // Multiplicative factors: these scale the entire base score up or down.
+  multipliers: {
+    platform: {
+      match: 1.0,      
+      mismatch: 0.3,   
+    },
+    unwantedDLC: 0.5,  
+    cancelledBoost: 1.5,
+    company: {
+      developer: 2.2,
+      publisher: 1.8,
+      porting: 1.3,
+      supporting: 1.2,
+      none: 1.0,
+    },
+  },
+  // Additives: flat values added/subtracted at the end.
+  bonuses: {
+    yearPenaltyPerYear: -0.1,
+    ageRatingMatch: 0.2,
+  },
+} as const;
+
+// ═══════════════════════════════════════════════════════════════════
+// MAIN EXPORT
+// This is the only function called from outside this module.
+// ═══════════════════════════════════════════════════════════════════
 
 /**
- * Main Scoring Function
- * Returns a number between 0 and 100.
+ * Calculates a relevance score for a game based on user query parameters.
+ * @param game - The IGDB game object to score.
+ * @param query - The user's search parameters.
+ * @returns A non-negative score (higher = better match).
  */
-export function calculateMatchScore(game: ScorableGame, filters: ScoringFilters): number {
-  let score = 0;
-  let maxPossible = 0;
+export const calculateMatchScore = (game: IGDBGame, query: QueryParams): number => {
+  const searchTerm = query.search?.toLowerCase().trim() ?? '';
 
-  // 1. BASELINE (The Search Term)
-  // We give initial points just for being returned by IGDB's text search.
-  score += 30;
-  maxPossible += 30;
+  const textScore = scoreText(game, searchTerm);
+  const metaScore = scoreMeta(game, query);
+  const multiplier = calculateMultiplier(game, query);
+  const bonuses = calculateBonuses(game, query);
 
-  // 2. PLATFORM (Hard Constraint)
-  if (filters.platformId) {
-    maxPossible += 20;
-    const hasPlatform = game.platforms?.some((p) => p.id === filters.platformId);
-    if (hasPlatform) score += 20;
-  }
+  return Math.max(0, (textScore + metaScore) * multiplier + bonuses);
+};
 
-  // 3. PERSPECTIVE (Visual Constraint)
-  // e.g., First Person vs Third Person
-  if (filters.perspectiveId) {
-    maxPossible += 15;
-    const hasPerspective = game.player_perspectives?.some((p) => p.id === filters.perspectiveId);
-    if (hasPerspective) score += 15;
-  }
+// ═══════════════════════════════════════════════════════════════════
+// SCORING STAGES
+// ═══════════════════════════════════════════════════════════════════
 
-  // 4. GAME MODE (Social Constraint)
-  // e.g., Single Player vs Split Screen
-  if (filters.gameModeId) {
-    maxPossible += 15;
-    const hasMode = game.game_modes?.some((m) => m.id === filters.gameModeId);
-    if (hasMode) score += 15;
-  }
+/**
+ * Stage 1: Text Relevance Score
+ * Checks how well the search term matches various text fields of the game.
+ */
+const scoreText = (game: IGDBGame, term: string): number => {
+  if (!term) return 0;
 
-  // 5. YEAR RANGE (Temporal Constraint)
-  if (filters.yearRange) {
-    maxPossible += 10;
-    const [start, end] = filters.yearRange;
-    
-    if (game.first_release_date) {
-      const releaseYear = new Date(game.first_release_date * 1000).getFullYear();
-      if (releaseYear >= start && releaseYear <= end) {
-        score += 10;
-      } else {
-        // Bonus: If it's just 1 year outside the range, give partial credit?
-        // For now, strict match.
-      }
-    }
-  }
+  const name = game.name?.toLowerCase() ?? '';
+  const { text: w } = Weights;
 
-  // 6. GENRES (Vibe Constraint)
-  if (filters.genreIds && filters.genreIds.length > 0) {
-    maxPossible += 5;
-    const matchCount = filters.genreIds.filter((id) => 
-      game.genres?.some((g) => g.id === id)
-    ).length;
-    
-    // Proportional score based on how many genres matched
-    if (matchCount > 0) score += 5;
-  }
+  const nameScore =
+    name === term ? w.exactName :        
+    name.includes(term) ? w.partialName :
+    0;
 
-  // 7. THEMES (Vibe Constraint - e.g. "Survival", "Sandbox")
-  if (filters.themeIds && filters.themeIds.length > 0) {
-    maxPossible += 5;
-    const matchCount = filters.themeIds.filter((id) => 
-      game.themes?.some((t) => t.id === id)
-    ).length;
+  const keywordScore = containsTerm(game.keywords, term) ? w.keyword : 0;
+  const altNameScore = containsTerm(game.alternative_names, term) ? w.altName : 0;
+  const contextScore = includesTerm(game.summary, term) || includesTerm(game.storyline, term) ? w.context : 0;
 
-    if (matchCount > 0) score += 5;
-  }
+  return nameScore + keywordScore + altNameScore + contextScore;
+};
 
-  // Prevent division by zero (though maxPossible starts at 30)
-  if (maxPossible === 0) return 0;
+/**
+ * Stage 2: Metadata Overlap Score
+ * Calculates how many of the user's requested filters match the game's metadata.
+ */
+const scoreMeta = (game: IGDBGame, query: QueryParams): number =>
+  overlap(game.genres, query.genreIds) +
+  overlap(game.themes, query.themeIds) +
+  (matches(game.game_modes, query.gameModeId) ? 1 : 0) +
+  (matches(game.player_perspectives, query.perspectiveId) ? 1 : 0);
 
-  // Convert raw points into a percentage (0-100).
-  return Math.round((score / maxPossible) * 100);
-}
+/**
+ * Stage 3: Multiplicative Constraints
+ * Returns a combined multiplier that scales the base score.
+ */
+const calculateMultiplier = (game: IGDBGame, query: QueryParams): number => {
+  const { multipliers: m } = Weights;
+
+  const platform = !query.platformId ? 1 :
+    game.platforms?.some(p => p.id === query.platformId) ? m.platform.match : m.platform.mismatch;
+
+  const category = (game.category === 1 && query.categoryId !== 1) ? m.unwantedDLC : 1;
+
+  const status = (query.statusId === 6 && game.status === 6) ? m.cancelledBoost : 1;
+
+  const company = !query.developerId ? 1 : getCompanyMultiplier(game.involved_companies, query.developerId);
+
+  return platform * category * status * company;
+};
+
+/**
+ * Stage 4: Additive Bonuses
+ * Returns flat bonuses/penalties that are added after multiplication.
+ */
+const calculateBonuses = (game: IGDBGame, query: QueryParams): number => {
+  const { bonuses: b } = Weights;
+
+  const yearPenalty = calculateYearPenalty(game.first_release_date, query.yearRange);
+  const ageBonus = matchesAgeRating(game.age_ratings, query) ? b.ageRatingMatch : 0;
+  const tieBreaker = (game.total_rating ?? 0) / 1000;
+
+  return yearPenalty + ageBonus + tieBreaker;
+};
+
+// ═══════════════════════════════════════════════════════════════════
+// HELPER FUNCTIONS
+// ═══════════════════════════════════════════════════════════════════
+
+/**
+ * Checks if any item in an array of named items contains the search term.
+ */
+const containsTerm = (items: IGDBNamedItem[] | undefined, term: string): boolean =>
+  items?.some(i => i.name.toLowerCase().includes(term)) ?? false;
+
+/**
+ * Checks if a string contains the search term.
+ */
+const includesTerm = (text: string | undefined, term: string): boolean =>
+  text?.toLowerCase().includes(term) ?? false;
+
+/**
+ * Checks if any item in an array has a specific ID.
+ */
+const matches = (items: IGDBNamedItem[] | undefined, id: number | null | undefined): boolean =>
+  // Double-bang ensures we only proceed if id is truthy (not null/undefined/0).
+  !!id && (items?.some(i => i.id === id) ?? false);
+
+/**
+ * Calculates the overlap ratio between game items and requested IDs.
+ */
+const overlap = (items: IGDBNamedItem[] | undefined, ids: number[] | undefined): number => {
+  if (!ids?.length || !items?.length) return 0;
+  const gameIds = new Set(items.map(i => i.id));
+  return ids.filter(id => gameIds.has(id)).length / ids.length;
+};
+
+/**
+ * Determines the company role multiplier based on the highest-priority match.
+ */
+const getCompanyMultiplier = (
+  companies: IGDBGame['involved_companies'],
+  targetId: number
+): number => {
+  const { company: c } = Weights.multipliers;
+  const match = companies?.find(co => co.company.id === targetId);
+  if (!match) return c.none;
+  if (match.developer) return c.developer;
+  if (match.publisher) return c.publisher;
+  if (match.porting) return c.porting;
+  return c.supporting;
+};
+
+/**
+ * Calculates the year penalty based on how far the game's release is from the requested range.
+ */
+const calculateYearPenalty = (
+  releaseDate: number | undefined,
+  range: [number, number] | undefined
+): number => {
+  if (!range || !releaseDate) return 0;
+  const [min, max] = range;
+  const year = new Date(releaseDate * 1000).getFullYear();
+  const diff = year < min ? min - year : year > max ? year - max : 0;
+  return diff * Weights.bonuses.yearPenaltyPerYear;
+};
+
+/**
+ * Checks if any of the game's age ratings match the user's filter.
+ */
+const matchesAgeRating = (
+  ratings: IGDBGame['age_ratings'],
+  query: QueryParams
+): boolean => {
+  if (!query.ageRatingOrg && !query.ageRatingValue) return false;
+  return ratings?.some(r =>
+    (!query.ageRatingOrg || r.organization === query.ageRatingOrg) &&
+    (!query.ageRatingValue || r.rating_category === query.ageRatingValue)
+  ) ?? false;
+};
