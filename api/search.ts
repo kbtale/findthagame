@@ -1,6 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { TokenManager } from './_utils/tokenManager';
 import { buildIgdbQuery } from './_utils/queryBuilder';
+import { calculateMatchScore } from './_utils/scoring';
+import type { IGDBGame } from '../src/models/IGDBTypes';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
 
@@ -87,8 +89,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // 8. RETURN SUCCESSFUL DATA
     // -------------------------------------------------------
     // Parse the JSON data returned by IGDB.
-    const data = await igdbResponse.json();
-    return res.status(200).json(data);
+    const rawGames = (await igdbResponse.json()) as IGDBGame[];
+
+    // Score every single game
+    // Passing the game AND the user's filters (req.body) to the scoring engine.
+    const scoredGames = rawGames.map((game) => {
+      return {
+        ...game, // Keep all original data
+        match_score: calculateMatchScore(game, req.body),
+      };
+    });
+
+    // Sort by score (Highest first)
+    scoredGames.sort((a, b) => b.match_score - a.match_score);
+
+    // Send the improved list back to the frontend
+    return res.status(200).json(scoredGames);
 
   } catch (error: unknown) {
     // 9. GLOBAL ERROR HANDLING

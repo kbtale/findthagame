@@ -8,10 +8,14 @@
 export interface GameResult {
   id: number;
   title: string;
+  matchScore: number;
   coverUrl?: string;
   year?: number;
   platforms: string[];
-  matchScore: number;
+  summary?: string;
+  genres: string[];
+  screenshots: string[];
+  companies: string[];
 }
 
 // Defines the structure for the Redux state that holds the user's active filters.
@@ -22,5 +26,6 @@ export interface FilterState {
   themeIds: number[];
   gameModeId: number | null;
   perspectiveId: number | null;
+  ageRatingId: number | null; 
   yearRange: [number, number];
 }

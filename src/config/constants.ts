@@ -96,3 +96,26 @@ export const AGE_RATINGS = [
   { id: 4, name: 'PEGI: 16' },
   { id: 5, name: 'PEGI: 18' },
 ];
+
+export const GAME_CATEGORIES = [
+  { id: 0, name: 'Main Game' },
+  { id: 1, name: 'DLC / Addon' },
+  { id: 2, name: 'Expansion' },
+  { id: 3, name: 'Bundle' },
+  { id: 4, name: 'Standalone Expansion' },
+  { id: 8, name: 'Remake' },
+  { id: 9, name: 'Remaster' },
+  { id: 10, name: 'Expanded Game' },
+  { id: 11, name: 'Port' },
+];
+
+export const GAME_STATUSES = [
+  { id: 0, name: 'Released' },
+  { id: 2, name: 'Alpha' },
+  { id: 3, name: 'Beta' },
+  { id: 4, name: 'Early Access' },
+  { id: 5, name: 'Offline' },
+  { id: 6, name: 'Cancelled' },
+  { id: 7, name: 'Rumored' },
+  { id: 8, name: 'Delisted' },
+];

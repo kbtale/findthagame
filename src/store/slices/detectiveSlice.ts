@@ -9,6 +9,7 @@ const initialState: FilterState = {
   themeIds: [],
   gameModeId: null,
   perspectiveId: null,
+  ageRatingId: null,
   yearRange: [1980, 2025],
 };
 

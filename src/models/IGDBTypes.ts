@@ -6,6 +6,11 @@
  */
 
 // Define the interface for Image objects (used for covers and screenshots).
+export interface IGDBNamedItem {
+  id: number;
+  name: string;
+}
+
 export interface IGDBImage {
   id: number;
   // Note: IGDB often returns URLs without the 'https:' protocol prefix.
@@ -14,12 +19,11 @@ export interface IGDBImage {
 
 // Define the interface for Company objects (Developers and Publishers).
 export interface IGDBCompany {
-  // The ID of the relationship record between the game and the company.
   id: number;
-  company: {
-    id: number;
-    name: string;
-  };
+  developer: boolean;
+  publisher: boolean;
+  porting: boolean;
+  company: IGDBNamedItem;
 }
 
 // Defines the main interface representing a Game in the IGDB database.
@@ -27,33 +31,23 @@ export interface IGDBGame {
   id: number;
   name: string;
   summary?: string;
+  storyline?: string;
   // Optional because unreleased or obscure games might not have a date.
   first_release_date?: number;
+  category: number;
+  status?: number;
+  total_rating?: number;
   cover?: IGDBImage;
   screenshots?: IGDBImage[];
-  platforms?: {
-    id: number;
-    name: string;
-  }[];
-  genres?: {
-    id: number;
-    name: string;
-  }[];
-  themes?: {
-    id: number;
-    name: string;
-  }[];
-  game_modes?: {
-    id: number;
-    name: string;
-  }[];
-  player_perspectives?: {
-    id: number;
-    name: string;
-  }[];
+  platforms?: IGDBNamedItem[];
+  genres?: IGDBNamedItem[];
+  themes?: IGDBNamedItem[];
+  game_modes?: IGDBNamedItem[];
+  player_perspectives?: IGDBNamedItem[];
+  keywords?: IGDBNamedItem[];
   involved_companies?: IGDBCompany[];
   age_ratings?: {
     id: number;
-    rating: number; 
+    rating_category: number;
   }[];
 }
