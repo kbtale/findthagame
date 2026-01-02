@@ -1,6 +1,6 @@
 <div align="center">
 
-# FindThaGame 🎮
+# FindThaGame
 
 **A game discovery tool that helps users find video games based on fuzzy memories and partial details.** Powered by the [IGDB API](https://api-docs.igdb.com/).
 
@@ -13,71 +13,60 @@
 
 </div>
 
----
+## How the Scoring Works
 
-## 🚀 Features
+The system calculates a **Total Score** for each game to determine its ranking. Instead of filtering games out, it adds or subtracts points based on how well they match the input.
 
-- **Smart Search:** Search by title, keywords, storyline fragments, or alternative names using fuzzy matching logic.
-- **Memory Anchors:** Narrow results using remembered details like platform, perspective, game mode, genre, theme, and release year.
-- **Dynamic Scoring:** A sophisticated algorithm ranks results based on intention, prioritizing "perfect matches" while preserving "partial memories."
-- **Rich Game Details:** View high-res covers, screenshots, summaries, ratings, and company roles.
+The calculation happens in **4 steps**:
 
-## 🧠 How It Works: The Scoring Algorithm
-
-FindThaGame uses a custom **Additive Relevance Algorithm** to rank games. Unlike standard database queries, this system doesn't just filter; it *weighs* every potential match to determine the probability of it being the game you remember.
-
-The Final Score is calculated in **4 stages**:
-
-### 1. Textual Relevance ($S_{text}$)
-We analyze how well the query matches various text fields.
+### 1. Text Score ($S_{text}$)
+Checks if the search query appears in the game's text fields.
 
 $$S_{text} = (M_{name} \cdot 1.5 \cdot B_{exact}) + (M_{alt} \cdot 0.5) + (M_{kw} \cdot 0.8) + (M_{ctx} \cdot 0.3)$$
 
-| Variable | Definition | Weight |
+| Variable | Definition | Points |
 | :--- | :--- | :--- |
-| $M_{name}$ | Query found in Title | **1.5** |
-| $B_{exact}$ | Exact Match Multiplier | **x2.0** (if 100% match) |
-| $M_{kw}$ | Query found in Keywords | **0.8** |
-| $M_{alt}$ | Query found in Alt Names | **0.5** |
-| $M_{ctx}$ | Query found in Summary/Story | **0.3** |
+| $M_{name}$ | Query found in Title | **+1.5** |
+| $B_{exact}$ | Exact Title Match | **x2.0** multiplier |
+| $M_{kw}$ | Query found in Keywords | **+0.8** |
+| $M_{alt}$ | Query found in Alt Names | **+0.5** |
+| $M_{ctx}$ | Query found in Summary | **+0.3** |
 
-### 2. Metadata Overlap ($S_{meta}$)
-If filters (Genre, Theme, Mode, Perspective) are applied, we calculate an overlap coefficient.
+### 2. Metadata Score ($S_{meta}$)
+Adds points if the game matches the selected filters (Genre, Theme, Mode, Perspective).
 
 $$S_{meta} = \sum \frac{\text{Matching IDs}}{\text{Requested IDs}}$$
 
-*Example: If you ask for 2 genres and the game has both, it adds **+1.0** to the score.*
+*Example: If 2 genres are selected and the game has both, it gets **+1.0** point.*
 
-### 3. Filter Multipliers ($K_{total}$)
-This stage applies "Boosts" or "Penalties" based on critical constraints.
+### 3. Multipliers ($K_{total}$)
+Boosts or reduces the score based on critical constraints.
 
 $$K_{total} = K_{plat} \cdot K_{cat} \cdot K_{status} \cdot K_{company}$$
 
-| Filter | Logic | Multiplier | Effect |
+| Filter | Logic | Multiplier | Result |
 | :--- | :--- | :--- | :--- |
-| **Platform** | Match | **x1.0** | Neutral |
-| | No Match | **x0.3** | **Heavy Penalty** |
-| **Category** | Main Game | **x1.0** | Neutral |
-| | Unwanted DLC | **x0.5** | Moderate Penalty |
-| **Company** | **Developer** | **x2.2** | **Massive Boost** |
-| | **Publisher** | **x1.8** | High Boost |
-| | Porting | **x1.3** | Medium Boost |
-| | Supporting | **x1.2** | Low Boost |
-| | No Match | **x1.0** | Neutral |
+| **Platform** | Match | **x1.0** | Score stays same |
+| | No Match | **x0.3** | **Score drops 70%** |
+| **Category** | Main Game | **x1.0** | Score stays same |
+| | DLC (Unwanted) | **x0.5** | Score drops 50% |
+| **Company** | **Developer** | **x2.2** | **Score doubles** |
+| | **Publisher** | **x1.8** | High boost |
+| | Porting | **x1.3** | Medium boost |
+| | Supporting | **x1.2** | Small boost |
+| | No Match | **x1.0** | Score stays same |
 
 ### 4. Final Calculation
-The Master Formula combines the Weighted Base Score with additive bonuses for Date and Rating.
+Combines the base score with multipliers and applies final bonuses/penalties.
 
-$$FinalScore = ((S_{text} + S_{meta}) \cdot K_{total}) + A_{bonos}$$
+$$FinalScore = ((S_{text} + S_{meta}) \cdot K_{total}) + A_{bonus}$$
 
-Where $A_{bonos}$ includes:
-- **Date Penalty:** $-0.1$ for every year outside the requested range.
-- **Age Rating:** $+0.2$ if the rating organization/category matches.
-- **Tie Breaker:** Adds fractional points based on the game's total rating.
+Where $A_{bonus}$ contains:
+- **Date:** $-0.1$ points for every year outside the range.
+- **Age Rating:** $+0.2$ points if it matches.
+- **Tie Breaker:** Adds `rating / 1000` to sort games with equal scores.
 
----
-
-## 🛠️ Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -88,7 +77,7 @@ Where $A_{bonos}$ includes:
 
 1. **Clone the repository**
 
-    git clone [https://github.com/your-username/FindThaGame.git](https://github.com/your-username/FindThaGame.git)
+    git clone https://github.com/your-username/FindThaGame.git
     cd FindThaGame
 
 2. **Install dependencies**
@@ -105,6 +94,6 @@ Where $A_{bonos}$ includes:
 
     npm run dev
 
-## 📄 License
+## License
 
 MIT
