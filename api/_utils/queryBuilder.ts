@@ -74,6 +74,20 @@ export const buildIgdbQuery = (params: QueryParams): string => {
     );
   }
 
+  if (params.yearRange) {
+    // Destructure the tuple: first number is startYear, second is endYear.
+    const [startYear, endYear] = params.yearRange;
+    
+    // Convert the Start Year (e.g., 2000) to a Unix Timestamp
+    const startTimestamp = Math.floor(new Date(`${startYear}-01-01`).getTime() / 1000);
+    
+    // Convert the End Year (e.g., 2005) to a Unix Timestamp
+    const endTimestamp = Math.floor(new Date(`${endYear}-12-31`).getTime() / 1000);
+    
+    whereClauses.push(`first_release_date >= ${startTimestamp}`);
+    whereClauses.push(`first_release_date <= ${endTimestamp}`);
+  }
+
   const filterMap: FilterRule[] = [
     {
       key: 'platformId', 
@@ -103,7 +117,7 @@ export const buildIgdbQuery = (params: QueryParams): string => {
       key: 'statusId',
       build: (v) => `status = (${v})`
     },
-    { 
+    {
       key: 'developerId',
       build: (v) => `involved_companies.company = (${v})`
     },
@@ -122,7 +136,7 @@ export const buildIgdbQuery = (params: QueryParams): string => {
   ];
 
   filterMap.forEach((rule) => {
-    // specific value from the user's params using the key (e.g., params['platformId']).
+    // Specific value from the user's params using the key (e.g., params['platformId']).
     const value = params[rule.key];
     
     if (value !== undefined && value !== null) {
@@ -134,20 +148,6 @@ export const buildIgdbQuery = (params: QueryParams): string => {
       whereClauses.push(rule.build(value as FilterValue));
     }
   });
-
-  if (params.yearRange) {
-    // Destructure the tuple: first number is startYear, second is endYear.
-    const [startYear, endYear] = params.yearRange;
-    
-    // Convert the Start Year (e.g., 2000) to a Unix Timestamp
-    const startTimestamp = Math.floor(new Date(`${startYear}-01-01`).getTime() / 1000);
-    
-    // Convert the End Year (e.g., 2005) to a Unix Timestamp
-    const endTimestamp = Math.floor(new Date(`${endYear}-12-31`).getTime() / 1000);
-    
-    whereClauses.push(`first_release_date >= ${startTimestamp}`);
-    whereClauses.push(`first_release_date <= ${endTimestamp}`);
-  }
 
   const whereString = whereClauses.length > 0 ? `where ${whereClauses.join(' & ')};` : '';
   

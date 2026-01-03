@@ -79,27 +79,24 @@ export const searchGames = async (filters: FilterState): Promise<GameResult[]> =
     return {
       id: game.id,
       title: game.name,
-      coverUrl: coverUrl,
-      year: year,
-      platforms: platformNames,
-      // Default to zero
-      matchScore: game.match_score || 0,
-      genres: genreNames,
-      themes: themeNames,
-      screenshots: screenshotUrls,
-      companies: companyNames,
-      summary: game.summary,
-      gameModes: modeNames,
-      perspectives: perspectiveNames,
-      storyline: game.storyline,
-      // Round ratings to avoid long decimals in UI
-      rating: totalRating,
-      // Default to 0 (Main Game) if missing, though IGDB usually provides this
-      category: game.category ?? 0,
-      status: game.status,
-      keywords: keywords,
       ageRatings: ageRatings,
-      alternativeNames: alternativeNames
+      alternativeNames: alternativeNames,
+      category: game.category ?? 0,
+      companies: companyNames,
+      coverUrl: coverUrl,
+      gameModes: modeNames,
+      genres: genreNames,
+      keywords: keywords,
+      matchScore: game.match_score || 0,
+      perspectives: perspectiveNames,
+      platforms: platformNames,
+      rating: totalRating,
+      screenshots: screenshotUrls,
+      status: game.status,
+      storyline: game.storyline,
+      summary: game.summary,
+      themes: themeNames,
+      year: year,
     };
   });
 };

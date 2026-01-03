@@ -6,25 +6,26 @@
 
 // Defines the structure for a single search result displayed to the user.
 export interface GameResult {
-id: number;
+  id: number;
   title: string;
-  coverUrl?: string;
-  year?: number;
-  matchScore: number;
-  platforms: string[];
-  genres: string[];
-  themes: string[];
-  gameModes: string[];
-  perspectives: string[];
-  companies: string[];
-  screenshots: string[];
-  summary?: string;
-  storyline?: string;
-  rating?: number;
+  ageRatings: { id: number; category: number; rating: number }[];
+  alternativeNames: string[];
   category: number;
-  status?: number;
+  companies: string[];
+  coverUrl?: string;
+  gameModes: string[];
+  genres: string[];
   keywords: string[];
-  ageRatings: { id: number; category: number }[];
+  matchScore: number;
+  perspectives: string[];
+  platforms: string[];
+  rating?: number;
+  screenshots: string[];
+  status?: number;
+  storyline?: string;
+  summary?: string;
+  themes: string[];
+  year?: number;
 }
 
 // Defines the structure for the Redux state that holds the user's active filters.
