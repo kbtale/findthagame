@@ -1,4 +1,19 @@
-import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import type { RootState } from '@/store/store';
+import {
+  setPlatformId,
+  setYearRange,
+  toggleGenreId,
+  setGameModeId,
+  setPerspectiveId,
+  setCategoryId,
+  setStatusId,
+  setDeveloperId,
+  setMinRating,
+  setAgeRatingOrg,
+  setAgeRatingValue,
+} from '@/store/slices/detectiveSlice';
+
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -7,28 +22,27 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
-// 1. Data Shape
-interface FilterState {
-  platformId: string | null;
-  yearRange: [number, number]; 
-  genreIds: string[];
-  themeIds: string[];
-  gameModeId: string | null;
-  perspectiveId: string | null;
-  categoryId: string | null;
-  statusId: string | null;
-  developerId: string;
-  minRating: number | null;
-  ageRatingOrg: string | null;
-  ageRatingValue: string | null;
-}
+// Genre options with their IGDB IDs
+const GENRES = [
+  { id: 12, name: 'RPG' },
+  { id: 5, name: 'Shooter' },
+  { id: 15, name: 'Strategy' },
+  { id: 32, name: 'Indie' },
+  { id: 31, name: 'Adventure' },
+  { id: 13, name: 'Simulator' },
+  { id: 14, name: 'Sport' },
+  { id: 10, name: 'Racing' },
+  { id: 4, name: 'Fighting' },
+  { id: 9, name: 'Puzzle' },
+];
 
 interface FilterPanelProps {
-  state?: FilterState; 
-  onSearch: () => void; // Trigger to close mobile menu
+  onSearch: () => void;
 }
 
 export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
+  const dispatch = useDispatch();
+  const filters = useSelector((state: RootState) => state.detective);
 
   return (
     <div className="space-y-8 pb-20 lg:pb-0 font-base text-foreground">
@@ -45,7 +59,10 @@ export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1.5">
             <Label className="text-xs uppercase font-heading">Platform</Label>
-            <Select>
+            <Select 
+              value={filters.platformId?.toString() ?? ''} 
+              onValueChange={(val) => dispatch(setPlatformId(val ? Number(val) : null))}
+            >
               <SelectTrigger className="w-full h-9 bg-background shadow-sm"><SelectValue placeholder="Any" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="48">PS5</SelectItem>
@@ -58,7 +75,10 @@ export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
 
           <div className="space-y-1.5">
             <Label className="text-xs uppercase font-heading">Status</Label>
-            <Select>
+            <Select 
+              value={filters.statusId?.toString() ?? ''} 
+              onValueChange={(val) => dispatch(setStatusId(val ? Number(val) : null))}
+            >
               <SelectTrigger className="w-full h-9 bg-background shadow-sm"><SelectValue placeholder="All" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="0">Released</SelectItem>
@@ -74,12 +94,17 @@ export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
           <Input 
             placeholder="e.g. Kojima" 
             className="h-9 bg-background font-base shadow-sm"
+            value={filters.developerId?.toString() ?? ''}
+            onChange={(e) => dispatch(setDeveloperId(e.target.value ? Number(e.target.value) : null))}
           />
         </div>
         
         <div className="space-y-1.5">
            <Label className="text-xs uppercase font-heading">Category</Label>
-           <Select>
+           <Select 
+             value={filters.categoryId?.toString() ?? ''} 
+             onValueChange={(val) => dispatch(setCategoryId(val ? Number(val) : null))}
+           >
               <SelectTrigger className="w-full h-9 bg-background shadow-sm"><SelectValue placeholder="Main Game" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="0">Main Game</SelectItem>
@@ -104,14 +129,15 @@ export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
           <div className="flex justify-between items-center">
             <span className="text-xs font-heading text-muted-foreground">Release Window</span>
             <div className="flex gap-1">
-                <span className="bg-foreground text-background text-xs font-heading px-1 py-0.5 rounded-[2px]">1980</span>
+                <span className="bg-foreground text-background text-xs font-heading px-1 py-0.5 rounded-[2px]">{filters.yearRange[0]}</span>
                 <span className="text-foreground font-heading">-</span>
-                <span className="bg-foreground text-background text-xs font-heading px-1 py-0.5 rounded-[2px]">2025</span>
+                <span className="bg-foreground text-background text-xs font-heading px-1 py-0.5 rounded-[2px]">{filters.yearRange[1]}</span>
             </div>
           </div>
           
           <Slider 
-            defaultValue={[1980, 2025]} 
+            value={filters.yearRange}
+            onValueChange={(val) => dispatch(setYearRange(val as [number, number]))}
             min={1980} 
             max={2025} 
             step={1} 
@@ -136,14 +162,18 @@ export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
           {/* ScrollArea with Neo-Brutal styling */}
           <ScrollArea className="h-32 rounded-base border-2 border-border bg-background p-3 shadow-shadow">
             <div className="flex flex-col gap-2">
-              {['RPG', 'Shooter', 'Strategy', 'Indie', 'Adventure', 'Simulator', 'Sport', 'Racing', 'Fighting', 'Puzzle'].map((genre) => (
-                <div key={genre} className="flex items-center space-x-2">
-                  <Checkbox id={`g-${genre}`} />
+              {GENRES.map((genre) => (
+                <div key={genre.id} className="flex items-center space-x-2">
+                  <Checkbox 
+                    id={`g-${genre.id}`} 
+                    checked={filters.genreIds.includes(genre.id)}
+                    onCheckedChange={() => dispatch(toggleGenreId(genre.id))}
+                  />
                   <label 
-                    htmlFor={`g-${genre}`} 
+                    htmlFor={`g-${genre.id}`} 
                     className="text-xs font-bold uppercase cursor-pointer select-none hover:text-main transition-colors"
                   >
-                    {genre}
+                    {genre.name}
                   </label>
                 </div>
               ))}
@@ -154,7 +184,10 @@ export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
         <div className="grid grid-cols-2 gap-3">
            <div className="space-y-1.5">
             <Label className="text-xs uppercase font-heading">Mode</Label>
-            <Select>
+            <Select 
+              value={filters.gameModeId?.toString() ?? ''} 
+              onValueChange={(val) => dispatch(setGameModeId(val ? Number(val) : null))}
+            >
               <SelectTrigger className="w-full h-9 bg-background shadow-sm"><SelectValue placeholder="Any" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="1">Single</SelectItem>
@@ -165,7 +198,10 @@ export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
            </div>
            <div className="space-y-1.5">
             <Label className="text-xs uppercase font-heading">View</Label>
-            <Select>
+            <Select 
+              value={filters.perspectiveId?.toString() ?? ''} 
+              onValueChange={(val) => dispatch(setPerspectiveId(val ? Number(val) : null))}
+            >
               <SelectTrigger className="w-full h-9 bg-background shadow-sm"><SelectValue placeholder="Any" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="1">First</SelectItem>
@@ -190,20 +226,32 @@ export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
         <div className="space-y-3 px-1">
            <div className="flex justify-between items-center">
             <Label className="text-xs uppercase font-heading">Min Score</Label>
-            <span className="text-xs font-heading text-main">80%</span>
+            <span className="text-xs font-heading text-main">{filters.minRating ?? 0}%</span>
            </div>
-           <Slider defaultValue={[80]} min={0} max={100} step={5} />
+           <Slider 
+             value={[filters.minRating ?? 0]} 
+             onValueChange={(val) => dispatch(setMinRating(val[0]))}
+             min={0} 
+             max={100} 
+             step={5} 
+           />
         </div>
 
         <div className="grid grid-cols-[1fr_2fr] gap-3 mt-4">
-           <Select>
+           <Select 
+             value={filters.ageRatingOrg?.toString() ?? ''} 
+             onValueChange={(val) => dispatch(setAgeRatingOrg(val ? Number(val) : null))}
+           >
              <SelectTrigger className="h-9 bg-background shadow-sm"><SelectValue placeholder="Org" /></SelectTrigger>
              <SelectContent>
                <SelectItem value="1">ESRB</SelectItem>
                <SelectItem value="2">PEGI</SelectItem>
              </SelectContent>
            </Select>
-           <Select>
+           <Select 
+             value={filters.ageRatingValue?.toString() ?? ''} 
+             onValueChange={(val) => dispatch(setAgeRatingValue(val ? Number(val) : null))}
+           >
              <SelectTrigger className="h-9 bg-background shadow-sm"><SelectValue placeholder="Rating" /></SelectTrigger>
              <SelectContent>
                <SelectItem value="1">E (Everyone)</SelectItem>
