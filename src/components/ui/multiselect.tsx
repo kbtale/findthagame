@@ -19,18 +19,18 @@ import {
 } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
 
-export interface ComboboxOption {
+export interface MultiselectOption {
   value: string
   label: string
 }
 
-export interface ComboboxProps {
+export interface MultiselectProps {
   /** Array of options to display */
-  options: ComboboxOption[]
-  /** Currently selected value */
-  value: string | null
+  options: MultiselectOption[]
+  /** Array of currently selected values */
+  value: string[]
   /** Callback when selection changes */
-  onValueChange: (value: string | null) => void
+  onValueChange: (value: string[]) => void
   /** Placeholder text when nothing is selected */
   placeholder?: string
   /** Placeholder text for the search input */
@@ -39,11 +39,13 @@ export interface ComboboxProps {
   emptyText?: string
   /** Additional class names for the trigger button */
   className?: string
-  /** Whether the combobox is disabled */
+  /** Whether the multiselect is disabled */
   disabled?: boolean
+  /** Maximum items to show in the button label before truncating */
+  maxDisplayItems?: number
 }
 
-export function Combobox({
+export function Multiselect({
   options,
   value,
   onValueChange,
@@ -52,10 +54,28 @@ export function Combobox({
   emptyText = "No results found.",
   className,
   disabled = false,
-}: ComboboxProps) {
+  maxDisplayItems = 3,
+}: MultiselectProps) {
   const [open, setOpen] = React.useState(false)
 
-  const selectedOption = options.find((option) => option.value === value)
+  const selectedLabels = options
+    .filter((option) => value.includes(option.value))
+    .map((option) => option.label)
+
+  const displayText =
+    selectedLabels.length === 0
+      ? placeholder
+      : selectedLabels.length <= maxDisplayItems
+        ? selectedLabels.join(", ")
+        : `${selectedLabels.slice(0, maxDisplayItems).join(", ")} +${selectedLabels.length - maxDisplayItems}`
+
+  const handleSelect = (selectedValue: string) => {
+    if (value.includes(selectedValue)) {
+      onValueChange(value.filter((v) => v !== selectedValue))
+    } else {
+      onValueChange([...value, selectedValue])
+    }
+  }
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -67,32 +87,29 @@ export function Combobox({
           disabled={disabled}
           className={cn("w-full justify-between", className)}
         >
-          {selectedOption?.label ?? placeholder}
+          <span className="truncate">{displayText}</span>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-(--radix-popover-trigger-width) border-0 p-0">
+      <PopoverContent className="w-[300px] p-0 border-0" align="start">
         <Command className="**:data-[slot=command-input-wrapper]:h-11">
           <CommandInput placeholder={searchPlaceholder} />
-          <CommandList className="p-1">
+          <CommandList>
             <CommandEmpty>{emptyText}</CommandEmpty>
-            <CommandGroup>
+            <CommandGroup className="p-2 [&_[cmdk-group-items]]:flex [&_[cmdk-group-items]]:flex-col [&_[cmdk-group-items]]:gap-1">
               {options.map((option) => (
                 <CommandItem
                   key={option.value}
                   value={option.value}
-                  onSelect={(currentValue) => {
-                    onValueChange(currentValue === value ? null : currentValue)
-                    setOpen(false)
-                  }}
+                  onSelect={() => handleSelect(option.value)}
                 >
+                  <div
+                    className="border-border pointer-events-none size-5 shrink-0 rounded-base border-2 transition-all select-none *:[svg]:opacity-0 data-[selected=true]:*:[svg]:opacity-100"
+                    data-selected={value.includes(option.value)}
+                  >
+                    <CheckIcon className="size-4 text-current" />
+                  </div>
                   {option.label}
-                  <CheckIcon
-                    className={cn(
-                      "ml-auto h-4 w-4",
-                      value === option.value ? "opacity-100" : "opacity-0"
-                    )}
-                  />
                 </CommandItem>
               ))}
             </CommandGroup>

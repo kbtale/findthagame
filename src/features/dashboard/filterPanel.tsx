@@ -19,22 +19,11 @@ import { Slider } from '@/components/ui/slider';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
+import { Multiselect } from '@/components/ui/multiselect';
+import { Combobox } from '@/components/ui/combobox';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-
-// Genre options with their IGDB IDs
-const GENRES = [
-  { id: 12, name: 'RPG' },
-  { id: 5, name: 'Shooter' },
-  { id: 15, name: 'Strategy' },
-  { id: 32, name: 'Indie' },
-  { id: 31, name: 'Adventure' },
-  { id: 13, name: 'Simulator' },
-  { id: 14, name: 'Sport' },
-  { id: 10, name: 'Racing' },
-  { id: 4, name: 'Fighting' },
-  { id: 9, name: 'Puzzle' },
-];
+import { PLATFORMS, GENRES, THEMES, GAME_MODES, PERSPECTIVES, AGE_RATING_ORGANIZATIONS, AGE_RATING_VALUES, GAME_CATEGORIES, GAME_STATUSES} from '@/config/constants.ts'
 
 interface FilterPanelProps {
   onSearch: () => void;
