@@ -29,9 +29,7 @@ interface FilterRule {
 // Converts QueryParams into the raw text string for IGDB.
 export const buildIgdbQuery = (params: QueryParams): string => {
   
-  // Define the SELECT statement.
-  // The semicolon ';' is required at the end of every Apicalypse statement.
-  const fields = [
+  const fields = `fields ${[
     'name',
     'summary',
     'storyline',
@@ -48,16 +46,14 @@ export const buildIgdbQuery = (params: QueryParams): string => {
     'player_perspectives.name',
     'keywords.name',
     'alternative_names.name',
-    // Company Details 
     'involved_companies.company.name',
     'involved_companies.developer',
     'involved_companies.publisher',
     'involved_companies.porting',
     'involved_companies.supporting',
-
     'age_ratings.organization',
     'age_ratings.rating_category'
-  ].join(', ') + ';'
+  ].join(', ')};`;
   // Initialized an empty array to hold the filter strings (e.g., ["platforms = (8)", "cover != null"]).
   const whereClauses: string[] = []
 
