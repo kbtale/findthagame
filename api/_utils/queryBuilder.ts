@@ -149,9 +149,9 @@ export const buildIgdbQuery = (params: QueryParams): string => {
   
   const searchString = params.search ? `search "${params.search.replace(/"/g, '\\"')}";` : '';
   
-  const limitString = 'limit 50;';
+  const limitString = 'limit 500;';
 
   // Combine all parts into one final string separated by spaces.
-  // Example: "fields ...; search "Mario"; where platforms = (8); limit 50;"
+  // Example: "fields ...; search "Mario"; where platforms = (8); limit 500;"
   return `${fields} ${searchString} ${whereString} ${limitString}`;
 };

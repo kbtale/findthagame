@@ -91,6 +91,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // -------------------------------------------------------
     // Parse the JSON data returned by IGDB.
     const rawGames = (await igdbResponse.json()) as IGDBGame[];
+    console.log(`IGDB returned ${rawGames.length} games`);
+    console.log('Raw games data:', JSON.stringify(rawGames, null, 2));
 
     // Score every single game
     // Passing the game AND the user's filters (req.body) to the scoring engine.
@@ -104,8 +106,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Sort by score (Highest first)
     scoredGames.sort((a, b) => b.match_score - a.match_score);
 
+    // Return only the top 50 best matches
+    const topResults = scoredGames.slice(0, 50);
+
     // Send the improved list back to the frontend
-    return res.status(200).json(scoredGames);
+    return res.status(200).json(topResults);
 
   } catch (error: unknown) {
     // 9. GLOBAL ERROR HANDLING
