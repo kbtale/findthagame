@@ -63,16 +63,19 @@ export const buildIgdbQuery = (params: QueryParams): string => {
 
   if (params.search) {
     const term = params.search.replace(/"/g, '\\"');
-    whereClauses.push(
-      `(` +
-      `name ~ *"${term}"* | ` +
-      `alternative_names.name ~ *"${term}"* | ` +
-      `summary ~ *"${term}"* | ` +
-      `storyline ~ *"${term}"* | ` +
-      `keywords.name ~ *"${term}"*` +
-      `involved_companies.company.name ~ *"${params.developerName}"*` +
-      `)`
-    );
+    const searchClauses = [
+      `name ~ *"${term}"*`,
+      `alternative_names.name ~ *"${term}"*`,
+      `summary ~ *"${term}"*`,
+      `storyline ~ *"${term}"*`,
+      `keywords.name ~ *"${term}"*`,
+    ];
+    
+    whereClauses.push(`(${searchClauses.join(' | ')})`);
+  }
+
+  if (params.developerName) {
+    whereClauses.push(`involved_companies.company.name ~ *"${params.developerName}"*`);
   }
 
   if (params.yearRange) {

@@ -63,6 +63,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Take the JSON body sent by React (req.body) and pass it to the builder function.
     // This converts { search: "Mario" } into "fields *; search "Mario";".
     const igdbQueryString = buildIgdbQuery(req.body);
+    console.log('IGDB Query:', igdbQueryString);
 
     // 6. EXECUTE IGDB API CALL
     // -------------------------------------------------------
