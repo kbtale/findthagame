@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector, useDispatch } from 'react-redux';
+import type { RootState } from '@/store/store';
+import { setLoading, setResults, setError, selectGame, clearSelection, selectNext, selectPrevious } from '@/store/slices/resultsSlice';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { FilterPanel } from '@/features/dashboard/filterPanel';
 import { ResultsGrid } from '@/features/dashboard/ResultsGrid';
@@ -7,47 +10,62 @@ import { GameDetail } from '@/features/dashboard/GameDetail';
 import { Input } from '@/components/ui/input';
 import { Search, History } from 'lucide-react';
 import { searchGames } from '@/api/client';
-import type { FilterState, GameResult } from '@/models/AppTypes';
+import type { FilterState } from '@/models/AppTypes';
 
 export const DashboardPage = () => {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
 
   // =========================================================================
-  // STATE
+  // REDUX STATE
+  // =========================================================================
+  const results = useSelector((state: RootState) => state.results.items);
+  const status = useSelector((state: RootState) => state.results.status);
+  const reduxError = useSelector((state: RootState) => state.results.error);
+  const selectedIndex = useSelector((state: RootState) => state.results.selectedIndex);
+
+  // =========================================================================
+  // LOCAL STATE
   // =========================================================================
   const [searchTerm, setSearchTerm] = useState('');
   const [isMobileOpen, setMobileOpen] = useState(false);
-  const [results, setResults] = useState<GameResult[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [selectedGame, setSelectedGame] = useState<GameResult | null>(null);
-  const [error, setError] = useState<string | null>(null);
+
+  // Derived values
+  const isLoading = status === 'loading';
+  const selectedGame = selectedIndex !== null ? results[selectedIndex] : null;
+  const hasPrev = selectedIndex !== null && selectedIndex > 0;
+  const hasNext = selectedIndex !== null && selectedIndex < results.length - 1;
 
   // =========================================================================
   // HANDLERS
   // =========================================================================
   const handleSearch = async (filters: FilterState) => {
     setMobileOpen(false);
-    setError(null);
-    setIsLoading(true);
+    dispatch(setLoading());
 
     try {
       const data = await searchGames({ ...filters, search: searchTerm });
-      setResults(data);
+      dispatch(setResults(data));
     } catch (err) {
       console.error('Search failed:', err);
-      setError(err instanceof Error ? err.message : 'Search failed');
-      setResults([]);
-    } finally {
-      setIsLoading(false);
+      dispatch(setError(err instanceof Error ? err.message : 'Search failed'));
     }
   };
 
-  const handleSelectGame = (game: GameResult) => {
-    setSelectedGame(game);
+  const handleSelectGame = (index: number) => {
+    dispatch(selectGame(index));
   };
 
-  const handleCloseDetail = () => {
-    setSelectedGame(null);
+  const handleBack = () => {
+    dispatch(clearSelection());
+  };
+
+  const handlePrev = () => {
+    dispatch(selectPrevious());
+  };
+
+  const handleNext = () => {
+    dispatch(selectNext());
   };
 
   // =========================================================================
@@ -106,7 +124,7 @@ export const DashboardPage = () => {
 
   const getStatusText = () => {
     if (isLoading) return t('dashboard.searching');
-    if (error) return t('dashboard.error');
+    if (reduxError) return t('dashboard.error');
     return t('dashboard.ready');
   };
 
@@ -119,7 +137,19 @@ export const DashboardPage = () => {
     </>
   );
 
-  const mainContent = (
+  // Conditionally render grid or detail view
+  const mainContent = selectedGame ? (
+    <div className="animate-slide-in-right">
+      <GameDetail 
+        game={selectedGame}
+        onBack={handleBack}
+        onPrev={handlePrev}
+        onNext={handleNext}
+        hasPrev={hasPrev}
+        hasNext={hasNext}
+      />
+    </div>
+  ) : (
     <ResultsGrid 
       results={results}
       isLoading={isLoading}
@@ -131,19 +161,16 @@ export const DashboardPage = () => {
   // RENDER
   // =========================================================================
   return (
-    <>
-      <DashboardLayout
-        brandHeader={brandHeader}
-        searchBar={searchBar}
-        mobileSearch={mobileSearch}
-        sidebar={sidebar}
-        sidebarFooter={sidebarFooter}
-        mainHeader={mainHeader}
-        main={mainContent}
-        isMobileOpen={isMobileOpen}
-        onMobileToggle={() => setMobileOpen(!isMobileOpen)}
-      />
-      <GameDetail game={selectedGame} onClose={handleCloseDetail} />
-    </>
+    <DashboardLayout
+      brandHeader={brandHeader}
+      searchBar={searchBar}
+      mobileSearch={mobileSearch}
+      sidebar={sidebar}
+      sidebarFooter={sidebarFooter}
+      mainHeader={mainHeader}
+      main={mainContent}
+      isMobileOpen={isMobileOpen}
+      onMobileToggle={() => setMobileOpen(!isMobileOpen)}
+    />
   );
 };

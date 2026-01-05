@@ -1,28 +1,66 @@
 import { useTranslation } from 'react-i18next';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import type { GameResult } from '@/models/AppTypes';
 
 interface GameDetailProps {
   game: GameResult | null;
-  onClose?: () => void;
+  onBack?: () => void;
+  onPrev?: () => void;
+  onNext?: () => void;
+  hasPrev?: boolean;
+  hasNext?: boolean;
 }
 
-export const GameDetail = ({ game, onClose }: GameDetailProps) => {
+export const GameDetail = ({ 
+  game, 
+  onBack, 
+  onPrev, 
+  onNext, 
+  hasPrev = false, 
+  hasNext = false 
+}: GameDetailProps) => {
   const { t } = useTranslation();
 
   if (!game) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="bg-background border-2 border-border rounded-base shadow-shadow max-w-3xl w-full max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b-2 border-border bg-main text-main-foreground">
-          <h2 className="font-heading text-xl truncate">{game.title}</h2>
-          <button 
-            onClick={onClose}
-            className="text-2xl font-bold hover:opacity-70 transition-opacity"
+    <div className="pb-20">
+      {/* Navigation Header */}
+      <div className="flex items-center justify-between mb-6 p-4 bg-secondary-background border-2 border-border rounded-base">
+        <Button 
+          variant="noShadow" 
+          onClick={onBack}
+          className="flex items-center gap-2"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Results
+        </Button>
+        <div className="flex items-center gap-2">
+          <Button 
+            variant="noShadow" 
+            onClick={onPrev}
+            disabled={!hasPrev}
+            className="px-3"
           >
-            ×
-          </button>
+            <ChevronLeft className="w-4 h-4" />
+          </Button>
+          <Button 
+            variant="noShadow" 
+            onClick={onNext}
+            disabled={!hasNext}
+            className="px-3"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+
+      {/* Game Content */}
+      <div className="bg-background border-2 border-border rounded-base shadow-shadow">
+        {/* Header */}
+        <div className="p-4 border-b-2 border-border bg-main text-main-foreground">
+          <h2 className="font-heading text-xl truncate">{game.title}</h2>
         </div>
 
         {/* Content */}

@@ -4,7 +4,7 @@ import type { GameResult } from '@/models/AppTypes';
 interface ResultsGridProps {
   results?: GameResult[];
   isLoading?: boolean;
-  onSelectGame?: (game: GameResult) => void;
+  onSelectGame?: (index: number) => void;
 }
 
 export const ResultsGrid = ({ 
@@ -60,10 +60,10 @@ export const ResultsGrid = ({
   // Results grid
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 pb-20">
-      {results.map((game) => (
+      {results.map((game, index) => (
         <div 
           key={game.id} 
-          onClick={() => onSelectGame?.(game)}
+          onClick={() => onSelectGame?.(index)}
           className="group relative aspect-[264/374] bg-white border-2 border-border rounded-base shadow-shadow flex flex-col justify-between overflow-hidden hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all cursor-pointer"
         >
           {/* Image Area */}
