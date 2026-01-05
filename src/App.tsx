@@ -1,7 +1,7 @@
-import { DashboardGrid } from './components/layout/dashboardGrid'
+import { DashboardPage } from './features/dashboard/DashboardPage'
 
 function App() {
-  return <DashboardGrid />
+  return <DashboardPage />
 }
 
 export default App
