@@ -14,7 +14,6 @@ export const ResultsGrid = ({
 }: ResultsGridProps) => {
   const { t } = useTranslation();
   
-  // Loading state
   if (isLoading) {
     return (
       <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 pb-20">
@@ -28,7 +27,6 @@ export const ResultsGrid = ({
     );
   }
 
-  // Empty state
   if (results.length === 0) {
     return (
       <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 pb-20">
@@ -57,7 +55,6 @@ export const ResultsGrid = ({
     );
   }
 
-  // Results grid
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 pb-20">
       {results.map((game, index) => (

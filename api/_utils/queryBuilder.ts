@@ -111,7 +111,8 @@ export const buildIgdbQuery = (params: QueryParams): string => {
     },
     { 
       key: 'categoryId',
-      build: (v) => `category = (${v})`
+      // When Main Game (0) is selected, include games with category = 0 OR category = null
+      build: (v) => v === 0 ? `(category = 0 | category = null)` : `category = (${v})`
     },
     { 
       key: 'statusId',

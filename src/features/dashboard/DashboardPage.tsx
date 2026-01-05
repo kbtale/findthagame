@@ -139,7 +139,7 @@ export const DashboardPage = () => {
 
   // Conditionally render grid or detail view
   const mainContent = selectedGame ? (
-    <div className="animate-slide-in-right">
+    <div key="detail" className="animate-slide-in-right">
       <GameDetail 
         game={selectedGame}
         onBack={handleBack}
