@@ -37,7 +37,7 @@ export class TokenManager {
         }
         try {
             const response = await fetch(
-                `https://api.twitch.tv/helix/oauth2/token?client_id=${clientId}&client_secret=${clientSecret}&grant_type=client_credentials`,
+                `https://id.twitch.tv/oauth2/token?client_id=${clientId}&client_secret=${clientSecret}&grant_type=client_credentials`,
                 { method: 'POST' }
             );
 
