@@ -125,7 +125,7 @@ export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
           <h3 className="text-sm font-heading uppercase tracking-widest text-muted-foreground">{t('filters.coreSpecs')}</h3>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 min-[395px]:grid-cols-2 gap-3">
           {/* Category - Combobox */}
           <div className="space-y-1.5">
             <Label className="text-xs uppercase font-heading">{t('filters.category')}</Label>
@@ -252,7 +252,7 @@ export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 min-[395px]:grid-cols-2 gap-3">
           {/* Game Mode - Combobox */}
           <div className="space-y-1.5">
             <Label className="text-xs uppercase font-heading">{t('filters.mode')}</Label>
@@ -307,7 +307,7 @@ export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
            />
         </div>
 
-        <div className="grid grid-cols-[1fr_2fr] gap-3 mt-4">
+        <div className="grid grid-cols-1 min-[395px]:grid-cols-[1fr_2fr] gap-3 mt-4">
           {/* Age Rating Org - Combobox */}
           <div className="space-y-1.5">
             <Label className="text-xs uppercase font-heading">{t('filters.ratingOrg')}</Label>

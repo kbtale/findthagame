@@ -29,7 +29,6 @@ export const GameDetail = ({
       {/* Navigation Header */}
       <div className="flex items-center justify-between mb-6 p-4 bg-secondary-background border-2 border-border rounded-base">
         <Button 
-          variant="noShadow" 
           onClick={onBack}
           className="flex items-center gap-2"
         >
@@ -38,18 +37,16 @@ export const GameDetail = ({
         </Button>
         <div className="flex items-center gap-2">
           <Button 
-            variant="noShadow" 
             onClick={onPrev}
             disabled={!hasPrev}
-            className="px-3"
+            size="icon"
           >
             <ChevronLeft className="w-4 h-4" />
           </Button>
           <Button 
-            variant="noShadow" 
             onClick={onNext}
             disabled={!hasNext}
-            className="px-3"
+            size="icon"
           >
             <ChevronRight className="w-4 h-4" />
           </Button>
@@ -139,50 +136,51 @@ export const GameDetail = ({
             </div>
           )}
 
-          {/* Genres */}
-          {game.genres.length > 0 && (
-            <div>
-              <span className="font-heading uppercase text-xs opacity-60">{t('results.genres')}</span>
-              <div className="flex flex-wrap gap-1 mt-1">
-                {game.genres.map((genre) => (
-                  <span key={genre} className="px-2 py-0.5 bg-secondary-background rounded-base text-xs font-base border border-border">
-                    {genre}
-                  </span>
-                ))}
+          {/* Classification Grid - Two columns on larger screens */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Genres */}
+            {game.genres.length > 0 && (
+              <div>
+                <span className="font-heading uppercase text-xs opacity-60">{t('results.genres')}</span>
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {game.genres.map((genre) => (
+                    <span key={genre} className="px-2 py-0.5 bg-secondary-background rounded-base text-xs font-base border border-border">
+                      {genre}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Themes */}
-          {game.themes.length > 0 && (
-            <div>
-              <span className="font-heading uppercase text-xs opacity-60">{t('results.themes')}</span>
-              <div className="flex flex-wrap gap-1 mt-1">
-                {game.themes.map((theme) => (
-                  <span key={theme} className="px-2 py-0.5 bg-secondary-background rounded-base text-xs font-base border border-border">
-                    {theme}
-                  </span>
-                ))}
+            {/* Themes */}
+            {game.themes.length > 0 && (
+              <div>
+                <span className="font-heading uppercase text-xs opacity-60">{t('results.themes')}</span>
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {game.themes.map((theme) => (
+                    <span key={theme} className="px-2 py-0.5 bg-secondary-background rounded-base text-xs font-base border border-border">
+                      {theme}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Platforms */}
-          {game.platforms.length > 0 && (
-            <div>
-              <span className="font-heading uppercase text-xs opacity-60">{t('results.platforms')}</span>
-              <div className="flex flex-wrap gap-1 mt-1">
-                {game.platforms.map((platform) => (
-                  <span key={platform} className="px-2 py-0.5 bg-secondary-background rounded-base text-xs font-base border border-border">
-                    {platform}
-                  </span>
-                ))}
+            {/* Platforms */}
+            {game.platforms.length > 0 && (
+              <div>
+                <span className="font-heading uppercase text-xs opacity-60">{t('results.platforms')}</span>
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {game.platforms.map((platform) => (
+                    <span key={platform} className="px-2 py-0.5 bg-secondary-background rounded-base text-xs font-base border border-border">
+                      {platform}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Game Modes & Perspectives */}
-          <div className="grid grid-cols-2 gap-4">
+            {/* Game Modes */}
             {game.gameModes.length > 0 && (
               <div>
                 <span className="font-heading uppercase text-xs opacity-60">{t('results.modes')}</span>
@@ -195,6 +193,8 @@ export const GameDetail = ({
                 </div>
               </div>
             )}
+
+            {/* Perspectives */}
             {game.perspectives.length > 0 && (
               <div>
                 <span className="font-heading uppercase text-xs opacity-60">{t('results.perspective')}</span>
@@ -207,21 +207,21 @@ export const GameDetail = ({
                 </div>
               </div>
             )}
-          </div>
 
-          {/* Keywords */}
-          {game.keywords.length > 0 && (
-            <div>
-              <span className="font-heading uppercase text-xs opacity-60">Keywords</span>
-              <div className="flex flex-wrap gap-1 mt-1">
-                {game.keywords.map((keyword) => (
-                  <span key={keyword} className="px-2 py-0.5 bg-secondary-background rounded text-xs font-base opacity-70">
-                    {keyword}
-                  </span>
-                ))}
+            {/* Keywords */}
+            {game.keywords.length > 0 && (
+              <div>
+                <span className="font-heading uppercase text-xs opacity-60">Keywords</span>
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {game.keywords.map((keyword) => (
+                    <span key={keyword} className="px-2 py-0.5 bg-secondary-background rounded text-xs font-base opacity-70">
+                      {keyword}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
 
           {/* Screenshots */}
           {game.screenshots.length > 0 && (

@@ -73,11 +73,11 @@
   }
 }
 
-/* Slide-in animation for game detail view */
+/* Slide-in animation for game detail view - covers content from right */
 @keyframes slide-in-right {
   from {
     opacity: 0;
-    transform: translateX(50px);
+    transform: translateX(100%);
   }
   to {
     opacity: 1;
