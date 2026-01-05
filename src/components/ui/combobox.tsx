@@ -65,9 +65,9 @@ export function Combobox({
           role="combobox"
           aria-expanded={open}
           disabled={disabled}
-          className={cn("w-full justify-between", className)}
+          className={cn("w-full justify-between overflow-hidden", className)}
         >
-          {selectedOption?.label ?? placeholder}
+          <span className="truncate">{selectedOption?.label ?? placeholder}</span>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -80,9 +80,9 @@ export function Combobox({
               {options.map((option) => (
                 <CommandItem
                   key={option.value}
-                  value={option.value}
-                  onSelect={(currentValue) => {
-                    onValueChange(currentValue === value ? null : currentValue)
+                  value={option.label}
+                  onSelect={() => {
+                    onValueChange(option.value === value ? null : option.value)
                     setOpen(false)
                   }}
                 >

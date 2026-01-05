@@ -15,7 +15,7 @@ const initialState: FilterState = {
 
   categoryId: null,
   statusId: null,
-  developerId: null,
+  developerName: '',
   minRating: null,
 
   ageRatingOrg: null,
@@ -67,8 +67,8 @@ export const detectiveSlice = createSlice({
     setStatusId: (state, action: PayloadAction<number | null>) => {
       state.statusId = action.payload;
     },
-    setDeveloperId: (state, action: PayloadAction<number | null>) => {
-      state.developerId = action.payload;
+    setDeveloperId: (state, action: PayloadAction<string>) => {
+      state.developerName = action.payload;
     },
     setMinRating: (state, action: PayloadAction<number | null>) => {
       state.minRating = action.payload;

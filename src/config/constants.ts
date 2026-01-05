@@ -143,7 +143,6 @@ export const PLATFORMS = [
   { id: 439, name: 'V.Smile' },
   { id: 74, name: 'Windows Phone' },
   { id: 73, name: 'BlackBerry OS' },
-  { id: 42, name: 'N-Gage' },
 
   // --- 8th gen (2011–PRESENTE) ---
   { id: 37, name: 'Nintendo 3DS' },
@@ -234,10 +233,8 @@ export const PLATFORMS = [
   { id: 479, name: 'Terebikko / See \'n Say Video Phone' },
   { id: 481, name: 'Tomy Tutor / Pyuta / Grandstand Tutor' },
   { id: 504, name: 'Uzebox' },
-  { id: 380, name: 'Casio Loopy' },
   { id: 407, name: 'HyperScan' },
   { id: 409, name: 'Legacy Computer' },
-  { id: 441, name: 'PocketStation' },
   { id: 509, name: 'Polymega' },
   { id: 377, name: 'Plug & Play' },
   { id: 166, name: 'Pokémon mini' },

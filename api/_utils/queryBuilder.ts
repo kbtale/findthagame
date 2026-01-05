@@ -11,7 +11,7 @@ export interface QueryParams {
   
   categoryId?: number;
   statusId?: number;
-  developerId?: number;
+  developerName?: string;
   minRating?: number;
 
   ageRatingOrg?: number;
@@ -70,6 +70,7 @@ export const buildIgdbQuery = (params: QueryParams): string => {
       `summary ~ *"${term}"* | ` +
       `storyline ~ *"${term}"* | ` +
       `keywords.name ~ *"${term}"*` +
+      `involved_companies.company.name ~ *"${developerName}"*` +
       `)`
     );
   }
@@ -116,10 +117,6 @@ export const buildIgdbQuery = (params: QueryParams): string => {
     { 
       key: 'statusId',
       build: (v) => `status = (${v})`
-    },
-    {
-      key: 'developerId',
-      build: (v) => `involved_companies.company = (${v})`
     },
     { 
       key: 'minRating',

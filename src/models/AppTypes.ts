@@ -42,7 +42,7 @@ export interface FilterState {
 
   categoryId: number | null;
   statusId: number | null;
-  developerId: number | null;
+  developerName: string;
   minRating: number | null;
 
   ageRatingOrg: number | null;

@@ -19,7 +19,7 @@ export const DashboardGrid = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-background text-foreground font-base flex flex-col lg:grid lg:grid-cols-[320px_1fr] overflow-hidden">
+    <div className="min-h-screen w-full bg-background text-foreground font-base flex flex-col lg:grid lg:grid-cols-[390px_1fr] overflow-hidden">
       
       {/* =========================================================================
           REGION 1: DESKTOP SIDEBAR (Visible ≥ 1024px)
@@ -28,7 +28,7 @@ export const DashboardGrid = () => {
         
         {/* Brand Header */}
         <div className="p-6 border-b-2 border-border bg-main text-main-foreground">
-          <h1 className="text-2xl font-heading italic tracking-tighter">DETECTIVE_UI</h1>
+          <h1 className="text-2xl font-heading italic tracking-tighter">FindThaGame</h1>
         </div>
 
         {/* Scrollable Control Center */}
@@ -36,7 +36,7 @@ export const DashboardGrid = () => {
           
           {/* 1. DESKTOP SEARCH (Anchored at top of sidebar) */}
           <div className="space-y-2">
-            <label className="text-xs font-heading uppercase tracking-widest">Protocol ID</label>
+            <label className="text-xs font-heading uppercase tracking-widest">Game name</label>
             <div className="relative">
               <Input 
                 placeholder="Search..." 

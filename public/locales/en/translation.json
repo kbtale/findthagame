@@ -1,7 +1,7 @@
 {
   "app": {
     "title": "FindThaGame",
-    "tagline": "Find the videogame that your mind can't"
+    "tagline": "Find the videogames that your mind can't"
   },
   "search": {
     "placeholder": "Type a memory...",

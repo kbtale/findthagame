@@ -4,6 +4,7 @@ import {
   setPlatformId,
   setYearRange,
   toggleGenreId,
+  toggleThemeId,
   setGameModeId,
   setPerspectiveId,
   setCategoryId,
@@ -16,14 +17,33 @@ import {
 
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
 import { Button } from '@/components/ui/button';
-import { Multiselect } from '@/components/ui/multiselect';
 import { Combobox } from '@/components/ui/combobox';
 import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { PLATFORMS, GENRES, THEMES, GAME_MODES, PERSPECTIVES, AGE_RATING_ORGANIZATIONS, AGE_RATING_VALUES, GAME_CATEGORIES, GAME_STATUSES} from '@/config/constants.ts'
+import { Multiselect } from '@/components/ui/multiselect';
+import { 
+  PLATFORMS, 
+  GENRES, 
+  THEMES, 
+  GAME_MODES, 
+  PERSPECTIVES, 
+  AGE_RATING_ORGANIZATIONS, 
+  AGE_RATING_VALUES, 
+  GAME_CATEGORIES, 
+  GAME_STATUSES
+} from '@/config/constants';
+
+// Maps each age rating organization to its valid rating value IDs
+const AGE_RATING_ORG_TO_VALUES: Record<number, number[]> = {
+  1: [1, 2, 3, 4, 5, 6, 7],       // ESRB: RP, EC, E, E10+, T, M, AO
+  2: [8, 9, 10, 11, 12],          // PEGI: 3, 7, 12, 16, 18
+  3: [13, 14, 15, 16, 17],        // CERO: A, B, C, D, Z
+  4: [18, 19, 20, 21, 22],        // USK: 0, 6, 12, 16, 18
+  5: [23, 24, 25, 26, 40, 27],    // GRAC: ALL, 12+, 15+, 19+, 18+, TESTING
+  6: [28, 29, 30, 31, 32, 33],    // CLASS IND: L, 10, 12, 14, 16, 18
+  7: [34, 35, 36, 37, 38, 39],    // ACB: G, PG, M, MA 15+, R 18+, RC
+};
 
 interface FilterPanelProps {
   onSearch: () => void;
@@ -32,6 +52,13 @@ interface FilterPanelProps {
 export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
   const dispatch = useDispatch();
   const filters = useSelector((state: RootState) => state.detective);
+
+  // Filter age rating values based on selected organization
+  const filteredAgeRatingValues = filters.ageRatingOrg
+    ? AGE_RATING_VALUES.filter(rating => 
+        AGE_RATING_ORG_TO_VALUES[filters.ageRatingOrg!]?.includes(rating.id)
+      )
+    : [];
 
   return (
     <div className="space-y-8 pb-20 lg:pb-0 font-base text-foreground">
@@ -46,61 +73,58 @@ export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
         </div>
 
         <div className="grid grid-cols-2 gap-3">
+          {/* Category - Combobox */}
           <div className="space-y-1.5">
-            <Label className="text-xs uppercase font-heading">Platform</Label>
-            <Select 
-              value={filters.platformId?.toString() ?? ''} 
-              onValueChange={(val) => dispatch(setPlatformId(val ? Number(val) : null))}
-            >
-              <SelectTrigger className="w-full h-9 bg-background shadow-sm"><SelectValue placeholder="Any" /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="48">PS5</SelectItem>
-                <SelectItem value="167">PS4</SelectItem>
-                <SelectItem value="6">PC (Win)</SelectItem>
-                <SelectItem value="130">Switch</SelectItem>
-              </SelectContent>
-            </Select>
+            <Label className="text-xs uppercase font-heading">Category</Label>
+            <Combobox
+              options={GAME_CATEGORIES.map(c => ({ value: c.id.toString(), label: c.name }))}
+              value={filters.categoryId?.toString() ?? null}
+              onValueChange={(val) => dispatch(setCategoryId(val ? Number(val) : null))}
+              placeholder="Any category..."
+              searchPlaceholder="Search categories..."
+              emptyText="No category found."
+              className="h-9 shadow-shadow"
+            />
           </div>
 
+          {/* Status - Combobox */}
           <div className="space-y-1.5">
             <Label className="text-xs uppercase font-heading">Status</Label>
-            <Select 
-              value={filters.statusId?.toString() ?? ''} 
+            <Combobox
+              options={GAME_STATUSES.map(s => ({ value: s.id.toString(), label: s.name }))}
+              value={filters.statusId?.toString() ?? null}
               onValueChange={(val) => dispatch(setStatusId(val ? Number(val) : null))}
-            >
-              <SelectTrigger className="w-full h-9 bg-background shadow-sm"><SelectValue placeholder="All" /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="0">Released</SelectItem>
-                <SelectItem value="2">Alpha</SelectItem>
-                <SelectItem value="3">Beta</SelectItem>
-              </SelectContent>
-            </Select>
+              placeholder="Any status..."
+              searchPlaceholder="Search statuses..."
+              emptyText="No status found."
+              className="h-9 shadow-shadow"
+            />
           </div>
         </div>
 
+        {/* Developer - Input */}
         <div className="space-y-1.5">
           <Label className="text-xs uppercase font-heading">Developer</Label>
-          <Input 
-            placeholder="e.g. Kojima" 
-            className="h-9 bg-background font-base shadow-sm"
-            value={filters.developerId?.toString() ?? ''}
-            onChange={(e) => dispatch(setDeveloperId(e.target.value ? Number(e.target.value) : null))}
+          <Input
+            placeholder="e.g. Kojima"
+            className="h-9 bg-background font-base shadow-shadow"
+            value={filters.developerName}
+            onChange={(e) => dispatch(setDeveloperId(e.target.value))}
           />
         </div>
         
+        {/* Platform - Combobox */}
         <div className="space-y-1.5">
-           <Label className="text-xs uppercase font-heading">Category</Label>
-           <Select 
-             value={filters.categoryId?.toString() ?? ''} 
-             onValueChange={(val) => dispatch(setCategoryId(val ? Number(val) : null))}
-           >
-              <SelectTrigger className="w-full h-9 bg-background shadow-sm"><SelectValue placeholder="Main Game" /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="0">Main Game</SelectItem>
-                <SelectItem value="1">DLC</SelectItem>
-                <SelectItem value="2">Expansion</SelectItem>
-              </SelectContent>
-            </Select>
+          <Label className="text-xs uppercase font-heading">Platform</Label>
+          <Combobox
+            options={PLATFORMS.map(p => ({ value: p.id.toString(), label: p.name }))}
+            value={filters.platformId?.toString() ?? null}
+            onValueChange={(val) => dispatch(setPlatformId(val ? Number(val) : null))}
+            placeholder="Any platform..."
+            searchPlaceholder="Search platforms..."
+            emptyText="No platform found."
+            className="h-9 shadow-shadow"
+          />
         </div>
       </section>
 
@@ -145,60 +169,78 @@ export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
           <h3 className="text-sm font-heading uppercase tracking-widest text-muted-foreground">Data Class</h3>
         </div>
 
-        <div className="space-y-2">
-          <Label className="text-xs uppercase font-heading">Genre (Multiselect)</Label>
-          
-          {/* ScrollArea with Neo-Brutal styling */}
-          <ScrollArea className="h-32 rounded-base border-2 border-border bg-background p-3 shadow-shadow">
-            <div className="flex flex-col gap-2">
-              {GENRES.map((genre) => (
-                <div key={genre.id} className="flex items-center space-x-2">
-                  <Checkbox 
-                    id={`g-${genre.id}`} 
-                    checked={filters.genreIds.includes(genre.id)}
-                    onCheckedChange={() => dispatch(toggleGenreId(genre.id))}
-                  />
-                  <label 
-                    htmlFor={`g-${genre.id}`} 
-                    className="text-xs font-bold uppercase cursor-pointer select-none hover:text-main transition-colors"
-                  >
-                    {genre.name}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </ScrollArea>
+        {/* Genre - Multiselect */}
+        <div className="space-y-1.5">
+          <Label className="text-xs uppercase font-heading">Genres</Label>
+          <Multiselect
+            options={GENRES.map(g => ({ value: g.id.toString(), label: g.name }))}
+            value={filters.genreIds.map(id => id.toString())}
+            onValueChange={(newValues) => {
+              const newIds = newValues.map(Number);
+              const currentIds = filters.genreIds;
+              // Find added IDs (in new but not in current)
+              newIds.filter(id => !currentIds.includes(id)).forEach(id => dispatch(toggleGenreId(id)));
+              // Find removed IDs (in current but not in new)
+              currentIds.filter(id => !newIds.includes(id)).forEach(id => dispatch(toggleGenreId(id)));
+            }}
+            placeholder="Select genres..."
+            searchPlaceholder="Search genres..."
+            emptyText="No genre found."
+            maxDisplayItems={2}
+            className="shadow-shadow"
+          />
+        </div>
+
+        {/* Theme - Multiselect */}
+        <div className="space-y-1.5">
+          <Label className="text-xs uppercase font-heading">Themes</Label>
+          <Multiselect
+            options={THEMES.map(t => ({ value: t.id.toString(), label: t.name }))}
+            value={filters.themeIds.map(id => id.toString())}
+            onValueChange={(newValues) => {
+              const newIds = newValues.map(Number);
+              const currentIds = filters.themeIds;
+              // Find added IDs (in new but not in current)
+              newIds.filter(id => !currentIds.includes(id)).forEach(id => dispatch(toggleThemeId(id)));
+              // Find removed IDs (in current but not in new)
+              currentIds.filter(id => !newIds.includes(id)).forEach(id => dispatch(toggleThemeId(id)));
+            }}
+            placeholder="Select themes..."
+            searchPlaceholder="Search themes..."
+            emptyText="No theme found."
+            maxDisplayItems={2}
+            className="shadow-shadow"
+          />
         </div>
 
         <div className="grid grid-cols-2 gap-3">
-           <div className="space-y-1.5">
+          {/* Game Mode - Combobox */}
+          <div className="space-y-1.5">
             <Label className="text-xs uppercase font-heading">Mode</Label>
-            <Select 
-              value={filters.gameModeId?.toString() ?? ''} 
+            <Combobox
+              options={GAME_MODES.map(m => ({ value: m.id.toString(), label: m.name }))}
+              value={filters.gameModeId?.toString() ?? null}
               onValueChange={(val) => dispatch(setGameModeId(val ? Number(val) : null))}
-            >
-              <SelectTrigger className="w-full h-9 bg-background shadow-sm"><SelectValue placeholder="Any" /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="1">Single</SelectItem>
-                <SelectItem value="2">Multi</SelectItem>
-                <SelectItem value="3">Co-op</SelectItem>
-              </SelectContent>
-            </Select>
-           </div>
-           <div className="space-y-1.5">
+              placeholder="Any mode..."
+              searchPlaceholder="Search modes..."
+              emptyText="No mode found."
+              className="h-9 shadow-shadow"
+            />
+          </div>
+
+          {/* Perspective - Combobox */}
+          <div className="space-y-1.5">
             <Label className="text-xs uppercase font-heading">View</Label>
-            <Select 
-              value={filters.perspectiveId?.toString() ?? ''} 
+            <Combobox
+              options={PERSPECTIVES.map(p => ({ value: p.id.toString(), label: p.name }))}
+              value={filters.perspectiveId?.toString() ?? null}
               onValueChange={(val) => dispatch(setPerspectiveId(val ? Number(val) : null))}
-            >
-              <SelectTrigger className="w-full h-9 bg-background shadow-sm"><SelectValue placeholder="Any" /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="1">First</SelectItem>
-                <SelectItem value="2">Third</SelectItem>
-                <SelectItem value="3">Iso</SelectItem>
-              </SelectContent>
-            </Select>
-           </div>
+              placeholder="Any view..."
+              searchPlaceholder="Search views..."
+              emptyText="No view found."
+              className="h-9 shadow-shadow"
+            />
+          </div>
         </div>
       </section>
 
@@ -227,27 +269,38 @@ export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
         </div>
 
         <div className="grid grid-cols-[1fr_2fr] gap-3 mt-4">
-           <Select 
-             value={filters.ageRatingOrg?.toString() ?? ''} 
-             onValueChange={(val) => dispatch(setAgeRatingOrg(val ? Number(val) : null))}
-           >
-             <SelectTrigger className="h-9 bg-background shadow-sm"><SelectValue placeholder="Org" /></SelectTrigger>
-             <SelectContent>
-               <SelectItem value="1">ESRB</SelectItem>
-               <SelectItem value="2">PEGI</SelectItem>
-             </SelectContent>
-           </Select>
-           <Select 
-             value={filters.ageRatingValue?.toString() ?? ''} 
-             onValueChange={(val) => dispatch(setAgeRatingValue(val ? Number(val) : null))}
-           >
-             <SelectTrigger className="h-9 bg-background shadow-sm"><SelectValue placeholder="Rating" /></SelectTrigger>
-             <SelectContent>
-               <SelectItem value="1">E (Everyone)</SelectItem>
-               <SelectItem value="2">T (Teen)</SelectItem>
-               <SelectItem value="3">M (Mature)</SelectItem>
-             </SelectContent>
-           </Select>
+          {/* Age Rating Org - Combobox */}
+          <div className="space-y-1.5">
+            <Label className="text-xs uppercase font-heading">Rating Org</Label>
+            <Combobox
+              options={AGE_RATING_ORGANIZATIONS.map(o => ({ value: o.id.toString(), label: o.name }))}
+              value={filters.ageRatingOrg?.toString() ?? null}
+              onValueChange={(val) => {
+                dispatch(setAgeRatingOrg(val ? Number(val) : null));
+                // Reset the rating value when org changes
+                dispatch(setAgeRatingValue(null));
+              }}
+              placeholder="Org..."
+              searchPlaceholder="Search..."
+              emptyText="Not found."
+              className="h-9 shadow-shadow"
+            />
+          </div>
+
+          {/* Age Rating Value - Combobox (dependent on Org) */}
+          <div className="space-y-1.5">
+            <Label className="text-xs uppercase font-heading">Rating</Label>
+            <Combobox
+              options={filteredAgeRatingValues.map(r => ({ value: r.id.toString(), label: r.name }))}
+              value={filters.ageRatingValue?.toString() ?? null}
+              onValueChange={(val) => dispatch(setAgeRatingValue(val ? Number(val) : null))}
+              placeholder="Select rating..."
+              searchPlaceholder="Search ratings..."
+              emptyText="Select an org first."
+              disabled={!filters.ageRatingOrg}
+              className="h-9 shadow-shadow"
+            />
+          </div>
         </div>
       </section>
 
