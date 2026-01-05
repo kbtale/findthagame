@@ -1,18 +1,19 @@
+import { useTranslation } from 'react-i18next';
 import type { GameResult } from '@/models/AppTypes';
 
 interface GameDetailProps {
-  /** The selected game to display, or null if none selected */
   game: GameResult | null;
-  /** Handler to close/deselect the game */
   onClose?: () => void;
 }
 
 export const GameDetail = ({ game, onClose }: GameDetailProps) => {
+  const { t } = useTranslation();
+
   if (!game) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="bg-background border-2 border-border rounded-base shadow-shadow max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-background border-2 border-border rounded-base shadow-shadow max-w-3xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b-2 border-border bg-main text-main-foreground">
           <h2 className="font-heading text-xl truncate">{game.title}</h2>
@@ -25,48 +26,103 @@ export const GameDetail = ({ game, onClose }: GameDetailProps) => {
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-4">
-          {/* Cover */}
-          {game.coverUrl && (
-            <img 
-              src={game.coverUrl} 
-              alt={game.title}
-              className="w-48 h-auto mx-auto rounded-base border-2 border-border shadow-shadow"
-            />
-          )}
+        <div className="p-6 space-y-6">
+          {/* Top Section: Cover + Basic Info */}
+          <div className="flex gap-6">
+            {/* Cover */}
+            {game.coverUrl && (
+              <img 
+                src={game.coverUrl} 
+                alt={game.title}
+                className="w-40 h-auto shrink-0 rounded-base border-2 border-border shadow-shadow"
+              />
+            )}
+
+            {/* Basic Info */}
+            <div className="flex-1 space-y-3">
+              {/* Alternative Names */}
+              {game.alternativeNames.length > 0 && (
+                <div className="text-sm font-base opacity-60 italic">
+                  {t('results.alsoKnownAs')}: {game.alternativeNames.join(', ')}
+                </div>
+              )}
+
+              {/* Year & Companies */}
+              <div className="flex flex-wrap items-center gap-2 text-sm font-base">
+                <span className="font-heading text-lg">{game.year ?? '—'}</span>
+                {game.companies.length > 0 && (
+                  <>
+                    <span className="opacity-30">|</span>
+                    <span>{game.companies.join(', ')}</span>
+                  </>
+                )}
+              </div>
+
+              {/* Stats Row */}
+              <div className="grid grid-cols-3 gap-4 text-sm">
+                <div>
+                  <span className="font-heading uppercase text-xs opacity-60">{t('gameDetail.rating')}</span>
+                  <p className="font-heading text-main text-lg">{game.rating ? `${game.rating}%` : '—'}</p>
+                </div>
+                <div>
+                  <span className="font-heading uppercase text-xs opacity-60">{t('results.status')}</span>
+                  <p className="font-base">
+                    {game.status !== undefined ? t(`gameStatus.${game.status}`, { defaultValue: `Status ${game.status}` }) : '—'}
+                  </p>
+                </div>
+                <div>
+                  <span className="font-heading uppercase text-xs opacity-60">{t('results.category')}</span>
+                  <p className="font-base">
+                    {game.category !== undefined ? t(`gameCategory.${game.category}`, { defaultValue: `Category ${game.category}` }) : '—'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Match Score */}
+              <div className="inline-block px-3 py-1 bg-main text-main-foreground rounded-base border-2 border-border">
+                <span className="font-heading text-sm">{game.matchScore.toFixed(2)} {t('results.match')}</span>
+              </div>
+            </div>
+          </div>
 
           {/* Summary */}
           {game.summary && (
             <div>
-              <h3 className="font-heading text-sm uppercase mb-2">Summary</h3>
+              <h3 className="font-heading text-sm uppercase mb-2">{t('gameDetail.summary')}</h3>
               <p className="text-sm font-base opacity-80">{game.summary}</p>
             </div>
           )}
 
-          {/* Metadata */}
-          <div className="grid grid-cols-2 gap-4 text-sm">
+          {/* Storyline */}
+          {game.storyline && (
             <div>
-              <span className="font-heading uppercase text-xs opacity-60">Release</span>
-              <p className="font-base">{game.year ?? '—'}</p>
+              <h3 className="font-heading text-sm uppercase mb-2">Storyline</h3>
+              <p className="text-sm font-base opacity-80">{game.storyline}</p>
             </div>
-            <div>
-              <span className="font-heading uppercase text-xs opacity-60">Rating</span>
-              <p className="font-base">{game.rating ? `${game.rating}%` : '—'}</p>
-            </div>
-            <div>
-              <span className="font-heading uppercase text-xs opacity-60">Match Score</span>
-              <p className="font-base font-bold text-main">{game.matchScore.toFixed(2)}</p>
-            </div>
-          </div>
+          )}
 
           {/* Genres */}
           {game.genres.length > 0 && (
             <div>
-              <span className="font-heading uppercase text-xs opacity-60">Genres</span>
+              <span className="font-heading uppercase text-xs opacity-60">{t('results.genres')}</span>
               <div className="flex flex-wrap gap-1 mt-1">
                 {game.genres.map((genre) => (
-                  <span key={genre} className="px-2 py-0.5 bg-secondary-background rounded-base text-xs font-base">
+                  <span key={genre} className="px-2 py-0.5 bg-secondary-background rounded-base text-xs font-base border border-border">
                     {genre}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Themes */}
+          {game.themes.length > 0 && (
+            <div>
+              <span className="font-heading uppercase text-xs opacity-60">{t('results.themes')}</span>
+              <div className="flex flex-wrap gap-1 mt-1">
+                {game.themes.map((theme) => (
+                  <span key={theme} className="px-2 py-0.5 bg-secondary-background rounded-base text-xs font-base border border-border">
+                    {theme}
                   </span>
                 ))}
               </div>
@@ -76,12 +132,71 @@ export const GameDetail = ({ game, onClose }: GameDetailProps) => {
           {/* Platforms */}
           {game.platforms.length > 0 && (
             <div>
-              <span className="font-heading uppercase text-xs opacity-60">Platforms</span>
+              <span className="font-heading uppercase text-xs opacity-60">{t('results.platforms')}</span>
               <div className="flex flex-wrap gap-1 mt-1">
                 {game.platforms.map((platform) => (
-                  <span key={platform} className="px-2 py-0.5 bg-secondary-background rounded-base text-xs font-base">
+                  <span key={platform} className="px-2 py-0.5 bg-secondary-background rounded-base text-xs font-base border border-border">
                     {platform}
                   </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Game Modes & Perspectives */}
+          <div className="grid grid-cols-2 gap-4">
+            {game.gameModes.length > 0 && (
+              <div>
+                <span className="font-heading uppercase text-xs opacity-60">{t('results.modes')}</span>
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {game.gameModes.map((mode) => (
+                    <span key={mode} className="px-2 py-0.5 bg-secondary-background rounded-base text-xs font-base border border-border">
+                      {mode}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+            {game.perspectives.length > 0 && (
+              <div>
+                <span className="font-heading uppercase text-xs opacity-60">{t('results.perspective')}</span>
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {game.perspectives.map((perspective) => (
+                    <span key={perspective} className="px-2 py-0.5 bg-secondary-background rounded-base text-xs font-base border border-border">
+                      {perspective}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Keywords */}
+          {game.keywords.length > 0 && (
+            <div>
+              <span className="font-heading uppercase text-xs opacity-60">Keywords</span>
+              <div className="flex flex-wrap gap-1 mt-1">
+                {game.keywords.map((keyword) => (
+                  <span key={keyword} className="px-2 py-0.5 bg-secondary-background rounded text-xs font-base opacity-70">
+                    {keyword}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Screenshots */}
+          {game.screenshots.length > 0 && (
+            <div>
+              <span className="font-heading uppercase text-xs opacity-60">Screenshots</span>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-2">
+                {game.screenshots.map((url, i) => (
+                  <img 
+                    key={i} 
+                    src={url} 
+                    alt={`${game.title} screenshot ${i + 1}`}
+                    className="w-full h-auto rounded-base border border-border"
+                  />
                 ))}
               </div>
             </div>
