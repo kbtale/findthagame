@@ -70,7 +70,6 @@ export const calculateMatchScore = (game: IGDBGame, query: QueryParams): number 
 
 /**
  * Stage 1: Text Relevance Score
- * Checks how well the search term matches various text fields of the game.
  */
 const scoreText = (game: IGDBGame, term: string): number => {
   if (!term) return 0;
@@ -92,7 +91,6 @@ const scoreText = (game: IGDBGame, term: string): number => {
 
 /**
  * Stage 2: Metadata Overlap Score
- * Calculates how many of the user's requested filters match the game's metadata.
  */
 const scoreMeta = (game: IGDBGame, query: QueryParams): number =>
   overlap(game.genres, query.genreIds) +
@@ -102,7 +100,6 @@ const scoreMeta = (game: IGDBGame, query: QueryParams): number =>
 
 /**
  * Stage 3: Multiplicative Constraints
- * Returns a combined multiplier that scales the base score.
  */
 const calculateMultiplier = (game: IGDBGame, query: QueryParams): number => {
   const { multipliers: m } = Weights;
@@ -114,14 +111,13 @@ const calculateMultiplier = (game: IGDBGame, query: QueryParams): number => {
 
   const status = (query.statusId === 6 && game.status === 6) ? m.cancelledBoost : 1;
 
-  const company = !query.developerId ? 1 : getCompanyMultiplier(game.involved_companies, query.developerId);
+  const company = !query.developerName ? 1 : getCompanyMultiplier(game.involved_companies, query.developerName);
 
   return platform * category * status * company;
 };
 
 /**
  * Stage 4: Additive Bonuses
- * Returns flat bonuses/penalties that are added after multiplication.
  */
 const calculateBonuses = (game: IGDBGame, query: QueryParams): number => {
   const { bonuses: b } = Weights;
@@ -153,7 +149,6 @@ const includesTerm = (text: string | undefined, term: string): boolean =>
  * Checks if any item in an array has a specific ID.
  */
 const matches = (items: IGDBNamedItem[] | undefined, id: number | null | undefined): boolean =>
-  // Double-bang ensures we only proceed if id is truthy (not null/undefined/0).
   !!id && (items?.some(i => i.id === id) ?? false);
 
 /**
@@ -170,10 +165,11 @@ const overlap = (items: IGDBNamedItem[] | undefined, ids: number[] | undefined):
  */
 const getCompanyMultiplier = (
   companies: IGDBGame['involved_companies'],
-  targetId: number
+  targetName: string
 ): number => {
   const { company: c } = Weights.multipliers;
-  const match = companies?.find(co => co.company.id === targetId);
+  const lowerTarget = targetName.toLowerCase();
+  const match = companies?.find(co => co.company.name?.toLowerCase().includes(lowerTarget));
   if (!match) return c.none;
   if (match.developer) return c.developer;
   if (match.publisher) return c.publisher;

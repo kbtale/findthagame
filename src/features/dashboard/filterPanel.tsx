@@ -1,23 +1,8 @@
-import { useSelector, useDispatch } from 'react-redux';
-import type { RootState } from '@/store/store';
-import {
-  setPlatformId,
-  setYearRange,
-  toggleGenreId,
-  toggleThemeId,
-  setGameModeId,
-  setPerspectiveId,
-  setCategoryId,
-  setStatusId,
-  setDeveloperId,
-  setMinRating,
-  setAgeRatingOrg,
-  setAgeRatingValue,
-} from '@/store/slices/detectiveSlice';
+import { useReducer } from 'react';
+import type { FilterState } from '@/models/AppTypes';
 
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
-
 import { Button } from '@/components/ui/button';
 import { Combobox } from '@/components/ui/combobox';
 import { Input } from '@/components/ui/input';
@@ -45,13 +30,79 @@ const AGE_RATING_ORG_TO_VALUES: Record<number, number[]> = {
   7: [34, 35, 36, 37, 38, 39],    // ACB: G, PG, M, MA 15+, R 18+, RC
 };
 
+// Initial state for the filter form
+const initialState: FilterState = {
+  search: '',
+  platformId: null,
+  yearRange: [1980, 2025],
+  genreIds: [],
+  themeIds: [],
+  gameModeId: null,
+  perspectiveId: null,
+  categoryId: null,
+  statusId: null,
+  developerName: '',
+  minRating: null,
+  ageRatingOrg: null,
+  ageRatingValue: null
+};
+
+// Action types for the reducer
+type FilterAction =
+  | { type: 'SET_PLATFORM_ID'; payload: number | null }
+  | { type: 'SET_YEAR_RANGE'; payload: [number, number] }
+  | { type: 'SET_GENRE_IDS'; payload: number[] }
+  | { type: 'SET_THEME_IDS'; payload: number[] }
+  | { type: 'SET_GAME_MODE_ID'; payload: number | null }
+  | { type: 'SET_PERSPECTIVE_ID'; payload: number | null }
+  | { type: 'SET_CATEGORY_ID'; payload: number | null }
+  | { type: 'SET_STATUS_ID'; payload: number | null }
+  | { type: 'SET_DEVELOPER_NAME'; payload: string }
+  | { type: 'SET_MIN_RATING'; payload: number | null }
+  | { type: 'SET_AGE_RATING_ORG'; payload: number | null }
+  | { type: 'SET_AGE_RATING_VALUE'; payload: number | null }
+  | { type: 'RESET' };
+
+// Reducer function
+function filterReducer(state: FilterState, action: FilterAction): FilterState {
+  switch (action.type) {
+    case 'SET_PLATFORM_ID':
+      return { ...state, platformId: action.payload };
+    case 'SET_YEAR_RANGE':
+      return { ...state, yearRange: action.payload };
+    case 'SET_GENRE_IDS':
+      return { ...state, genreIds: action.payload };
+    case 'SET_THEME_IDS':
+      return { ...state, themeIds: action.payload };
+    case 'SET_GAME_MODE_ID':
+      return { ...state, gameModeId: action.payload };
+    case 'SET_PERSPECTIVE_ID':
+      return { ...state, perspectiveId: action.payload };
+    case 'SET_CATEGORY_ID':
+      return { ...state, categoryId: action.payload };
+    case 'SET_STATUS_ID':
+      return { ...state, statusId: action.payload };
+    case 'SET_DEVELOPER_NAME':
+      return { ...state, developerName: action.payload };
+    case 'SET_MIN_RATING':
+      return { ...state, minRating: action.payload };
+    case 'SET_AGE_RATING_ORG':
+      return { ...state, ageRatingOrg: action.payload, ageRatingValue: null };
+    case 'SET_AGE_RATING_VALUE':
+      return { ...state, ageRatingValue: action.payload };
+    case 'RESET':
+      return initialState;
+    default:
+      return state;
+  }
+}
+
 interface FilterPanelProps {
-  onSearch: () => void;
+  onSearch: (filters: FilterState) => void;
 }
 
 export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
-  const dispatch = useDispatch();
-  const filters = useSelector((state: RootState) => state.detective);
+  const [filters, dispatch] = useReducer(filterReducer, initialState);
 
   // Filter age rating values based on selected organization
   const filteredAgeRatingValues = filters.ageRatingOrg
@@ -79,7 +130,7 @@ export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
             <Combobox
               options={GAME_CATEGORIES.map(c => ({ value: c.id.toString(), label: c.name }))}
               value={filters.categoryId?.toString() ?? null}
-              onValueChange={(val) => dispatch(setCategoryId(val ? Number(val) : null))}
+              onValueChange={(val) => dispatch({ type: 'SET_CATEGORY_ID', payload: val ? Number(val) : null })}
               placeholder="Any category..."
               searchPlaceholder="Search categories..."
               emptyText="No category found."
@@ -93,7 +144,7 @@ export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
             <Combobox
               options={GAME_STATUSES.map(s => ({ value: s.id.toString(), label: s.name }))}
               value={filters.statusId?.toString() ?? null}
-              onValueChange={(val) => dispatch(setStatusId(val ? Number(val) : null))}
+              onValueChange={(val) => dispatch({ type: 'SET_STATUS_ID', payload: val ? Number(val) : null })}
               placeholder="Any status..."
               searchPlaceholder="Search statuses..."
               emptyText="No status found."
@@ -109,7 +160,7 @@ export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
             placeholder="e.g. Kojima"
             className="h-9 bg-background font-base shadow-shadow"
             value={filters.developerName}
-            onChange={(e) => dispatch(setDeveloperId(e.target.value))}
+            onChange={(e) => dispatch({ type: 'SET_DEVELOPER_NAME', payload: e.target.value })}
           />
         </div>
         
@@ -119,7 +170,7 @@ export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
           <Combobox
             options={PLATFORMS.map(p => ({ value: p.id.toString(), label: p.name }))}
             value={filters.platformId?.toString() ?? null}
-            onValueChange={(val) => dispatch(setPlatformId(val ? Number(val) : null))}
+            onValueChange={(val) => dispatch({ type: 'SET_PLATFORM_ID', payload: val ? Number(val) : null })}
             placeholder="Any platform..."
             searchPlaceholder="Search platforms..."
             emptyText="No platform found."
@@ -150,7 +201,7 @@ export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
           
           <Slider 
             value={filters.yearRange}
-            onValueChange={(val) => dispatch(setYearRange(val as [number, number]))}
+            onValueChange={(val) => dispatch({ type: 'SET_YEAR_RANGE', payload: val as [number, number] })}
             min={1980} 
             max={2025} 
             step={1} 
@@ -175,14 +226,7 @@ export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
           <Multiselect
             options={GENRES.map(g => ({ value: g.id.toString(), label: g.name }))}
             value={filters.genreIds.map(id => id.toString())}
-            onValueChange={(newValues) => {
-              const newIds = newValues.map(Number);
-              const currentIds = filters.genreIds;
-              // Find added IDs (in new but not in current)
-              newIds.filter(id => !currentIds.includes(id)).forEach(id => dispatch(toggleGenreId(id)));
-              // Find removed IDs (in current but not in new)
-              currentIds.filter(id => !newIds.includes(id)).forEach(id => dispatch(toggleGenreId(id)));
-            }}
+            onValueChange={(newValues) => dispatch({ type: 'SET_GENRE_IDS', payload: newValues.map(Number) })}
             placeholder="Select genres..."
             searchPlaceholder="Search genres..."
             emptyText="No genre found."
@@ -197,14 +241,7 @@ export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
           <Multiselect
             options={THEMES.map(t => ({ value: t.id.toString(), label: t.name }))}
             value={filters.themeIds.map(id => id.toString())}
-            onValueChange={(newValues) => {
-              const newIds = newValues.map(Number);
-              const currentIds = filters.themeIds;
-              // Find added IDs (in new but not in current)
-              newIds.filter(id => !currentIds.includes(id)).forEach(id => dispatch(toggleThemeId(id)));
-              // Find removed IDs (in current but not in new)
-              currentIds.filter(id => !newIds.includes(id)).forEach(id => dispatch(toggleThemeId(id)));
-            }}
+            onValueChange={(newValues) => dispatch({ type: 'SET_THEME_IDS', payload: newValues.map(Number) })}
             placeholder="Select themes..."
             searchPlaceholder="Search themes..."
             emptyText="No theme found."
@@ -220,7 +257,7 @@ export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
             <Combobox
               options={GAME_MODES.map(m => ({ value: m.id.toString(), label: m.name }))}
               value={filters.gameModeId?.toString() ?? null}
-              onValueChange={(val) => dispatch(setGameModeId(val ? Number(val) : null))}
+              onValueChange={(val) => dispatch({ type: 'SET_GAME_MODE_ID', payload: val ? Number(val) : null })}
               placeholder="Any mode..."
               searchPlaceholder="Search modes..."
               emptyText="No mode found."
@@ -234,7 +271,7 @@ export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
             <Combobox
               options={PERSPECTIVES.map(p => ({ value: p.id.toString(), label: p.name }))}
               value={filters.perspectiveId?.toString() ?? null}
-              onValueChange={(val) => dispatch(setPerspectiveId(val ? Number(val) : null))}
+              onValueChange={(val) => dispatch({ type: 'SET_PERSPECTIVE_ID', payload: val ? Number(val) : null })}
               placeholder="Any view..."
               searchPlaceholder="Search views..."
               emptyText="No view found."
@@ -261,7 +298,7 @@ export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
            </div>
            <Slider 
              value={[filters.minRating ?? 0]} 
-             onValueChange={(val) => dispatch(setMinRating(val[0]))}
+             onValueChange={(val) => dispatch({ type: 'SET_MIN_RATING', payload: val[0] })}
              min={0} 
              max={100} 
              step={5} 
@@ -275,11 +312,7 @@ export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
             <Combobox
               options={AGE_RATING_ORGANIZATIONS.map(o => ({ value: o.id.toString(), label: o.name }))}
               value={filters.ageRatingOrg?.toString() ?? null}
-              onValueChange={(val) => {
-                dispatch(setAgeRatingOrg(val ? Number(val) : null));
-                // Reset the rating value when org changes
-                dispatch(setAgeRatingValue(null));
-              }}
+              onValueChange={(val) => dispatch({ type: 'SET_AGE_RATING_ORG', payload: val ? Number(val) : null })}
               placeholder="Org..."
               searchPlaceholder="Search..."
               emptyText="Not found."
@@ -293,7 +326,7 @@ export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
             <Combobox
               options={filteredAgeRatingValues.map(r => ({ value: r.id.toString(), label: r.name }))}
               value={filters.ageRatingValue?.toString() ?? null}
-              onValueChange={(val) => dispatch(setAgeRatingValue(val ? Number(val) : null))}
+              onValueChange={(val) => dispatch({ type: 'SET_AGE_RATING_VALUE', payload: val ? Number(val) : null })}
               placeholder="Select rating..."
               searchPlaceholder="Search ratings..."
               emptyText="Select an org first."
@@ -308,7 +341,7 @@ export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
           ACTION BUTTON
       ================================================== */}
       <Button 
-        onClick={onSearch}
+        onClick={() => onSearch(filters)}
         className="w-full h-12 text-lg font-heading uppercase tracking-widest bg-main text-main-foreground border-2 border-border shadow-shadow hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:translate-x-[4px] active:translate-y-[4px] transition-all"
       >
         Execute Search

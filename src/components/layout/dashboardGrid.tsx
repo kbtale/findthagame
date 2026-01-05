@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { FilterPanel } from '@/features/dashboard/filterPanel';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search, X, SlidersHorizontal, History } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import type { FilterState } from '@/models/AppTypes';
 
 export const DashboardGrid = () => {
   // STATE 1: Controls Mobile Filter visibility (The "Accordion" logic)
@@ -12,10 +13,12 @@ export const DashboardGrid = () => {
   // STATE 2: Shared Search Term (Controlled by both Top and Left inputs)
   const [searchTerm, setSearchTerm] = useState('');
 
-  // HANDLER: When search executes, hide the mobile menu
-  const handleSearchExecute = () => {
-    setMobileFiltersOpen(false); 
-    // Dispatch your API call here...
+  // HANDLER: When search executes, hide the mobile menu and log filters
+  const handleSearchExecute = (filters: FilterState) => {
+    setMobileFiltersOpen(false);
+    // Combine search term with filters and make API call
+    console.log('Search executed with filters:', { ...filters, search: searchTerm });
+    // TODO: Dispatch your API call here...
   };
 
   return (
