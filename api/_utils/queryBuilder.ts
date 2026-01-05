@@ -70,7 +70,7 @@ export const buildIgdbQuery = (params: QueryParams): string => {
       `summary ~ *"${term}"* | ` +
       `storyline ~ *"${term}"* | ` +
       `keywords.name ~ *"${term}"*` +
-      `involved_companies.company.name ~ *"${developerName}"*` +
+      `involved_companies.company.name ~ *"${params.developerName}"*` +
       `)`
     );
   }
