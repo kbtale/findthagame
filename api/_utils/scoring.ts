@@ -4,8 +4,8 @@
  * Additive Relevance Algorithm for ranking game search results.
  */
 
-import type { IGDBGame, IGDBNamedItem } from '@/models/IGDBTypes';
-import type { QueryParams } from './queryBuilder';
+import type { IGDBGame, IGDBNamedItem } from '../../src/models/IGDBTypes.js';
+import type { QueryParams } from './queryBuilder.js';
 
 // ═══════════════════════════════════════════════════════════════════
 // CONFIGURATION

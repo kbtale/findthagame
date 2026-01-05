@@ -1,8 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { TokenManager } from './_utils/tokenManager';
-import { buildIgdbQuery } from './_utils/queryBuilder';
-import { calculateMatchScore } from './_utils/scoring';
-import type { IGDBGame } from '@/models/IGDBTypes';
+import { TokenManager } from './_utils/tokenManager.js';
+import { buildIgdbQuery } from './_utils/queryBuilder.js';
+import { calculateMatchScore } from './_utils/scoring.js';
+import type { IGDBGame } from '../src/models/IGDBTypes.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
 
