@@ -23,6 +23,7 @@ export interface IGDBCompany {
   developer: boolean;
   publisher: boolean;
   porting: boolean;
+  supporting: boolean;
   company: IGDBNamedItem;
 }
 

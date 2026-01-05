@@ -115,7 +115,8 @@ export const buildIgdbQuery = (params: QueryParams): string => {
     },
     { 
       key: 'statusId',
-      build: (v) => `status = (${v})`
+      // When Released (0) is selected, include games with status = 0 OR status = null
+      build: (v) => v === 0 ? `(status = 0 | status = null)` : `status = (${v})`
     },
     { 
       key: 'minRating',

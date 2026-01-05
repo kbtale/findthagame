@@ -47,9 +47,9 @@ export const GameDetail = ({ game, onClose }: GameDetailProps) => {
                 </div>
               )}
 
-              {/* Year & Companies */}
+              {/* Release Date & Companies */}
               <div className="flex flex-wrap items-center gap-2 text-sm font-base">
-                <span className="font-heading text-lg">{game.year ?? '—'}</span>
+                <span className="font-heading text-lg">{game.firstReleaseDate ?? game.year ?? '-'}</span>
                 {game.companies.length > 0 && (
                   <>
                     <span className="opacity-30">|</span>

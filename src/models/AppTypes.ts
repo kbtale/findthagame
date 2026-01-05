@@ -13,6 +13,7 @@ export interface GameResult {
   category: number;
   companies: string[];
   coverUrl?: string;
+  firstReleaseDate?: string;
   gameModes: string[];
   genres: string[];
   keywords: string[];

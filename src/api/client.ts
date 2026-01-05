@@ -50,17 +50,34 @@ export const searchGames = async (filters: FilterState): Promise<GameResult[]> =
       ? new Date(game.first_release_date * 1000).getFullYear()
       : undefined;
 
+    const firstReleaseDate = game.first_release_date
+      ? new Date(game.first_release_date * 1000).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        })
+      : undefined;
+
     const coverUrl = game.cover?.url
       ? `https:${game.cover.url.replace('t_thumb', 't_cover_big')}`
       : undefined;
 
     const platformNames = game.platforms?.map((p) => p.name) || [];
     const genreNames = game.genres?.map((g) => g.name) || [];
-    const companyNames = game.involved_companies?.map((c) => c.company.name) || [];
+    
+    // Build company names with roles
+    const companyNames = game.involved_companies?.map((c) => {
+      const roles: string[] = [];
+      if (c.developer) roles.push('Developer');
+      if (c.publisher) roles.push('Publisher');
+      if (c.porting) roles.push('Porting');
+      if (c.supporting) roles.push('Supporting');
+      return roles.length > 0 ? `${c.company.name} (${roles.join(', ')})` : c.company.name;
+    }) || [];
 
-    // Process screenshot URLs (add https and resize)
+    // Process screenshot URLs (add https and use 1080p size)
     const screenshotUrls = game.screenshots?.map((s) =>
-      `https:${s.url.replace('t_thumb', 't_screenshot_medium')}`
+      `https:${s.url.replace('t_thumb', 't_1080p')}`
     ) || [];
 
     const themeNames = game.themes?.map((t) => t.name) || []
@@ -84,6 +101,7 @@ export const searchGames = async (filters: FilterState): Promise<GameResult[]> =
       category: game.category ?? 0,
       companies: companyNames,
       coverUrl: coverUrl,
+      firstReleaseDate: firstReleaseDate,
       gameModes: modeNames,
       genres: genreNames,
       keywords: keywords,
@@ -92,7 +110,7 @@ export const searchGames = async (filters: FilterState): Promise<GameResult[]> =
       platforms: platformNames,
       rating: totalRating,
       screenshots: screenshotUrls,
-      status: game.status,
+      status: game.status ?? 0,  // Default to Released (0) when not set
       storyline: game.storyline,
       summary: game.summary,
       themes: themeNames,
