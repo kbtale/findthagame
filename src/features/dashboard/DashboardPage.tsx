@@ -23,6 +23,7 @@ export const DashboardPage = () => {
   const status = useSelector((state: RootState) => state.results.status);
   const reduxError = useSelector((state: RootState) => state.results.error);
   const selectedIndex = useSelector((state: RootState) => state.results.selectedIndex);
+  const clickOrigin = useSelector((state: RootState) => state.results.clickOrigin);
 
   // =========================================================================
   // LOCAL STATE
@@ -52,8 +53,8 @@ export const DashboardPage = () => {
     }
   };
 
-  const handleSelectGame = (index: number) => {
-    dispatch(selectGame(index));
+  const handleSelectGame = (index: number, origin: { x: number; y: number; width: number; height: number }) => {
+    dispatch(selectGame({ index, origin }));
   };
 
   const handleBack = () => {
@@ -137,9 +138,25 @@ export const DashboardPage = () => {
     </>
   );
 
+  // Calculate FLIP animation style from click origin
+  const getFlipStyle = (): React.CSSProperties | undefined => {
+    if (!clickOrigin) return undefined;
+    // We'll set CSS variables that the animation will use
+    return {
+      '--flip-origin-x': `${clickOrigin.x}px`,
+      '--flip-origin-y': `${clickOrigin.y}px`,
+      '--flip-origin-w': `${clickOrigin.width}px`,
+      '--flip-origin-h': `${clickOrigin.height}px`,
+    } as React.CSSProperties;
+  };
+
   // Conditionally render grid or detail view
   const mainContent = selectedGame ? (
-    <div key="detail" className="animate-slide-in-right">
+    <div 
+      key="detail" 
+      className={clickOrigin ? "animate-flip-expand" : ""}
+      style={getFlipStyle()}
+    >
       <GameDetail 
         game={selectedGame}
         onBack={handleBack}

@@ -1,10 +1,18 @@
 import { useTranslation } from 'react-i18next';
 import type { GameResult } from '@/models/AppTypes';
+import type { MouseEvent } from 'react';
+
+interface ClickOrigin {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
 
 interface ResultsGridProps {
   results?: GameResult[];
   isLoading?: boolean;
-  onSelectGame?: (index: number) => void;
+  onSelectGame?: (index: number, origin: ClickOrigin) => void;
 }
 
 export const ResultsGrid = ({ 
@@ -13,6 +21,18 @@ export const ResultsGrid = ({
   onSelectGame 
 }: ResultsGridProps) => {
   const { t } = useTranslation();
+
+  const handleCardClick = (e: MouseEvent<HTMLDivElement>, index: number) => {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const origin: ClickOrigin = {
+      x: rect.left,
+      y: rect.top,
+      width: rect.width,
+      height: rect.height,
+    };
+    onSelectGame?.(index, origin);
+  };
   
   if (isLoading) {
     return (
@@ -60,7 +80,7 @@ export const ResultsGrid = ({
       {results.map((game, index) => (
         <div 
           key={game.id} 
-          onClick={() => onSelectGame?.(index)}
+          onClick={(e) => handleCardClick(e, index)}
           className="group relative aspect-[264/374] bg-white border-2 border-border rounded-base shadow-shadow flex flex-col justify-between overflow-hidden hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all cursor-pointer"
         >
           {/* Image Area */}
