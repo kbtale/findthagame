@@ -74,7 +74,16 @@ export const DashboardLayout = ({
       ========================================================================= */}
       <header className="lg:hidden z-50 bg-background border-b-2 border-border flex flex-col relative shadow-sm">
         
-        {/* Top Bar: Always Visible */}
+        {/* Brand Header - Mobile */}
+        {brandHeader && (
+          <div className="p-4 pb-2 bg-main border-b-2 border-border">
+            <div className="h-8">
+              {brandHeader}
+            </div>
+          </div>
+        )}
+        
+        {/* Top Bar: Search + Toggle */}
         <div className="p-4 flex items-center gap-3 bg-background z-20 relative">
           {/* Mobile Search Slot */}
           <div className="flex-1">
@@ -112,17 +121,25 @@ export const DashboardLayout = ({
       <main className="flex-1 h-full overflow-y-auto bg-background p-4 lg:p-8 relative z-10">
         {/* Main Header Slot (Desktop only) */}
         <div className="hidden lg:flex items-center justify-between mb-8">
-          {/* Sidebar Toggle Button */}
-          {onSidebarToggle && (
-            <Button
-              variant="neutral"
-              size="icon"
-              onClick={onSidebarToggle}
-              className="mr-4"
-            >
-              {isSidebarCollapsed ? <PanelLeft className="w-5 h-5" /> : <PanelLeftClose className="w-5 h-5" />}
-            </Button>
-          )}
+          <div className="flex items-center">
+            {/* Sidebar Toggle Button */}
+            {onSidebarToggle && (
+              <Button
+                variant="neutral"
+                size="icon"
+                onClick={onSidebarToggle}
+                className="mr-4"
+              >
+                {isSidebarCollapsed ? <PanelLeft className="w-5 h-5" /> : <PanelLeftClose className="w-5 h-5" />}
+              </Button>
+            )}
+            {/* Show brand header when sidebar is collapsed */}
+            {isSidebarCollapsed && brandHeader && (
+              <div className="h-8">
+                {brandHeader}
+              </div>
+            )}
+          </div>
           {mainHeader}
         </div>
 
