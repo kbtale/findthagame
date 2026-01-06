@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Combobox } from '@/components/ui/combobox';
 import { Input } from '@/components/ui/input';
 import { Multiselect } from '@/components/ui/multiselect';
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/components/ui/tooltip';
 import { 
   PLATFORMS, 
   GENRES, 
@@ -132,6 +133,7 @@ export const FilterPanel = ({ onSearch, onClearAll }: FilterPanelProps) => {
   };
 
   return (
+    <TooltipProvider>
     <div className="space-y-8 pb-20 lg:pb-0 font-base text-foreground">
 
       {/* ==================================================
@@ -141,14 +143,19 @@ export const FilterPanel = ({ onSearch, onClearAll }: FilterPanelProps) => {
         <div className="flex items-center gap-2 border-b-2 border-border pb-1">
           <span className="bg-foreground text-background text-xs font-heading px-1">01</span>
           <h3 className="text-sm font-heading uppercase tracking-widest text-muted-foreground">{t('filters.coreSpecs')}</h3>
-          <Button 
-            variant="neutral"
-            size="sm"
-            onClick={() => dispatch({ type: 'RESET_CORE' })}
-            className="ml-auto cursor-pointer"
-          >
-            {t('filters.clear')}
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={() => dispatch({ type: 'RESET_CORE' })}
+                className="ml-auto text-xs font-heading uppercase opacity-50 hover:opacity-100 transition-opacity cursor-pointer"
+              >
+                {t('filters.clear')}
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{t('filters.clearSection')}</p>
+            </TooltipContent>
+          </Tooltip>
         </div>
 
         <div className="grid grid-cols-1 min-[395px]:grid-cols-2 gap-3">
@@ -215,14 +222,19 @@ export const FilterPanel = ({ onSearch, onClearAll }: FilterPanelProps) => {
         <div className="flex items-center gap-2 border-b-2 border-border pb-1">
           <span className="bg-foreground text-background text-xs font-heading px-1">02</span>
           <h3 className="text-sm font-heading uppercase tracking-widest text-muted-foreground">{t('filters.timeline')}</h3>
-          <Button 
-            variant="neutral"
-            size="sm"
-            onClick={() => dispatch({ type: 'RESET_TIMELINE' })}
-            className="ml-auto cursor-pointer"
-          >
-            {t('filters.clear')}
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={() => dispatch({ type: 'RESET_TIMELINE' })}
+                className="ml-auto text-xs font-heading uppercase opacity-50 hover:opacity-100 transition-opacity cursor-pointer"
+              >
+                {t('filters.clear')}
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{t('filters.clearSection')}</p>
+            </TooltipContent>
+          </Tooltip>
         </div>
 
         <div className="space-y-4 px-1">
@@ -254,14 +266,19 @@ export const FilterPanel = ({ onSearch, onClearAll }: FilterPanelProps) => {
         <div className="flex items-center gap-2 border-b-2 border-border pb-1">
           <span className="bg-foreground text-background text-xs font-heading px-1">03</span>
           <h3 className="text-sm font-heading uppercase tracking-widest text-muted-foreground">{t('filters.dataClass')}</h3>
-          <Button 
-            variant="neutral"
-            size="sm"
-            onClick={() => dispatch({ type: 'RESET_CLASSIFICATION' })}
-            className="ml-auto cursor-pointer"
-          >
-            {t('filters.clear')}
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={() => dispatch({ type: 'RESET_CLASSIFICATION' })}
+                className="ml-auto text-xs font-heading uppercase opacity-50 hover:opacity-100 transition-opacity cursor-pointer"
+              >
+                {t('filters.clear')}
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{t('filters.clearSection')}</p>
+            </TooltipContent>
+          </Tooltip>
         </div>
 
         {/* Genre - Multiselect */}
@@ -333,14 +350,19 @@ export const FilterPanel = ({ onSearch, onClearAll }: FilterPanelProps) => {
         <div className="flex items-center gap-2 border-b-2 border-border pb-1">
           <span className="bg-foreground text-background text-xs font-heading px-1">04</span>
           <h3 className="text-sm font-heading uppercase tracking-widest text-muted-foreground">{t('filters.metrics')}</h3>
-          <Button 
-            variant="neutral"
-            size="sm"
-            onClick={() => dispatch({ type: 'RESET_METRICS' })}
-            className="ml-auto cursor-pointer"
-          >
-            {t('filters.clear')}
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={() => dispatch({ type: 'RESET_METRICS' })}
+                className="ml-auto text-xs font-heading uppercase opacity-50 hover:opacity-100 transition-opacity cursor-pointer"
+              >
+                {t('filters.clear')}
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{t('filters.clearSection')}</p>
+            </TooltipContent>
+          </Tooltip>
         </div>
 
         <div className="space-y-3 px-1">
@@ -395,19 +417,20 @@ export const FilterPanel = ({ onSearch, onClearAll }: FilterPanelProps) => {
       <div className="space-y-3">
         <Button 
           onClick={() => onSearch(filters)}
-          className="w-full h-12 text-lg font-heading uppercase tracking-widest bg-main text-main-foreground border-2 border-border shadow-shadow hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:translate-x-[4px] active:translate-y-[4px] transition-all cursor-pointer"
+          className="w-full h-12 text-lg font-heading uppercase tracking-widest bg-main text-main-foreground border-2 border-border shadow-shadow hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:translate-x-[4px] active:translate-y-[4px] transition-all"
         >
           {t('filters.search')}
         </Button>
         
         <Button 
           onClick={handleClearAll}
-          className="w-full h-10 text-sm font-heading uppercase tracking-widest bg-[var(--chart-3)] text-white border-2 border-border shadow-shadow hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:translate-x-[4px] active:translate-y-[4px] transition-all cursor-pointer"
+          className="w-full h-10 text-sm font-heading uppercase tracking-widest bg-[var(--chart-3)] text-white border-2 border-border shadow-shadow hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:translate-x-[4px] active:translate-y-[4px] transition-all"
         >
           {t('filters.clearAll')}
         </Button>
       </div>
 
     </div>
+    </TooltipProvider>
   );
 };

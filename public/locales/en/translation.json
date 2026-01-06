@@ -61,7 +61,8 @@
     "searchRatings": "Search ratings...",
     "selectOrgFirst": "Select an org first.",
     "clearAll": "Clear All Filters",
-    "clear": "Clear"
+    "clear": "Clear",
+    "clearSection": "Clear this section"
   },
   "results": {
     "noResults": "No Results",
@@ -76,7 +77,10 @@
     "rating": "Rating",
     "status": "Status",
     "category": "Category",
-    "match": "Match"
+    "match": "Match",
+    "welcomeTitle": "Ready to find your next favorite game?",
+    "welcomeFilters": "Use the filters on the left to narrow down your search.",
+    "welcomeSearch": "Hit Search when you're ready to explore."
   },
   "gameStatus": {
     "0": "Released",

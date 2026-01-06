@@ -49,28 +49,18 @@ export const ResultsGrid = ({
 
   if (results.length === 0) {
     return (
-      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 pb-20">
-        {/* Placeholder cards */}
-        {Array.from({ length: 12 }).map((_, i) => (
-          <div 
-            key={i} 
-            className="group relative aspect-[264/374] bg-white border-2 border-border rounded-base shadow-shadow flex flex-col justify-between overflow-hidden hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all cursor-pointer"
-          >
-            {/* Image Area */}
-            <div className="w-full h-full bg-secondary-background flex items-center justify-center">
-              <span className="font-heading opacity-20">IMG_0{i}</span>
-            </div>
-            
-            {/* Meta Overlay */}
-            <div className="absolute bottom-0 w-full p-3 bg-background/90 border-t-2 border-border backdrop-blur-sm">
-              <h4 className="font-heading text-sm truncate">GAME #{i + 1}</h4>
-              <div className="flex justify-between items-center mt-1">
-                <span className="text-xs font-base opacity-70">—</span>
-                <span className="text-xs font-heading text-main">—</span>
-              </div>
-            </div>
-          </div>
-        ))}
+      <div className="flex flex-col items-center justify-center py-20 px-8 text-center">
+        <div className="max-w-md space-y-4">
+          <h2 className="text-2xl font-heading opacity-30">
+            {t('results.welcomeTitle')}
+          </h2>
+          <p className="text-sm font-base opacity-20">
+            {t('results.welcomeFilters')}
+          </p>
+          <p className="text-sm font-base opacity-20">
+            {t('results.welcomeSearch')}
+          </p>
+        </div>
       </div>
     );
   }

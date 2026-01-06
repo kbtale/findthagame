@@ -118,7 +118,7 @@ export const DashboardLayout = ({
               variant="neutral"
               size="icon"
               onClick={onSidebarToggle}
-              className="mr-4 cursor-pointer"
+              className="mr-4"
             >
               {isSidebarCollapsed ? <PanelLeft className="w-5 h-5" /> : <PanelLeftClose className="w-5 h-5" />}
             </Button>
