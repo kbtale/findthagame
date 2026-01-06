@@ -1,7 +1,8 @@
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { cn } from '@/lib/utils';
-import { X, SlidersHorizontal, PanelLeft, PanelLeftClose } from 'lucide-react';
+import { X, SlidersHorizontal, PanelLeft, PanelLeftClose, Github, History } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 
 interface DashboardLayoutProps {
   brandHeader?: ReactNode;
@@ -30,6 +31,8 @@ export const DashboardLayout = ({
   isSidebarCollapsed = false,
   onSidebarToggle,
 }: DashboardLayoutProps) => {
+  const [isRecentSearchesOpen, setRecentSearchesOpen] = useState(false);
+
   return (
     <div className={cn(
       "min-h-screen w-full bg-background text-foreground font-base flex flex-col lg:grid overflow-hidden transition-all duration-300",
@@ -135,17 +138,49 @@ export const DashboardLayout = ({
             )}
             {/* Show brand header when sidebar is collapsed */}
             {isSidebarCollapsed && brandHeader && (
-              <div className="h-8">
+              <div className="h-6 animate-in fade-in slide-in-from-left-4 duration-300">
                 {brandHeader}
               </div>
             )}
           </div>
+          
+          {/* Center: Main Header Content */}
           {mainHeader}
+          
+          {/* Right: Menu Buttons */}
+          <div className="flex items-center gap-2">
+            <Button variant="neutral" onClick={() => setRecentSearchesOpen(true)}>
+              <History className="w-4 h-4 mr-2" />
+              Recent Searches
+            </Button>
+            <Button
+              variant="neutral"
+              size="icon"
+              onClick={() => window.open('https://github.com/kbtale/findthagame', '_blank')}
+            >
+              <Github className="w-5 h-5" />
+            </Button>
+          </div>
         </div>
 
         {/* Main Content Slot */}
         {main}
       </main>
+
+      {/* Recent Searches Dialog */}
+      <Dialog open={isRecentSearchesOpen} onOpenChange={setRecentSearchesOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Recent Searches</DialogTitle>
+            <DialogDescription>
+              Your recent search history will appear here.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4 text-center text-muted-foreground">
+            No recent searches yet.
+          </div>
+        </DialogContent>
+      </Dialog>
 
     </div>
   );
