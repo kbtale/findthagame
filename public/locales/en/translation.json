@@ -15,7 +15,7 @@
     "error": "ERROR"
   },
   "filters": {
-    "executeSearch": "Execute Search",
+    "search": "Search",
     "coreSpecs": "Core Specs",
     "timeline": "Timeline",
     "dataClass": "Data Class",
@@ -59,7 +59,9 @@
     "rating": "Rating",
     "selectRating": "Select rating...",
     "searchRatings": "Search ratings...",
-    "selectOrgFirst": "Select an org first."
+    "selectOrgFirst": "Select an org first.",
+    "clearAll": "Clear All Filters",
+    "clear": "Clear"
   },
   "results": {
     "noResults": "NO RESULTS",
@@ -109,6 +111,10 @@
     "rating": "Rating",
     "matchScore": "Match Score",
     "genres": "Genres",
-    "platforms": "Platforms"
+    "platforms": "Platforms",
+    "backToResults": "Back to Results",
+    "storyline": "Storyline",
+    "keywords": "Keywords",
+    "screenshots": "Screenshots"
   }
 }

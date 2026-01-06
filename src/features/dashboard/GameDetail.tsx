@@ -33,7 +33,7 @@ export const GameDetail = ({
           className="flex items-center gap-2"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back to Results
+          {t('gameDetail.backToResults')}
         </Button>
         <div className="flex items-center gap-2">
           <Button 
@@ -131,7 +131,7 @@ export const GameDetail = ({
           {/* Storyline */}
           {game.storyline && (
             <div>
-              <h3 className="font-heading text-sm uppercase mb-2">Storyline</h3>
+              <h3 className="font-heading text-sm uppercase mb-2">{t('gameDetail.storyline')}</h3>
               <p className="text-sm font-base opacity-80">{game.storyline}</p>
             </div>
           )}
@@ -211,7 +211,7 @@ export const GameDetail = ({
             {/* Keywords */}
             {game.keywords.length > 0 && (
               <div>
-                <span className="font-heading uppercase text-xs opacity-60">Keywords</span>
+                <span className="font-heading uppercase text-xs opacity-60">{t('gameDetail.keywords')}</span>
                 <div className="flex flex-wrap gap-1 mt-1">
                   {game.keywords.map((keyword) => (
                     <span key={keyword} className="px-2 py-0.5 bg-secondary-background rounded text-xs font-base opacity-70">
@@ -226,7 +226,7 @@ export const GameDetail = ({
           {/* Screenshots */}
           {game.screenshots.length > 0 && (
             <div>
-              <span className="font-heading uppercase text-xs opacity-60">Screenshots</span>
+              <span className="font-heading uppercase text-xs opacity-60">{t('gameDetail.screenshots')}</span>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-2">
                 {game.screenshots.map((url, i) => (
                   <img 
