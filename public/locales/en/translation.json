@@ -8,11 +8,8 @@
     "searchPlaceholder": "Search...",
     "mobileSearchPlaceholder": "Tap to configure search...",
     "recentInquiries": "Recent Searches",
-    "dataGrid": "Data Grid",
-    "status": "Status",
-    "ready": "Ready",
-    "searching": "Searching...",
-    "error": "Error"
+    "waitingForResults": "Waiting for results...",
+    "gamesFound": "{{count}} Games Found"
   },
   "filters": {
     "search": "Search",

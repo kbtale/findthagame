@@ -8,6 +8,7 @@ import { FilterPanel } from '@/features/dashboard/filterPanel';
 import { ResultsGrid } from '@/features/dashboard/ResultsGrid';
 import { GameDetail } from '@/features/dashboard/GameDetail';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Search, History } from 'lucide-react';
 import { searchGames } from '@/api/client';
 import type { FilterState } from '@/models/AppTypes';
@@ -21,7 +22,6 @@ export const DashboardPage = () => {
   // =========================================================================
   const results = useSelector((state: RootState) => state.results.items);
   const status = useSelector((state: RootState) => state.results.status);
-  const reduxError = useSelector((state: RootState) => state.results.error);
   const selectedIndex = useSelector((state: RootState) => state.results.selectedIndex);
   const clickOrigin = useSelector((state: RootState) => state.results.clickOrigin);
 
@@ -124,20 +124,17 @@ export const DashboardPage = () => {
     </>
   );
 
-  const getStatusText = () => {
-    if (isLoading) return t('dashboard.searching');
-    if (reduxError) return t('dashboard.error');
-    return t('dashboard.ready');
+  const getResultText = () => {
+    if (isLoading) return t('dashboard.waitingForResults');
+    if (results.length === 0) return '';
+    return t('dashboard.gamesFound', { count: results.length });
   };
 
-  const mainHeader = (
-    <>
-      <h2 className="text-4xl font-heading uppercase tracking-tight">{t('dashboard.dataGrid')}</h2>
-      <div className="bg-main text-main-foreground px-4 py-1 text-sm font-heading rounded-base border-2 border-border shadow-shadow">
-        {t('dashboard.status')}: {getStatusText()}
-      </div>
-    </>
-  );
+  const mainHeader = getResultText() ? (
+    <Button variant="neutral" onClick={() => {}}>
+      {getResultText()}
+    </Button>
+  ) : null;
 
   // Calculate FLIP animation style from click origin
   const getFlipStyle = (): React.CSSProperties | undefined => {
