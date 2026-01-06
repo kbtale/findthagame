@@ -127,6 +127,7 @@ export const DashboardPage = () => {
   const getResultText = () => {
     if (isLoading) return t('dashboard.waitingForResults');
     if (results.length === 0) return '';
+    if (results.length >= 50) return t('dashboard.gamesFoundPlus', { count: 50 });
     return t('dashboard.gamesFound', { count: results.length });
   };
 

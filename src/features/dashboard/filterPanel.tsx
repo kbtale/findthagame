@@ -36,7 +36,7 @@ const AGE_RATING_ORG_TO_VALUES: Record<number, number[]> = {
 const initialState: FilterState = {
   search: '',
   platformId: null,
-  yearRange: [1980, 2025],
+  yearRange: [1970, 2026],
   genreIds: [],
   themeIds: [],
   gameModeId: null,
@@ -101,7 +101,7 @@ function filterReducer(state: FilterState, action: FilterAction): FilterState {
     case 'RESET_CORE':
       return { ...state, categoryId: null, statusId: null, platformId: null, developerName: '' };
     case 'RESET_TIMELINE':
-      return { ...state, yearRange: [1980, 2025] };
+      return { ...state, yearRange: [1970, 2026] };
     case 'RESET_CLASSIFICATION':
       return { ...state, genreIds: [], themeIds: [], gameModeId: null, perspectiveId: null };
     case 'RESET_METRICS':
@@ -250,8 +250,8 @@ export const FilterPanel = ({ onSearch, onClearAll }: FilterPanelProps) => {
           <Slider 
             value={filters.yearRange}
             onValueChange={(val) => dispatch({ type: 'SET_YEAR_RANGE', payload: val as [number, number] })}
-            min={1980} 
-            max={2025} 
+            min={1970} 
+            max={2026} 
             step={1} 
             className="cursor-pointer"
           />

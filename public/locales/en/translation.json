@@ -9,7 +9,8 @@
     "mobileSearchPlaceholder": "Tap to configure search...",
     "recentInquiries": "Recent Searches",
     "waitingForResults": "Waiting for results...",
-    "gamesFound": "{{count}} Games Found"
+    "gamesFound": "{{count}} Games Found",
+    "gamesFoundPlus": "{{count}}+ Games Found"
   },
   "filters": {
     "search": "Search",

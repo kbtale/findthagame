@@ -6,7 +6,7 @@ const initialState: FilterState = {
   search: '',
 
   platformId: null,
-  yearRange: [1980, 2025],
+  yearRange: [1970, 2026],
 
   genreIds: [],
   themeIds: [],
