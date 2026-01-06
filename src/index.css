@@ -91,18 +91,16 @@
 
 /* FLIP expand animation - card expands to fill the detail view */
 @keyframes flip-expand {
-  from {
-    transform: scale(0.2);
-    transform-origin: var(--flip-origin-x, 50%) var(--flip-origin-y, 50%);
+  0% {
+    transform: scale(0);
     opacity: 0;
   }
-  to {
+  100% {
     transform: scale(1);
-    transform-origin: var(--flip-origin-x, 50%) var(--flip-origin-y, 50%);
     opacity: 1;
   }
 }
 
 .animate-flip-expand {
-  animation: flip-expand 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: flip-expand 1s ease-out forwards;
 }

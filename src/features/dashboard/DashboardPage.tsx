@@ -141,7 +141,7 @@ export const DashboardPage = () => {
   // Calculate FLIP animation style from click origin
   const getFlipStyle = (): React.CSSProperties | undefined => {
     if (!clickOrigin) return undefined;
-    // We'll set CSS variables that the animation will use
+    console.log('FLIP animation with origin:', clickOrigin);
     return {
       '--flip-origin-x': `${clickOrigin.x}px`,
       '--flip-origin-y': `${clickOrigin.y}px`,
@@ -150,11 +150,14 @@ export const DashboardPage = () => {
     } as React.CSSProperties;
   };
 
+  // Log for debugging
+  console.log('Selected game:', selectedGame?.title, 'clickOrigin:', clickOrigin);
+
   // Conditionally render grid or detail view
   const mainContent = selectedGame ? (
     <div 
-      key="detail" 
-      className={clickOrigin ? "animate-flip-expand" : ""}
+      key={`detail-${selectedIndex}`}
+      className="animate-flip-expand"
       style={getFlipStyle()}
     >
       <GameDetail 
