@@ -112,9 +112,10 @@ function filterReducer(state: FilterState, action: FilterAction): FilterState {
 
 interface FilterPanelProps {
   onSearch: (filters: FilterState) => void;
+  onClearAll?: () => void;
 }
 
-export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
+export const FilterPanel = ({ onSearch, onClearAll }: FilterPanelProps) => {
   const { t } = useTranslation();
   const [filters, dispatch] = useReducer(filterReducer, initialState);
 
@@ -125,19 +126,13 @@ export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
       )
     : [];
 
+  const handleClearAll = () => {
+    dispatch({ type: 'RESET' });
+    onClearAll?.();
+  };
+
   return (
     <div className="space-y-8 pb-20 lg:pb-0 font-base text-foreground">
-      
-      {/* Clear All Button */}
-      <div className="flex justify-end">
-        <Button 
-          variant="neutral"
-          size="sm"
-          onClick={() => dispatch({ type: 'RESET' })}
-        >
-          {t('filters.clearAll')}
-        </Button>
-      </div>
 
       {/* ==================================================
           SECTION 1: CORE IDENTITY
@@ -146,12 +141,14 @@ export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
         <div className="flex items-center gap-2 border-b-2 border-border pb-1">
           <span className="bg-foreground text-background text-xs font-heading px-1">01</span>
           <h3 className="text-sm font-heading uppercase tracking-widest text-muted-foreground">{t('filters.coreSpecs')}</h3>
-          <button 
+          <Button 
+            variant="neutral"
+            size="sm"
             onClick={() => dispatch({ type: 'RESET_CORE' })}
-            className="ml-auto text-xs font-heading uppercase opacity-50 hover:opacity-100 transition-opacity"
+            className="ml-auto cursor-pointer"
           >
             {t('filters.clear')}
-          </button>
+          </Button>
         </div>
 
         <div className="grid grid-cols-1 min-[395px]:grid-cols-2 gap-3">
@@ -218,12 +215,14 @@ export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
         <div className="flex items-center gap-2 border-b-2 border-border pb-1">
           <span className="bg-foreground text-background text-xs font-heading px-1">02</span>
           <h3 className="text-sm font-heading uppercase tracking-widest text-muted-foreground">{t('filters.timeline')}</h3>
-          <button 
+          <Button 
+            variant="neutral"
+            size="sm"
             onClick={() => dispatch({ type: 'RESET_TIMELINE' })}
-            className="ml-auto text-xs font-heading uppercase opacity-50 hover:opacity-100 transition-opacity"
+            className="ml-auto cursor-pointer"
           >
             {t('filters.clear')}
-          </button>
+          </Button>
         </div>
 
         <div className="space-y-4 px-1">
@@ -255,12 +254,14 @@ export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
         <div className="flex items-center gap-2 border-b-2 border-border pb-1">
           <span className="bg-foreground text-background text-xs font-heading px-1">03</span>
           <h3 className="text-sm font-heading uppercase tracking-widest text-muted-foreground">{t('filters.dataClass')}</h3>
-          <button 
+          <Button 
+            variant="neutral"
+            size="sm"
             onClick={() => dispatch({ type: 'RESET_CLASSIFICATION' })}
-            className="ml-auto text-xs font-heading uppercase opacity-50 hover:opacity-100 transition-opacity"
+            className="ml-auto cursor-pointer"
           >
             {t('filters.clear')}
-          </button>
+          </Button>
         </div>
 
         {/* Genre - Multiselect */}
@@ -332,12 +333,14 @@ export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
         <div className="flex items-center gap-2 border-b-2 border-border pb-1">
           <span className="bg-foreground text-background text-xs font-heading px-1">04</span>
           <h3 className="text-sm font-heading uppercase tracking-widest text-muted-foreground">{t('filters.metrics')}</h3>
-          <button 
+          <Button 
+            variant="neutral"
+            size="sm"
             onClick={() => dispatch({ type: 'RESET_METRICS' })}
-            className="ml-auto text-xs font-heading uppercase opacity-50 hover:opacity-100 transition-opacity"
+            className="ml-auto cursor-pointer"
           >
             {t('filters.clear')}
-          </button>
+          </Button>
         </div>
 
         <div className="space-y-3 px-1">
@@ -387,14 +390,23 @@ export const FilterPanel = ({ onSearch }: FilterPanelProps) => {
       </section>
 
       {/* ==================================================
-          ACTION BUTTON
+          ACTION BUTTONS
       ================================================== */}
-      <Button 
-        onClick={() => onSearch(filters)}
-        className="w-full h-12 text-lg font-heading uppercase tracking-widest bg-main text-main-foreground border-2 border-border shadow-shadow hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:translate-x-[4px] active:translate-y-[4px] transition-all"
-      >
-        {t('filters.search')}
-      </Button>
+      <div className="space-y-3">
+        <Button 
+          onClick={() => onSearch(filters)}
+          className="w-full h-12 text-lg font-heading uppercase tracking-widest bg-main text-main-foreground border-2 border-border shadow-shadow hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:translate-x-[4px] active:translate-y-[4px] transition-all cursor-pointer"
+        >
+          {t('filters.search')}
+        </Button>
+        
+        <Button 
+          onClick={handleClearAll}
+          className="w-full h-10 text-sm font-heading uppercase tracking-widest bg-[var(--chart-3)] text-white border-2 border-border shadow-shadow hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:translate-x-[4px] active:translate-y-[4px] transition-all cursor-pointer"
+        >
+          {t('filters.clearAll')}
+        </Button>
+      </div>
 
     </div>
   );

@@ -30,6 +30,7 @@ export const DashboardPage = () => {
   // =========================================================================
   const [searchTerm, setSearchTerm] = useState('');
   const [isMobileOpen, setMobileOpen] = useState(false);
+  const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   // Derived values
   const isLoading = status === 'loading';
@@ -73,7 +74,7 @@ export const DashboardPage = () => {
   // SLOT CONTENT
   // =========================================================================
   const brandHeader = (
-    <h1 className="text-2xl font-heading italic tracking-tighter">FindThaGame</h1>
+    <img src="/img/Logo.png" alt="FindThaGame" className="w-full h-auto object-contain" />
   );
 
   const searchBar = (
@@ -105,7 +106,7 @@ export const DashboardPage = () => {
   );
 
   const sidebar = (
-    <FilterPanel onSearch={handleSearch} />
+    <FilterPanel onSearch={handleSearch} onClearAll={() => setSearchTerm('')} />
   );
 
   const sidebarFooter = (
@@ -191,6 +192,8 @@ export const DashboardPage = () => {
       main={mainContent}
       isMobileOpen={isMobileOpen}
       onMobileToggle={() => setMobileOpen(!isMobileOpen)}
+      isSidebarCollapsed={isSidebarCollapsed}
+      onSidebarToggle={() => setSidebarCollapsed(!isSidebarCollapsed)}
     />
   );
 };

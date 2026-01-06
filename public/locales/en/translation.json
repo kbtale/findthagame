@@ -4,15 +4,15 @@
     "tagline": "Find the videogames that your mind can't"
   },
   "dashboard": {
-    "gameName": "Game name",
+    "gameName": "Game Name",
     "searchPlaceholder": "Search...",
-    "mobileSearchPlaceholder": "Tap to configure parameters...",
-    "recentInquiries": "Recent Inquiries",
+    "mobileSearchPlaceholder": "Tap to configure search...",
+    "recentInquiries": "Recent Searches",
     "dataGrid": "Data Grid",
-    "status": "STATUS",
-    "ready": "READY",
-    "searching": "SEARCHING...",
-    "error": "ERROR"
+    "status": "Status",
+    "ready": "Ready",
+    "searching": "Searching...",
+    "error": "Error"
   },
   "filters": {
     "search": "Search",
@@ -29,7 +29,7 @@
     "searchStatuses": "Search statuses...",
     "noStatusFound": "No status found.",
     "developer": "Developer",
-    "developerPlaceholder": "e.g. Kojima",
+    "developerPlaceholder": "e.g. Ubisoft",
     "platform": "Platform",
     "anyPlatform": "Any platform...",
     "searchPlatforms": "Search platforms...",
@@ -64,7 +64,7 @@
     "clear": "Clear"
   },
   "results": {
-    "noResults": "NO RESULTS",
+    "noResults": "No Results",
     "tryAdjusting": "Try adjusting your filters",
     "noImage": "NO IMG",
     "alsoKnownAs": "Also known as",
@@ -76,7 +76,7 @@
     "rating": "Rating",
     "status": "Status",
     "category": "Category",
-    "match": "MATCH"
+    "match": "Match"
   },
   "gameStatus": {
     "0": "Released",

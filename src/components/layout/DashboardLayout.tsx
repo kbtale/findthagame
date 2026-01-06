@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
-import { X, SlidersHorizontal } from 'lucide-react';
+import { X, SlidersHorizontal, PanelLeft, PanelLeftClose } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface DashboardLayoutProps {
@@ -13,6 +13,8 @@ interface DashboardLayoutProps {
   mobileSearch?: ReactNode;
   isMobileOpen?: boolean;
   onMobileToggle?: () => void;
+  isSidebarCollapsed?: boolean;
+  onSidebarToggle?: () => void;
 }
 
 export const DashboardLayout = ({
@@ -25,14 +27,22 @@ export const DashboardLayout = ({
   mobileSearch,
   isMobileOpen = false,
   onMobileToggle,
+  isSidebarCollapsed = false,
+  onSidebarToggle,
 }: DashboardLayoutProps) => {
   return (
-    <div className="min-h-screen w-full bg-background text-foreground font-base flex flex-col lg:grid lg:grid-cols-[390px_1fr] overflow-hidden">
+    <div className={cn(
+      "min-h-screen w-full bg-background text-foreground font-base flex flex-col lg:grid overflow-hidden transition-all duration-300",
+      isSidebarCollapsed ? "lg:grid-cols-[0px_1fr]" : "lg:grid-cols-[390px_1fr]"
+    )}>
       
       {/* =========================================================================
           REGION 1: DESKTOP SIDEBAR (Visible ≥ 1024px)
       ========================================================================= */}
-      <aside className="hidden lg:flex flex-col h-full border-r-2 border-border bg-background overflow-hidden relative z-20">
+      <aside className={cn(
+        "hidden lg:flex flex-col h-full border-r-2 border-border bg-background relative z-20 transition-all duration-300 overflow-hidden",
+        isSidebarCollapsed ? "w-0 opacity-0" : "w-full opacity-100"
+      )}>
         
         {/* Brand Header Slot */}
         {brandHeader && (
@@ -101,11 +111,20 @@ export const DashboardLayout = ({
       ========================================================================= */}
       <main className="flex-1 h-full overflow-y-auto bg-background p-4 lg:p-8 relative z-10">
         {/* Main Header Slot (Desktop only) */}
-        {mainHeader && (
-          <div className="hidden lg:flex items-center justify-between mb-8">
-            {mainHeader}
-          </div>
-        )}
+        <div className="hidden lg:flex items-center justify-between mb-8">
+          {/* Sidebar Toggle Button */}
+          {onSidebarToggle && (
+            <Button
+              variant="neutral"
+              size="icon"
+              onClick={onSidebarToggle}
+              className="mr-4 cursor-pointer"
+            >
+              {isSidebarCollapsed ? <PanelLeft className="w-5 h-5" /> : <PanelLeftClose className="w-5 h-5" />}
+            </Button>
+          )}
+          {mainHeader}
+        </div>
 
         {/* Main Content Slot */}
         {main}
