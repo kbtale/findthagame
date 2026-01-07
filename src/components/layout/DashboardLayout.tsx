@@ -207,7 +207,7 @@ export const DashboardLayout = ({
       {/* Recent Searches Dialog */}
       <Dialog open={isRecentSearchesOpen} onOpenChange={setRecentSearchesOpen}>
         <DialogContent>
-          <DialogHeader className="flex flex-row items-start justify-between pr-10">
+          <DialogHeader className="flex flex-row items-start justify-between">
             <div>
               <DialogTitle>{t('dashboard.recentInquiries')}</DialogTitle>
               <DialogDescription>
@@ -219,14 +219,14 @@ export const DashboardLayout = ({
                 variant="neutral"
                 size="sm"
                 onClick={onClearHistory}
-                className="shrink-0"
+                className="shrink-0 mr-10"
               >
                 <Trash2 className="w-4 h-4 mr-1" />
                 {t('dashboard.clearHistory')}
               </Button>
             )}
           </DialogHeader>
-          <div className="py-2 max-h-[400px] overflow-y-auto">
+          <div className="py-2 max-h-[400px] overflow-y-auto overflow-x-hidden">
             {!recentSearches || recentSearches.length === 0 ? (
               <div className="py-8 text-center text-muted-foreground">
                 {t('dashboard.noRecentSearches')}
@@ -236,7 +236,7 @@ export const DashboardLayout = ({
                 {recentSearches.map((search) => (
                   <div
                     key={search.id}
-                    className="group flex items-center justify-between p-3 bg-secondary-background border-2 border-border rounded-base cursor-pointer hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none shadow-shadow transition-all"
+                    className="group flex items-center gap-2 p-3 bg-secondary-background border-2 border-border rounded-base cursor-pointer hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none shadow-shadow transition-all"
                     onClick={() => {
                       onSelectSearch?.(search);
                       setRecentSearchesOpen(false);
@@ -253,7 +253,7 @@ export const DashboardLayout = ({
                     <Button
                       variant="neutral"
                       size="icon"
-                      className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="shrink-0 invisible group-hover:visible"
                       onClick={(e) => {
                         e.stopPropagation();
                         onDeleteSearch?.(search.id);

@@ -163,6 +163,7 @@ export const DashboardPage = () => {
     <ResultsGrid 
       results={results}
       isLoading={isLoading}
+      hasSearched={status === 'success'}
       onSelectGame={handleSelectGame}
     />
   );

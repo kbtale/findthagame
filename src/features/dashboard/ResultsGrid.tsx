@@ -14,12 +14,14 @@ interface ClickOrigin {
 interface ResultsGridProps {
   results?: GameResult[];
   isLoading?: boolean;
+  hasSearched?: boolean;
   onSelectGame?: (index: number, origin: ClickOrigin) => void;
 }
 
 export const ResultsGrid = ({ 
   results = [], 
   isLoading = false,
+  hasSearched = false,
   onSelectGame 
 }: ResultsGridProps) => {
   const { t } = useTranslation();
@@ -42,25 +44,37 @@ export const ResultsGrid = ({
         {Array.from({ length: 12 }).map((_, i) => (
           <div 
             key={i} 
-            className="aspect-[264/374] bg-secondary-background border-2 border-border rounded-base animate-pulse"
+            className="aspect-[264/374] bg-main/30 border-2 border-border rounded-base animate-pulse"
           />
         ))}
       </div>
     );
   }
 
-  if (results.length === 0) {
+  // No search yet - show welcome/placeholder
+  if (!hasSearched && results.length === 0) {
+    return (
+      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 pb-20">
+        {Array.from({ length: 12 }).map((_, i) => (
+          <div 
+            key={i} 
+            className="aspect-[264/374] bg-main/20 border-2 border-border rounded-base"
+          />
+        ))}
+      </div>
+    );
+  }
+
+  // Search done but no results found
+  if (hasSearched && results.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-20 px-8 text-center">
         <div className="max-w-lg space-y-4">
-          <h2 className="text-2xl font-heading opacity-30">
-            {t('results.welcomeTitle')}
+          <h2 className="text-2xl font-heading">
+            {t('results.noResultsTitle')}
           </h2>
-          <p className="text-sm font-base opacity-20">
-            {t('results.welcomeFilters')}
-          </p>
-          <p className="text-sm font-base opacity-20">
-            {t('results.welcomeSearch')}
+          <p className="text-sm font-base opacity-60">
+            {t('results.noResultsDescription')}
           </p>
         </div>
       </div>
