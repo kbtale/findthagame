@@ -30,7 +30,7 @@ export const GameDetail = ({
       <div className="flex items-center justify-between mb-6 p-4 bg-secondary-background border-2 border-border rounded-base">
         <Button 
           onClick={onBack}
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 bg-[var(--chart-3)] text-white hover:bg-[var(--chart-3)]/90"
         >
           <ArrowLeft className="w-4 h-4" />
           {t('gameDetail.backToResults')}
@@ -40,6 +40,7 @@ export const GameDetail = ({
             onClick={onPrev}
             disabled={!hasPrev}
             size="icon"
+            className="bg-[var(--chart-3)] text-white hover:bg-[var(--chart-3)]/90 disabled:opacity-50"
           >
             <ChevronLeft className="w-4 h-4" />
           </Button>
@@ -47,6 +48,7 @@ export const GameDetail = ({
             onClick={onNext}
             disabled={!hasNext}
             size="icon"
+            className="bg-[var(--chart-3)] text-white hover:bg-[var(--chart-3)]/90 disabled:opacity-50"
           >
             <ChevronRight className="w-4 h-4" />
           </Button>

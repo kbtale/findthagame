@@ -51,7 +51,7 @@ export const ResultsGrid = ({
   if (results.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-20 px-8 text-center">
-        <div className="max-w-md space-y-4">
+        <div className="max-w-lg space-y-4">
           <h2 className="text-2xl font-heading opacity-30">
             {t('results.welcomeTitle')}
           </h2>

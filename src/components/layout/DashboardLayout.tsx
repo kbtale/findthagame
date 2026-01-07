@@ -60,7 +60,7 @@ export const DashboardLayout = ({
         {/* Brand Header Slot */}
         {brandHeader && (
           <div className="p-6 border-b-2 border-border bg-main text-main-foreground flex justify-center">
-            <div className="h-12">
+            <div className="h-[72px]">
               {brandHeader}
             </div>
           </div>
@@ -83,13 +83,18 @@ export const DashboardLayout = ({
       <header className="lg:hidden z-50 bg-background border-b-2 border-border flex flex-col relative shadow-sm">
         
         {/* Brand Header - Mobile */}
-        {brandHeader && (
-          <div className="p-4 pb-2 bg-main border-b-2 border-border flex justify-center">
-            <div className="h-8">
-              {brandHeader}
-            </div>
+        <div className="p-4 pb-2 bg-main border-b-2 border-border flex items-center justify-between">
+          <div className="h-12">
+            {brandHeader}
           </div>
-        )}
+          <Button
+            variant="neutral"
+            size="icon"
+            onClick={() => window.open('https://github.com/kbtale/findthagame', '_blank')}
+          >
+            <Github className="w-5 h-5" />
+          </Button>
+        </div>
         
         {/* Top Bar: Search + Toggle */}
         <div className="p-4 flex items-center gap-3 bg-background z-20 relative">
@@ -142,11 +147,12 @@ export const DashboardLayout = ({
               </Button>
             )}
             {/* Show brand header when sidebar is collapsed */}
-            {isSidebarCollapsed && brandHeader && (
-              <div className="h-6 animate-in fade-in slide-in-from-left-4 duration-300">
-                {brandHeader}
-              </div>
-            )}
+            <div className={cn(
+              "h-12 transition-all duration-300",
+              isSidebarCollapsed ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4 pointer-events-none"
+            )}>
+              {brandHeader}
+            </div>
           </div>
           
           {/* Right: Menu Buttons */}
