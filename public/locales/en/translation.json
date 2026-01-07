@@ -12,7 +12,10 @@
     "gamesFound": "{{count}} Games Found",
     "gamesFoundPlus": "{{count}}+ Games Found",
     "recentSearchesDescription": "Your recent search history will appear here.",
-    "noRecentSearches": "No recent searches yet."
+    "noRecentSearches": "No recent searches yet.",
+    "clearHistory": "Clear",
+    "noSearchTerm": "(No search term)",
+    "results": "results"
   },
   "filters": {
     "search": "Search",

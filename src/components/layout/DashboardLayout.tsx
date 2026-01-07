@@ -1,9 +1,10 @@
 import { useState, useEffect, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
-import { X, SlidersHorizontal, PanelLeft, PanelLeftClose, Github, History, Star } from 'lucide-react';
+import { X, SlidersHorizontal, PanelLeft, PanelLeftClose, Github, History, Star, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import type { RecentSearch } from '@/hooks/useRecentSearches';
 
 interface DashboardLayoutProps {
   brandHeader?: ReactNode;
@@ -17,6 +18,10 @@ interface DashboardLayoutProps {
   onSidebarToggle?: () => void;
   isLoading?: boolean;
   resultsCount?: number;
+  recentSearches?: RecentSearch[];
+  onSelectSearch?: (search: RecentSearch) => void;
+  onDeleteSearch?: (id: string) => void;
+  onClearHistory?: () => void;
 }
 
 export const DashboardLayout = ({
@@ -31,6 +36,10 @@ export const DashboardLayout = ({
   onSidebarToggle,
   isLoading = false,
   resultsCount = 0,
+  recentSearches,
+  onSelectSearch,
+  onDeleteSearch,
+  onClearHistory,
 }: DashboardLayoutProps) => {
   const [isRecentSearchesOpen, setRecentSearchesOpen] = useState(false);
   const [starCount, setStarCount] = useState<number | null>(null);
@@ -125,7 +134,7 @@ export const DashboardLayout = ({
           )}
         </div>
 
-        {/* The Accordion Panel (Options appear below) */}
+        {/* The Accordion Panel */}
         <div className={cn(
           "overflow-hidden transition-[max-height] duration-500 ease-in-out w-full border-border bg-background absolute top-full left-0 z-10",
           isMobileOpen ? "max-h-[85vh] border-b-2 shadow-shadow" : "max-h-0 border-none"
@@ -140,7 +149,7 @@ export const DashboardLayout = ({
       {/* =========================================================================
           REGION 3: MAIN CONTENT AREA
       ========================================================================= */}
-      <main className="flex-1 h-full overflow-y-auto bg-background p-4 lg:p-8 relative z-10">
+      <main id="results-area" className="flex-1 h-full overflow-y-auto bg-background p-4 lg:p-8 relative z-10">
         {/* Main Header Slot (Desktop only) */}
         <div className="hidden lg:flex items-center justify-between mb-8">
           <div className="flex items-center">
@@ -198,14 +207,64 @@ export const DashboardLayout = ({
       {/* Recent Searches Dialog */}
       <Dialog open={isRecentSearchesOpen} onOpenChange={setRecentSearchesOpen}>
         <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{t('dashboard.recentInquiries')}</DialogTitle>
-            <DialogDescription>
-              {t('dashboard.recentSearchesDescription')}
-            </DialogDescription>
+          <DialogHeader className="flex flex-row items-start justify-between pr-10">
+            <div>
+              <DialogTitle>{t('dashboard.recentInquiries')}</DialogTitle>
+              <DialogDescription>
+                {t('dashboard.recentSearchesDescription')}
+              </DialogDescription>
+            </div>
+            {recentSearches && recentSearches.length > 0 && onClearHistory && (
+              <Button
+                variant="neutral"
+                size="sm"
+                onClick={onClearHistory}
+                className="shrink-0"
+              >
+                <Trash2 className="w-4 h-4 mr-1" />
+                {t('dashboard.clearHistory')}
+              </Button>
+            )}
           </DialogHeader>
-          <div className="py-4 text-center text-muted-foreground">
-            {t('dashboard.noRecentSearches')}
+          <div className="py-2 max-h-[400px] overflow-y-auto">
+            {!recentSearches || recentSearches.length === 0 ? (
+              <div className="py-8 text-center text-muted-foreground">
+                {t('dashboard.noRecentSearches')}
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {recentSearches.map((search) => (
+                  <div
+                    key={search.id}
+                    className="group flex items-center justify-between p-3 bg-secondary-background border-2 border-border rounded-base cursor-pointer hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none shadow-shadow transition-all"
+                    onClick={() => {
+                      onSelectSearch?.(search);
+                      setRecentSearchesOpen(false);
+                    }}
+                  >
+                    <div className="flex-1 min-w-0">
+                      <p className="font-heading text-sm truncate">
+                        {search.filters.search || t('dashboard.noSearchTerm')}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {search.resultCount} {t('dashboard.results')} • {new Date(search.timestamp).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <Button
+                      variant="neutral"
+                      size="icon"
+                      className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDeleteSearch?.(search.id);
+                      }}
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </DialogContent>
       </Dialog>

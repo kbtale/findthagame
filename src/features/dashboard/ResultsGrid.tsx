@@ -83,7 +83,7 @@ export const ResultsGrid = ({
                 {(game.rating / 10).toFixed(1)}
               </Badge>
             )}
-            {game.matchScore > 0 && (
+            {game.matchScore !== undefined && (
               <Badge variant="neutral">
                 {t('results.match')}: {game.matchScore.toFixed(3)}
               </Badge>

@@ -10,6 +10,7 @@ import { GameDetail } from '@/features/dashboard/GameDetail';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import { searchGames } from '@/api/client';
+import { useRecentSearches, type RecentSearch } from '@/hooks/useRecentSearches';
 import type { FilterState } from '@/models/AppTypes';
 
 export const DashboardPage = () => {
@@ -31,6 +32,9 @@ export const DashboardPage = () => {
   const [isMobileOpen, setMobileOpen] = useState(false);
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
 
+  // Recent searches
+  const { searches: recentSearches, addSearch, removeSearch, clearAll: clearSearchHistory } = useRecentSearches();
+
   // Derived values
   const isLoading = status === 'loading';
   const selectedGame = selectedIndex !== null ? results[selectedIndex] : null;
@@ -44,9 +48,13 @@ export const DashboardPage = () => {
     setMobileOpen(false);
     dispatch(setLoading());
 
+    const fullFilters = { ...filters, search: searchTerm };
+
     try {
-      const data = await searchGames({ ...filters, search: searchTerm });
+      const data = await searchGames(fullFilters);
       dispatch(setResults(data));
+      addSearch(fullFilters, data.length);
+      document.getElementById('results-area')?.scrollIntoView({ behavior: 'smooth' });
     } catch (err) {
       console.error('Search failed:', err);
       dispatch(setError(err instanceof Error ? err.message : 'Search failed'));
@@ -67,6 +75,21 @@ export const DashboardPage = () => {
 
   const handleNext = () => {
     dispatch(selectNext());
+  };
+
+  const handleSelectRecentSearch = async (search: RecentSearch) => {
+    setSearchTerm(search.filters.search);
+    setMobileOpen(false);
+    dispatch(setLoading());
+
+    try {
+      const data = await searchGames(search.filters);
+      dispatch(setResults(data));
+      document.getElementById('results-area')?.scrollIntoView({ behavior: 'smooth' });
+    } catch (err) {
+      console.error('Search failed:', err);
+      dispatch(setError(err instanceof Error ? err.message : 'Search failed'));
+    }
   };
 
   const brandHeader = (
@@ -160,6 +183,10 @@ export const DashboardPage = () => {
       onSidebarToggle={() => setSidebarCollapsed(!isSidebarCollapsed)}
       isLoading={isLoading}
       resultsCount={results.length}
+      recentSearches={recentSearches}
+      onSelectSearch={handleSelectRecentSearch}
+      onDeleteSearch={removeSearch}
+      onClearHistory={clearSearchHistory}
     />
   );
 };

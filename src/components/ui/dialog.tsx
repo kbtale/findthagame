@@ -63,7 +63,7 @@ function DialogContent({
       >
         {children}
         <DialogPrimitive.Close asChild>
-          <button className="absolute right-4 top-4 rounded-base border-2 border-border bg-secondary-background p-2 cursor-pointer hover:bg-main transition-colors focus:outline-hidden focus:ring-2 focus:ring-black focus:ring-offset-2">
+          <button className="absolute right-4 top-4 rounded-base border-2 border-border bg-secondary-background p-2 shadow-shadow cursor-pointer hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all focus:outline-hidden focus:ring-2 focus:ring-black focus:ring-offset-2">
             <X className="size-4" />
             <span className="sr-only">Close</span>
           </button>
