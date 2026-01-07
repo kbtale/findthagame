@@ -2,7 +2,9 @@
 
 # FindThaGame
 
-**A game discovery tool that helps users find video games based on fuzzy memories and partial details.** Powered by the [IGDB API](https://api-docs.igdb.com/).
+**A game discovery tool that helps users find video games based on fuzzy memories and partial details.**
+
+Powered by the [IGDB API](https://api-docs.igdb.com/).
 
 ![React](https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
@@ -47,11 +49,11 @@ $$K_{total} = K_{plat} \cdot K_{cat} \cdot K_{status} \cdot K_{company}$$
 | Filter | Logic | Multiplier | Result |
 | :--- | :--- | :--- | :--- |
 | **Platform** | Match | **x1.0** | Score stays same |
-| | No Match | **x0.3** | **Score drops 70%** |
+| | No Match | **x0.3** | Score drops 70% |
 | **Category** | Main Game | **x1.0** | Score stays same |
 | | DLC (Unwanted) | **x0.5** | Score drops 50% |
-| **Company** | **Developer** | **x2.2** | **Score doubles** |
-| | **Publisher** | **x1.8** | High boost |
+| **Company** | Developer | **x2.2** | Score doubles |
+| | Publisher | **x1.8** | High boost |
 | | Porting | **x1.3** | Medium boost |
 | | Supporting | **x1.2** | Small boost |
 | | No Match | **x1.0** | Score stays same |
@@ -85,12 +87,14 @@ Where $A_{bonus}$ contains:
     npm install
 
 3. **Configure Environment**
+
    Create a `.env.local` file with your Twitch credentials:
 
-    TWITCH_CLIENT_ID=your_client_id
-    TWITCH_CLIENT_SECRET=your_client_secret
+   TWITCH_CLIENT_ID=your_client_id
 
-4. **Run Development Server**
+   TWITCH_CLIENT_SECRET=your_client_secret
+
+5. **Run Development Server**
 
     npm run dev
 
