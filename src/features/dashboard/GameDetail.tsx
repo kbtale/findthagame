@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import type { GameResult } from '@/models/AppTypes';
 
@@ -146,9 +147,9 @@ export const GameDetail = ({
                 <span className="font-heading uppercase text-xs opacity-60">{t('results.genres')}</span>
                 <div className="flex flex-wrap gap-1 mt-1">
                   {game.genres.map((genre) => (
-                    <span key={genre} className="px-2 py-0.5 bg-secondary-background rounded-base text-xs font-base border border-border">
+                    <Badge key={genre} variant="neutral">
                       {genre}
-                    </span>
+                    </Badge>
                   ))}
                 </div>
               </div>
@@ -160,9 +161,9 @@ export const GameDetail = ({
                 <span className="font-heading uppercase text-xs opacity-60">{t('results.themes')}</span>
                 <div className="flex flex-wrap gap-1 mt-1">
                   {game.themes.map((theme) => (
-                    <span key={theme} className="px-2 py-0.5 bg-secondary-background rounded-base text-xs font-base border border-border">
+                    <Badge key={theme} variant="neutral">
                       {theme}
-                    </span>
+                    </Badge>
                   ))}
                 </div>
               </div>
@@ -174,9 +175,9 @@ export const GameDetail = ({
                 <span className="font-heading uppercase text-xs opacity-60">{t('results.platforms')}</span>
                 <div className="flex flex-wrap gap-1 mt-1">
                   {game.platforms.map((platform) => (
-                    <span key={platform} className="px-2 py-0.5 bg-secondary-background rounded-base text-xs font-base border border-border">
+                    <Badge key={platform} variant="neutral">
                       {platform}
-                    </span>
+                    </Badge>
                   ))}
                 </div>
               </div>
@@ -188,9 +189,9 @@ export const GameDetail = ({
                 <span className="font-heading uppercase text-xs opacity-60">{t('results.modes')}</span>
                 <div className="flex flex-wrap gap-1 mt-1">
                   {game.gameModes.map((mode) => (
-                    <span key={mode} className="px-2 py-0.5 bg-secondary-background rounded-base text-xs font-base border border-border">
+                    <Badge key={mode} variant="neutral">
                       {mode}
-                    </span>
+                    </Badge>
                   ))}
                 </div>
               </div>
@@ -202,9 +203,9 @@ export const GameDetail = ({
                 <span className="font-heading uppercase text-xs opacity-60">{t('results.perspective')}</span>
                 <div className="flex flex-wrap gap-1 mt-1">
                   {game.perspectives.map((perspective) => (
-                    <span key={perspective} className="px-2 py-0.5 bg-secondary-background rounded-base text-xs font-base border border-border">
+                    <Badge key={perspective} variant="neutral">
                       {perspective}
-                    </span>
+                    </Badge>
                   ))}
                 </div>
               </div>
@@ -216,9 +217,9 @@ export const GameDetail = ({
                 <span className="font-heading uppercase text-xs opacity-60">{t('gameDetail.keywords')}</span>
                 <div className="flex flex-wrap gap-1 mt-1">
                   {game.keywords.map((keyword) => (
-                    <span key={keyword} className="px-2 py-0.5 bg-secondary-background rounded text-xs font-base opacity-70">
+                    <Badge key={keyword} variant="neutral">
                       {keyword}
-                    </span>
+                    </Badge>
                   ))}
                 </div>
               </div>

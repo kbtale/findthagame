@@ -59,7 +59,7 @@ export const DashboardLayout = ({
         
         {/* Brand Header Slot */}
         {brandHeader && (
-          <div className="p-6 border-b-2 border-border bg-main text-main-foreground flex justify-center">
+          <div className="py-3 px-6 border-b-2 border-border bg-main text-main-foreground flex justify-center">
             <div className="h-[72px]">
               {brandHeader}
             </div>
