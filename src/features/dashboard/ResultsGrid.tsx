@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import type { GameResult } from '@/models/AppTypes';
 import type { MouseEvent } from 'react';
 import { Badge } from '@/components/ui/badge';
+import { Star } from 'lucide-react';
 
 interface ClickOrigin {
   x: number;
@@ -78,7 +79,8 @@ export const ResultsGrid = ({
           <div className="absolute -top-2 -left-2 z-10 flex gap-1">
             {game.rating && (
               <Badge>
-                {t('results.rating')}: {game.rating}%
+                <Star className="w-3 h-3 fill-current" />
+                {(game.rating / 10).toFixed(1)}
               </Badge>
             )}
             {game.matchScore > 0 && (

@@ -112,7 +112,7 @@ export const buildIgdbQuery = (params: QueryParams): string => {
     { 
       key: 'categoryId',
       // When Main Game (0) is selected, include games with category = 0 OR category = null
-      build: (v) => v === 0 ? `(category = 0 | category = null)` : `category = (${v})`
+      build: (v) => v === 0 ? `(category = 0 | category = null)` : `game_type = (${v})`
     },
     { 
       key: 'statusId',
@@ -125,7 +125,7 @@ export const buildIgdbQuery = (params: QueryParams): string => {
     },
     {
       key: 'ageRatingOrg',
-      build: (v) => `age_ratings.rating = (${v})` 
+      build: (v) => `age_ratings.organization = (${v})` 
     },
     {
       key: 'ageRatingValue',

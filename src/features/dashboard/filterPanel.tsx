@@ -239,7 +239,7 @@ export const FilterPanel = ({ onSearch, onClearAll }: FilterPanelProps) => {
 
         <div className="space-y-4 px-1">
           <div className="flex justify-between items-center">
-            <span className="text-xs font-heading text-muted-foreground">{t('filters.releaseWindow')}</span>
+            <span className="text-xs font-heading uppercase">{t('filters.releaseWindow')}</span>
             <div className="flex gap-1">
                 <span className="bg-foreground text-background text-xs font-heading px-1 py-0.5 rounded-[2px]">{filters.yearRange[0]}</span>
                 <span className="text-foreground font-heading">-</span>
@@ -368,7 +368,7 @@ export const FilterPanel = ({ onSearch, onClearAll }: FilterPanelProps) => {
         <div className="space-y-3 px-1">
            <div className="flex justify-between items-center">
             <Label className="text-xs uppercase font-heading">{t('filters.minScore')}</Label>
-            <span className="text-xs font-heading text-main">{filters.minRating ?? 0}%</span>
+            <span className="bg-foreground text-background text-xs font-heading px-1 py-0.5 rounded-[2px]">{filters.minRating ?? 0}%</span>
            </div>
            <Slider 
              value={[filters.minRating ?? 0]} 

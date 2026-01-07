@@ -103,8 +103,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       };
     });
 
-    // Sort by score (Highest first)
-    scoredGames.sort((a, b) => b.match_score - a.match_score);
+    // Sort by score (Highest first), use rating as tie-breaker when scores are equal
+    scoredGames.sort((a, b) => {
+      const scoreDiff = b.match_score - a.match_score;
+      if (scoreDiff !== 0) return scoreDiff;
+      return (b.total_rating ?? 0) - (a.total_rating ?? 0);
+    });
 
     // Return only the top 50 best matches
     const topResults = scoredGames.slice(0, 50);

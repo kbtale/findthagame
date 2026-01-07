@@ -28,7 +28,7 @@ export const GameDetail = ({
   return (
     <div className="pb-20">
       {/* Navigation Header */}
-      <div className="flex items-center justify-between mb-6 p-4 bg-secondary-background border-2 border-border rounded-base">
+      <div className="flex items-center justify-between mb-6 p-4 bg-[var(--chart-3)] border-2 border-border rounded-base">
         <Button 
           onClick={onBack}
           className="flex items-center gap-2 bg-[var(--chart-3)] text-white hover:bg-[var(--chart-3)]/90"

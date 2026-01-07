@@ -124,9 +124,8 @@ const calculateBonuses = (game: IGDBGame, query: QueryParams): number => {
 
   const yearPenalty = calculateYearPenalty(game.first_release_date, query.yearRange);
   const ageBonus = matchesAgeRating(game.age_ratings, query) ? b.ageRatingMatch : 0;
-  const tieBreaker = (game.total_rating ?? 0) / 1000;
 
-  return yearPenalty + ageBonus + tieBreaker;
+  return yearPenalty + ageBonus;
 };
 
 // ═══════════════════════════════════════════════════════════════════
