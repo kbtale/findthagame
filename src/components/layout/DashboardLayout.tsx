@@ -1,7 +1,7 @@
-import { useState, type ReactNode } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
-import { X, SlidersHorizontal, PanelLeft, PanelLeftClose, Github, History } from 'lucide-react';
+import { X, SlidersHorizontal, PanelLeft, PanelLeftClose, Github, History, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 
@@ -33,7 +33,16 @@ export const DashboardLayout = ({
   resultsCount = 0,
 }: DashboardLayoutProps) => {
   const [isRecentSearchesOpen, setRecentSearchesOpen] = useState(false);
+  const [starCount, setStarCount] = useState<number | null>(null);
   const { t } = useTranslation();
+
+  // Fetch GitHub stars on mount
+  useEffect(() => {
+    fetch('https://api.github.com/repos/kbtale/findthagame')
+      .then(res => res.json())
+      .then(data => setStarCount(data.stargazers_count ?? null))
+      .catch(() => setStarCount(null));
+  }, []);
 
   // Get result text for the button
   const getResultText = () => {
@@ -169,10 +178,15 @@ export const DashboardLayout = ({
             </Button>
             <Button
               variant="neutral"
-              size="icon"
               onClick={() => window.open('https://github.com/kbtale/findthagame', '_blank')}
             >
-              <Github className="w-5 h-5" />
+              <Github className="w-4 h-4 mr-1" />
+              {starCount !== null && (
+                <>
+                  <Star className="w-3 h-3 fill-current mr-1" />
+                  {starCount}
+                </>
+              )}
             </Button>
           </div>
         </div>
