@@ -207,21 +207,20 @@ export const DashboardLayout = ({
       {/* Recent Searches Dialog */}
       <Dialog open={isRecentSearchesOpen} onOpenChange={setRecentSearchesOpen}>
         <DialogContent className="pr-16">
+          {/* Clear button */}
+          {recentSearches && recentSearches.length > 0 && onClearHistory && (
+            <Button
+              variant="neutral"
+              size="sm"
+              onClick={onClearHistory}
+              className="absolute top-4 right-16"
+            >
+              <Trash2 className="w-4 h-4 mr-1" />
+              {t('dashboard.clearHistory')}
+            </Button>
+          )}
           <DialogHeader>
-            <div className="flex items-center justify-between">
-              <DialogTitle>{t('dashboard.recentInquiries')}</DialogTitle>
-              {recentSearches && recentSearches.length > 0 && onClearHistory && (
-                <Button
-                  variant="neutral"
-                  size="sm"
-                  onClick={onClearHistory}
-                  className="shrink-0"
-                >
-                  <Trash2 className="w-4 h-4 mr-1" />
-                  {t('dashboard.clearHistory')}
-                </Button>
-              )}
-            </div>
+            <DialogTitle>{t('dashboard.recentInquiries')}</DialogTitle>
             <DialogDescription>
               {t('dashboard.recentSearchesDescription')}
             </DialogDescription>

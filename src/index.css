@@ -106,27 +106,31 @@
 }
 
 /* Neobrutalist Scrollbar */
-::-webkit-scrollbar {
+html::-webkit-scrollbar,
+*::-webkit-scrollbar {
   width: 16px;
   height: 16px;
 }
 
-::-webkit-scrollbar-track {
+html::-webkit-scrollbar-track,
+*::-webkit-scrollbar-track {
   background: var(--background);
   border-left: 2px solid var(--border);
 }
 
-::-webkit-scrollbar-thumb {
+html::-webkit-scrollbar-thumb,
+*::-webkit-scrollbar-thumb {
   background: var(--foreground);
   border: 2px solid var(--border);
 }
 
-::-webkit-scrollbar-thumb:hover {
+html::-webkit-scrollbar-thumb:hover,
+*::-webkit-scrollbar-thumb:hover {
   background: var(--main);
 }
 
 /* Firefox scrollbar */
-* {
-  scrollbar-width: thin;
+html, * {
+  scrollbar-width: auto;
   scrollbar-color: var(--foreground) var(--background);
 }

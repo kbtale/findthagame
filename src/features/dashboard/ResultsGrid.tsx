@@ -1,17 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
-import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import type { GameResult } from '@/models/AppTypes';
 import type { MouseEvent } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Star } from 'lucide-react';
 
+// Lazy load the Lottie player
+const Lottie = lazy(() => import('lottie-react'));
+
 const WELCOME_CATS = [
-  '/cats/WelcomeCat1.lottie',
-  '/cats/WelcomeCat2.lottie',
-  '/cats/WelcomeCat3.lottie',
-  '/cats/WelcomeCat4.lottie',
-  '/cats/WelcomeCat5.lottie',
+  '/cats/WelcomeCat1.json',
+  '/cats/WelcomeCat2.json',
+  '/cats/WelcomeCat3.json',
+  '/cats/WelcomeCat4.json',
+  '/cats/WelcomeCat5.json',
 ];
 
 const getRandomCat = () => WELCOME_CATS[Math.floor(Math.random() * WELCOME_CATS.length)];
@@ -38,7 +40,18 @@ export const ResultsGrid = ({
 }: ResultsGridProps) => {
   const { t } = useTranslation();
   
-  const [randomCat] = useState(() => getRandomCat());
+  const [randomCatPath] = useState(() => getRandomCat());
+  const [animationData, setAnimationData] = useState<object | null>(null);
+
+  // Fetch animation JSON when welcome screen is shown
+  useEffect(() => {
+    if (!hasSearched && results.length === 0) {
+      fetch(randomCatPath)
+        .then(res => res.json())
+        .then(data => setAnimationData(data))
+        .catch(console.error);
+    }
+  }, [hasSearched, results.length, randomCatPath]);
 
   const handleCardClick = (e: MouseEvent<HTMLDivElement>, index: number) => {
     const card = e.currentTarget;
@@ -69,12 +82,16 @@ export const ResultsGrid = ({
   if (!hasSearched && results.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-20 px-8 text-center">
-        <DotLottieReact
-          src={randomCat}
-          loop
-          autoplay
-          className="w-48 h-48 mb-4"
-        />
+        <Suspense fallback={<div className="w-48 h-48" />}>
+          {animationData && (
+            <Lottie
+              animationData={animationData}
+              loop
+              autoplay
+              className="w-48 h-48"
+            />
+          )}
+        </Suspense>
         <div className="max-w-lg space-y-4">
           <h2 className="text-2xl font-heading opacity-30">
             {t('results.welcomeTitle')}
