@@ -10,7 +10,9 @@
     "recentInquiries": "Recent Searches",
     "waitingForResults": "Waiting for results...",
     "gamesFound": "{{count}} Games Found",
-    "gamesFoundPlus": "{{count}}+ Games Found"
+    "gamesFoundPlus": "{{count}}+ Games Found",
+    "recentSearchesDescription": "Your recent search history will appear here.",
+    "noRecentSearches": "No recent searches yet."
   },
   "filters": {
     "search": "Search",

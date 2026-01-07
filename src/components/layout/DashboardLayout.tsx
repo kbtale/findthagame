@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { X, SlidersHorizontal, PanelLeft, PanelLeftClose, Github, History } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -8,30 +9,39 @@ interface DashboardLayoutProps {
   brandHeader?: ReactNode;
   searchBar?: ReactNode;
   sidebar?: ReactNode;
-  sidebarFooter?: ReactNode;
   main?: ReactNode;
-  mainHeader?: ReactNode;
   mobileSearch?: ReactNode;
   isMobileOpen?: boolean;
   onMobileToggle?: () => void;
   isSidebarCollapsed?: boolean;
   onSidebarToggle?: () => void;
+  isLoading?: boolean;
+  resultsCount?: number;
 }
 
 export const DashboardLayout = ({
   brandHeader,
   searchBar,
   sidebar,
-  sidebarFooter,
   main,
-  mainHeader,
   mobileSearch,
   isMobileOpen = false,
   onMobileToggle,
   isSidebarCollapsed = false,
   onSidebarToggle,
+  isLoading = false,
+  resultsCount = 0,
 }: DashboardLayoutProps) => {
   const [isRecentSearchesOpen, setRecentSearchesOpen] = useState(false);
+  const { t } = useTranslation();
+
+  // Get result text for the button
+  const getResultText = () => {
+    if (isLoading) return t('dashboard.waitingForResults');
+    if (resultsCount === 0) return null;
+    if (resultsCount >= 50) return t('dashboard.gamesFoundPlus', { count: 50 });
+    return t('dashboard.gamesFound', { count: resultsCount });
+  };
 
   return (
     <div className={cn(
@@ -62,13 +72,6 @@ export const DashboardLayout = ({
           {/* Sidebar Content Slot */}
           {sidebar}
         </div>
-
-        {/* Sidebar Footer Slot */}
-        {sidebarFooter && (
-          <div className="p-5 border-t-2 border-border bg-secondary-background">
-            {sidebarFooter}
-          </div>
-        )}
       </aside>
 
 
@@ -144,14 +147,17 @@ export const DashboardLayout = ({
             )}
           </div>
           
-          {/* Center: Main Header Content */}
-          {mainHeader}
-          
           {/* Right: Menu Buttons */}
           <div className="flex items-center gap-2">
+            {/* Results Count Button */}
+            {getResultText() && (
+              <Button variant="neutral" onClick={() => {}}>
+                {getResultText()}
+              </Button>
+            )}
             <Button variant="neutral" onClick={() => setRecentSearchesOpen(true)}>
               <History className="w-4 h-4 mr-2" />
-              Recent Searches
+              {t('dashboard.recentInquiries')}
             </Button>
             <Button
               variant="neutral"
@@ -171,13 +177,13 @@ export const DashboardLayout = ({
       <Dialog open={isRecentSearchesOpen} onOpenChange={setRecentSearchesOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Recent Searches</DialogTitle>
+            <DialogTitle>{t('dashboard.recentInquiries')}</DialogTitle>
             <DialogDescription>
-              Your recent search history will appear here.
+              {t('dashboard.recentSearchesDescription')}
             </DialogDescription>
           </DialogHeader>
           <div className="py-4 text-center text-muted-foreground">
-            No recent searches yet.
+            {t('dashboard.noRecentSearches')}
           </div>
         </DialogContent>
       </Dialog>

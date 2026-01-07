@@ -8,8 +8,7 @@ import { FilterPanel } from '@/features/dashboard/filterPanel';
 import { ResultsGrid } from '@/features/dashboard/ResultsGrid';
 import { GameDetail } from '@/features/dashboard/GameDetail';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Search, History } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { searchGames } from '@/api/client';
 import type { FilterState } from '@/models/AppTypes';
 
@@ -70,11 +69,8 @@ export const DashboardPage = () => {
     dispatch(selectNext());
   };
 
-  // =========================================================================
-  // SLOT CONTENT
-  // =========================================================================
   const brandHeader = (
-    <img src="/img/Logo.png" alt="FindThaGame" className="w-full h-auto object-contain" />
+    <img src="/img/Logo.png" alt="FindThaGame" className="h-full w-auto object-contain" />
   );
 
   const searchBar = (
@@ -108,34 +104,6 @@ export const DashboardPage = () => {
   const sidebar = (
     <FilterPanel onSearch={handleSearch} onClearAll={() => setSearchTerm('')} />
   );
-
-  const sidebarFooter = (
-    <>
-      <div className="flex items-center gap-2 mb-3 text-xs font-heading uppercase opacity-70">
-        <History className="w-3 h-3" /> {t('dashboard.recentInquiries')}
-      </div>
-      <div className="flex flex-col gap-2">
-        {['Metal Gear', 'Silent Hill', 'Castlevania'].map((s) => (
-          <button key={s} className="text-sm font-bold text-left hover:text-main transition-colors truncate">
-            &gt; {s}
-          </button>
-        ))}
-      </div>
-    </>
-  );
-
-  const getResultText = () => {
-    if (isLoading) return t('dashboard.waitingForResults');
-    if (results.length === 0) return '';
-    if (results.length >= 50) return t('dashboard.gamesFoundPlus', { count: 50 });
-    return t('dashboard.gamesFound', { count: results.length });
-  };
-
-  const mainHeader = getResultText() ? (
-    <Button variant="neutral" onClick={() => {}}>
-      {getResultText()}
-    </Button>
-  ) : null;
 
   // Calculate FLIP animation style from click origin
   const getFlipStyle = (): React.CSSProperties | undefined => {
@@ -185,13 +153,13 @@ export const DashboardPage = () => {
       searchBar={searchBar}
       mobileSearch={mobileSearch}
       sidebar={sidebar}
-      sidebarFooter={sidebarFooter}
-      mainHeader={mainHeader}
       main={mainContent}
       isMobileOpen={isMobileOpen}
       onMobileToggle={() => setMobileOpen(!isMobileOpen)}
       isSidebarCollapsed={isSidebarCollapsed}
       onSidebarToggle={() => setSidebarCollapsed(!isSidebarCollapsed)}
+      isLoading={isLoading}
+      resultsCount={results.length}
     />
   );
 };

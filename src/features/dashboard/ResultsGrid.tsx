@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import type { GameResult } from '@/models/AppTypes';
 import type { MouseEvent } from 'react';
+import { Badge } from '@/components/ui/badge';
 
 interface ClickOrigin {
   x: number;
@@ -71,10 +72,24 @@ export const ResultsGrid = ({
         <div 
           key={game.id} 
           onClick={(e) => handleCardClick(e, index)}
-          className="group relative aspect-[264/374] bg-white border-2 border-border rounded-base shadow-shadow flex flex-col justify-between overflow-hidden hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all cursor-pointer"
+          className="group relative aspect-[264/374] bg-white border-2 border-border rounded-base shadow-shadow flex flex-col justify-between overflow-visible hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all cursor-pointer"
         >
+          {/* Rating Badge - Top Right (outside box) */}
+          {game.rating && (
+            <Badge className="absolute -top-2 -right-2 z-10">
+              {game.rating}%
+            </Badge>
+          )}
+          
+          {/* Match Score Badge - Top Left (outside box) */}
+          {game.matchScore > 0 && (
+            <Badge variant="neutral" className="absolute -top-2 -left-2 z-10">
+              {t('results.match')}: {game.matchScore}
+            </Badge>
+          )}
+
           {/* Image Area */}
-          <div className="w-full h-full bg-secondary-background flex items-center justify-center overflow-hidden">
+          <div className="w-full h-full bg-secondary-background flex items-center justify-center overflow-hidden rounded-base">
             {game.coverUrl ? (
               <img 
                 src={game.coverUrl} 
@@ -89,14 +104,9 @@ export const ResultsGrid = ({
           {/* Meta Overlay */}
           <div className="absolute bottom-0 w-full p-3 bg-background/90 border-t-2 border-border backdrop-blur-sm">
             <h4 className="font-heading text-sm truncate">{game.title}</h4>
-            <div className="flex justify-between items-center mt-1">
-              <span className="text-xs font-base opacity-70">
-                {game.year ?? '—'}
-              </span>
-              <span className="text-xs font-heading text-main">
-                {game.rating ? `${game.rating}%` : '—'}
-              </span>
-            </div>
+            <span className="text-xs font-base opacity-70">
+              {game.year ?? '—'}
+            </span>
           </div>
         </div>
       ))}
