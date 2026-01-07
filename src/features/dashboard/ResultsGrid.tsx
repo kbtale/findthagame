@@ -74,19 +74,19 @@ export const ResultsGrid = ({
           onClick={(e) => handleCardClick(e, index)}
           className="group relative aspect-[264/374] bg-white border-2 border-border rounded-base shadow-shadow flex flex-col justify-between overflow-visible hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all cursor-pointer"
         >
-          {/* Rating Badge - Top Right (outside box) */}
-          {game.rating && (
-            <Badge className="absolute -top-2 -right-2 z-10">
-              {game.rating}%
-            </Badge>
-          )}
-          
-          {/* Match Score Badge - Top Left (outside box) */}
-          {game.matchScore > 0 && (
-            <Badge variant="neutral" className="absolute -top-2 -left-2 z-10">
-              {t('results.match')}: {game.matchScore}
-            </Badge>
-          )}
+          {/* Badges - Top Left (outside box) */}
+          <div className="absolute -top-2 -left-2 z-10 flex gap-1">
+            {game.rating && (
+              <Badge>
+                {t('results.rating')}: {game.rating}%
+              </Badge>
+            )}
+            {game.matchScore > 0 && (
+              <Badge variant="neutral">
+                {t('results.match')}: {game.matchScore.toFixed(3)}
+              </Badge>
+            )}
+          </div>
 
           {/* Image Area */}
           <div className="w-full h-full bg-secondary-background flex items-center justify-center overflow-hidden rounded-base">

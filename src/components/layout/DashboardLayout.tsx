@@ -59,8 +59,10 @@ export const DashboardLayout = ({
         
         {/* Brand Header Slot */}
         {brandHeader && (
-          <div className="p-6 border-b-2 border-border bg-main text-main-foreground">
-            {brandHeader}
+          <div className="p-6 border-b-2 border-border bg-main text-main-foreground flex justify-center">
+            <div className="h-12">
+              {brandHeader}
+            </div>
           </div>
         )}
 
@@ -82,7 +84,7 @@ export const DashboardLayout = ({
         
         {/* Brand Header - Mobile */}
         {brandHeader && (
-          <div className="p-4 pb-2 bg-main border-b-2 border-border">
+          <div className="p-4 pb-2 bg-main border-b-2 border-border flex justify-center">
             <div className="h-8">
               {brandHeader}
             </div>
