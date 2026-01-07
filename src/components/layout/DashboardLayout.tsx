@@ -206,27 +206,27 @@ export const DashboardLayout = ({
 
       {/* Recent Searches Dialog */}
       <Dialog open={isRecentSearchesOpen} onOpenChange={setRecentSearchesOpen}>
-        <DialogContent>
-          <DialogHeader className="flex flex-row items-start justify-between">
-            <div>
+        <DialogContent className="pr-16">
+          <DialogHeader>
+            <div className="flex items-center justify-between">
               <DialogTitle>{t('dashboard.recentInquiries')}</DialogTitle>
-              <DialogDescription>
-                {t('dashboard.recentSearchesDescription')}
-              </DialogDescription>
+              {recentSearches && recentSearches.length > 0 && onClearHistory && (
+                <Button
+                  variant="neutral"
+                  size="sm"
+                  onClick={onClearHistory}
+                  className="shrink-0"
+                >
+                  <Trash2 className="w-4 h-4 mr-1" />
+                  {t('dashboard.clearHistory')}
+                </Button>
+              )}
             </div>
-            {recentSearches && recentSearches.length > 0 && onClearHistory && (
-              <Button
-                variant="neutral"
-                size="sm"
-                onClick={onClearHistory}
-                className="shrink-0 mr-10"
-              >
-                <Trash2 className="w-4 h-4 mr-1" />
-                {t('dashboard.clearHistory')}
-              </Button>
-            )}
+            <DialogDescription>
+              {t('dashboard.recentSearchesDescription')}
+            </DialogDescription>
           </DialogHeader>
-          <div className="py-2 max-h-[400px] overflow-y-auto overflow-x-hidden">
+          <div className="py-2 pr-2 max-h-[400px] overflow-y-auto overflow-x-hidden">
             {!recentSearches || recentSearches.length === 0 ? (
               <div className="py-8 text-center text-muted-foreground">
                 {t('dashboard.noRecentSearches')}

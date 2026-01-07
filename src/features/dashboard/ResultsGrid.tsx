@@ -1,8 +1,20 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import type { GameResult } from '@/models/AppTypes';
 import type { MouseEvent } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Star } from 'lucide-react';
+
+const WELCOME_CATS = [
+  '/cats/WelcomeCat1.lottie',
+  '/cats/WelcomeCat2.lottie',
+  '/cats/WelcomeCat3.lottie',
+  '/cats/WelcomeCat4.lottie',
+  '/cats/WelcomeCat5.lottie',
+];
+
+const getRandomCat = () => WELCOME_CATS[Math.floor(Math.random() * WELCOME_CATS.length)];
 
 interface ClickOrigin {
   x: number;
@@ -25,6 +37,8 @@ export const ResultsGrid = ({
   onSelectGame 
 }: ResultsGridProps) => {
   const { t } = useTranslation();
+  
+  const [randomCat] = useState(() => getRandomCat());
 
   const handleCardClick = (e: MouseEvent<HTMLDivElement>, index: number) => {
     const card = e.currentTarget;
@@ -51,16 +65,27 @@ export const ResultsGrid = ({
     );
   }
 
-  // No search yet - show welcome/placeholder
+  // No search yet - show welcome message with cat
   if (!hasSearched && results.length === 0) {
     return (
-      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 pb-20">
-        {Array.from({ length: 12 }).map((_, i) => (
-          <div 
-            key={i} 
-            className="aspect-[264/374] bg-main/20 border-2 border-border rounded-base"
-          />
-        ))}
+      <div className="flex flex-col items-center justify-center py-20 px-8 text-center">
+        <DotLottieReact
+          src={randomCat}
+          loop
+          autoplay
+          className="w-48 h-48 mb-4"
+        />
+        <div className="max-w-lg space-y-4">
+          <h2 className="text-2xl font-heading opacity-30">
+            {t('results.welcomeTitle')}
+          </h2>
+          <p className="text-sm font-base opacity-20">
+            {t('results.welcomeFilters')}
+          </p>
+          <p className="text-sm font-base opacity-20">
+            {t('results.welcomeSearch')}
+          </p>
+        </div>
       </div>
     );
   }
