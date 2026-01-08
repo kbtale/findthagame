@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Star } from 'lucide-react';
 
 // Lazy load the Lottie player
-const Lottie = lazy(() => import('lottie-react'));
+const Lottie = lazy(() => import('lottie-react').then(mod => ({ default: mod.default })));
 
 const WELCOME_CATS = [
   '/cats/WelcomeCat1.json',
