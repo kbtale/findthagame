@@ -12,6 +12,7 @@ import { Search } from 'lucide-react';
 import { searchGames } from '@/api/client';
 import { useRecentSearches, type RecentSearch } from '@/hooks/useRecentSearches';
 import type { FilterState } from '@/models/AppTypes';
+import { generateRandomFilters } from '@/utils/randomFilters';
 
 export const DashboardPage = () => {
   const { t } = useTranslation();
@@ -90,6 +91,32 @@ export const DashboardPage = () => {
       console.error('Search failed:', err);
       dispatch(setError(err instanceof Error ? err.message : 'Search failed'));
     }
+  };
+
+  // Randomize filters and trigger search
+  const handleRandomize = async () => {
+    const randomFilters = generateRandomFilters();
+    setMobileOpen(false);
+    dispatch(setLoading());
+
+    try {
+      const data = await searchGames(randomFilters);
+      dispatch(setResults(data));
+      addSearch(randomFilters, data.length);
+      document.getElementById('results-area')?.scrollIntoView({ behavior: 'smooth' });
+    } catch (err) {
+      console.error('Random search failed:', err);
+      dispatch(setError(err instanceof Error ? err.message : 'Search failed'));
+    }
+  };
+
+  // Placeholder handlers for favorites and saved searches
+  const handleOpenFavorites = () => {
+    alert('Favorites feature coming soon!');
+  };
+
+  const handleOpenSavedSearches = () => {
+    alert('Saved Searches feature coming soon!');
   };
 
   const brandHeader = (
@@ -184,6 +211,9 @@ export const DashboardPage = () => {
       onSelectSearch={handleSelectRecentSearch}
       onDeleteSearch={removeSearch}
       onClearHistory={clearSearchHistory}
+      onRandomize={handleRandomize}
+      onOpenFavorites={handleOpenFavorites}
+      onOpenSavedSearches={handleOpenSavedSearches}
     />
   );
 };

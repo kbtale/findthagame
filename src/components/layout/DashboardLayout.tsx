@@ -22,6 +22,10 @@ interface DashboardLayoutProps {
   onSelectSearch?: (search: RecentSearch) => void;
   onDeleteSearch?: (id: string) => void;
   onClearHistory?: () => void;
+  // Action button handlers
+  onRandomize?: () => void;
+  onOpenFavorites?: () => void;
+  onOpenSavedSearches?: () => void;
 }
 
 export const DashboardLayout = ({
@@ -40,6 +44,9 @@ export const DashboardLayout = ({
   onSelectSearch,
   onDeleteSearch,
   onClearHistory,
+  onRandomize,
+  onOpenFavorites,
+  onOpenSavedSearches,
 }: DashboardLayoutProps) => {
   const [isRecentSearchesOpen, setRecentSearchesOpen] = useState(false);
   const [starCount, setStarCount] = useState<number | null>(null);
@@ -91,7 +98,7 @@ export const DashboardLayout = ({
             variant="neutral"
             size="icon"
             className="bg-main"
-            onClick={() => alert('Favorites coming soon!')}
+            onClick={onOpenFavorites}
             title="Favorites"
           >
             <Heart className="w-5 h-5" fill="currentColor" />
@@ -100,8 +107,8 @@ export const DashboardLayout = ({
             variant="neutral"
             size="icon"
             className="bg-main"
-            onClick={() => alert('Bookmarks coming soon!')}
-            title="Bookmarks"
+            onClick={onOpenSavedSearches}
+            title="Saved Searches"
           >
             <Bookmark className="w-5 h-5" fill="currentColor" />
           </Button>
@@ -109,8 +116,8 @@ export const DashboardLayout = ({
             variant="neutral"
             size="icon"
             className="bg-main"
-            onClick={() => alert('Randomizer coming soon!')}
-            title="Random Game"
+            onClick={onRandomize}
+            title="Randomize Filters"
           >
             <Dice5 className="w-5 h-5" />
           </Button>
