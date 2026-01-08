@@ -13,11 +13,9 @@ export const DashboardGrid = () => {
   // STATE 2: Shared Search Term (Controlled by both Top and Left inputs)
   const [searchTerm, setSearchTerm] = useState('');
 
-  // HANDLER: When search executes, hide the mobile menu and log filters
-  const handleSearchExecute = (filters: FilterState) => {
+  // HANDLER: When search executes, hide the mobile menu
+  const handleSearchExecute = (_filters: FilterState) => {
     setMobileFiltersOpen(false);
-    // Combine search term with filters and make API call
-    console.log('Search executed with filters:', { ...filters, search: searchTerm });
     // TODO: Dispatch your API call here...
   };
 

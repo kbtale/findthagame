@@ -131,7 +131,6 @@ export const DashboardPage = () => {
   // Calculate FLIP animation style from click origin
   const getFlipStyle = (): React.CSSProperties | undefined => {
     if (!clickOrigin) return undefined;
-    console.log('FLIP animation with origin:', clickOrigin);
     return {
       '--flip-origin-x': `${clickOrigin.x}px`,
       '--flip-origin-y': `${clickOrigin.y}px`,
@@ -139,9 +138,6 @@ export const DashboardPage = () => {
       '--flip-origin-h': `${clickOrigin.height}px`,
     } as React.CSSProperties;
   };
-
-  // Log for debugging
-  console.log('Selected game:', selectedGame?.title, 'clickOrigin:', clickOrigin);
 
   // Conditionally render grid or detail view
   const mainContent = selectedGame ? (

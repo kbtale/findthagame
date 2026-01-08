@@ -1,12 +1,15 @@
-import { useState, useEffect, lazy, Suspense } from 'react';
+import { useState, useEffect, lazy, Suspense, type ComponentType } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { GameResult } from '@/models/AppTypes';
 import type { MouseEvent } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Star } from 'lucide-react';
 
-// Lazy load the Lottie player
-const Lottie = lazy(() => import('lottie-react').then(mod => ({ default: mod.default })));
+const Lottie = lazy(() => 
+  import('lottie-react').then(mod => ({
+    default: (mod as unknown as { default: { default: ComponentType<{ animationData: object; loop?: boolean; autoplay?: boolean; className?: string }> } }).default.default
+  }))
+);
 
 const WELCOME_CATS = [
   '/cats/WelcomeCat1.json',
@@ -93,13 +96,13 @@ export const ResultsGrid = ({
           )}
         </Suspense>
         <div className="max-w-lg space-y-4">
-          <h2 className="text-2xl font-heading opacity-30">
+          <h2 className="text-2xl font-heading">
             {t('results.welcomeTitle')}
           </h2>
-          <p className="text-sm font-base opacity-20">
+          <p className="text-sm font-base">
             {t('results.welcomeFilters')}
           </p>
-          <p className="text-sm font-base opacity-20">
+          <p className="text-sm font-base">
             {t('results.welcomeSearch')}
           </p>
         </div>
