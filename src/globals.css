@@ -102,7 +102,7 @@
 }
 
 .animate-flip-expand {
-  animation: flip-expand 1s ease-out forwards;
+  animation: flip-expand 0.3s ease-out forwards;
 }
 
 /* Neobrutalist Scrollbar */

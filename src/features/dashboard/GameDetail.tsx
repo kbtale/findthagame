@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, ChevronLeft, ChevronRight, Languages } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, Languages, Heart } from 'lucide-react';
 import type { GameResult } from '@/models/AppTypes';
 import { updateGameTranslation } from '@/store/slices/resultsSlice';
 
@@ -18,6 +18,8 @@ interface NavigationHeaderProps {
   hasTranslation: boolean;
   showOriginal: boolean;
   onToggleTranslation: () => void;
+  isFavorite: boolean;
+  onToggleFavorite: () => void;
 }
 
 const NavigationHeader = memo(({ 
@@ -30,11 +32,12 @@ const NavigationHeader = memo(({
   isTranslating,
   hasTranslation,
   showOriginal,
-  onToggleTranslation
+  onToggleTranslation,
+  isFavorite,
+  onToggleFavorite
 }: NavigationHeaderProps) => {
   const { t } = useTranslation();
   
-  // Determine button text
   const getButtonText = () => {
     if (isTranslating) return t('gameDetail.translating');
     if (hasTranslation && !showOriginal) return t('gameDetail.seeOriginal');
@@ -61,6 +64,17 @@ const NavigationHeader = memo(({
             {getButtonText()}
           </Button>
         )}
+        <Button
+          onClick={onToggleFavorite}
+          size="icon"
+          className={isFavorite 
+            ? "bg-red-500 text-white hover:bg-red-600" 
+            : "bg-[var(--chart-3)] text-white hover:bg-[var(--chart-3)]/90"
+          }
+          title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+        >
+          <Heart className="w-4 h-4" fill={isFavorite ? "currentColor" : "none"} />
+        </Button>
         <Button 
           onClick={onPrev}
           disabled={!hasPrev}
@@ -89,6 +103,8 @@ interface GameDetailProps {
   onNext?: () => void;
   hasPrev?: boolean;
   hasNext?: boolean;
+  isFavorite?: boolean;
+  onToggleFavorite?: () => void;
 }
 
 export const GameDetail = ({ 
@@ -97,7 +113,9 @@ export const GameDetail = ({
   onPrev, 
   onNext, 
   hasPrev = false, 
-  hasNext = false 
+  hasNext = false,
+  isFavorite = false,
+  onToggleFavorite
 }: GameDetailProps) => {
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
@@ -173,6 +191,8 @@ export const GameDetail = ({
         hasTranslation={hasTranslation}
         showOriginal={showOriginal}
         onToggleTranslation={handleToggleTranslation}
+        isFavorite={isFavorite}
+        onToggleFavorite={onToggleFavorite ?? (() => {})}
       />
 
       {/* Game Content */}

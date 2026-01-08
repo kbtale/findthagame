@@ -12,7 +12,9 @@ import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import { searchGames } from '@/api/client';
 import { useRecentSearches, type RecentSearch } from '@/hooks/useRecentSearches';
-import type { FilterState } from '@/models/AppTypes';
+import { useFavorites } from '@/hooks/useFavorites';
+import { FavoritesDialog } from '@/components/FavoritesDialog';
+import type { FilterState, GameResult } from '@/models/AppTypes';
 import { generateRandomFilters } from '@/utils/randomFilters';
 
 export const DashboardPage = () => {
@@ -36,6 +38,10 @@ export const DashboardPage = () => {
 
   // Recent searches
   const { searches: recentSearches, addSearch, removeSearch, clearAll: clearSearchHistory } = useRecentSearches();
+
+  // Favorites
+  const { favorites, isFavorite, toggleFavorite, removeFavorite } = useFavorites();
+  const [isFavoritesOpen, setFavoritesOpen] = useState(false);
 
   // Derived values
   const isLoading = status === 'loading';
@@ -113,9 +119,18 @@ export const DashboardPage = () => {
     }
   };
 
-  // Placeholder handlers for favorites and saved searches
+  // Handlers for favorites dialog
   const handleOpenFavorites = () => {
-    alert('Favorites feature coming soon!');
+    setFavoritesOpen(true);
+  };
+
+  const handleSelectFavorite = (game: GameResult) => {
+    // Find the game index in results and select it
+    const index = results.findIndex(r => r.id === game.id);
+    if (index !== -1) {
+      dispatch(selectGame({ index, origin: { x: 0, y: 0, width: 0, height: 0 } }));
+    }
+    setFavoritesOpen(false);
   };
 
   const handleOpenSavedSearches = () => {
@@ -189,6 +204,8 @@ export const DashboardPage = () => {
         onNext={handleNext}
         hasPrev={hasPrev}
         hasNext={hasNext}
+        isFavorite={selectedGame ? isFavorite(selectedGame.id) : false}
+        onToggleFavorite={() => selectedGame && toggleFavorite(selectedGame)}
       />
     </div>
   ) : (
@@ -204,25 +221,35 @@ export const DashboardPage = () => {
   // RENDER
   // =========================================================================
   return (
-    <DashboardLayout
-      brandHeader={brandHeader}
-      searchBar={searchBar}
-      mobileSearch={mobileSearch}
-      sidebar={sidebar}
-      main={mainContent}
-      isMobileOpen={isMobileOpen}
-      onMobileToggle={() => setMobileOpen(!isMobileOpen)}
-      isSidebarCollapsed={isSidebarCollapsed}
-      onSidebarToggle={() => setSidebarCollapsed(!isSidebarCollapsed)}
-      isLoading={isLoading}
-      resultsCount={results.length}
-      recentSearches={recentSearches}
-      onSelectSearch={handleSelectRecentSearch}
-      onDeleteSearch={removeSearch}
-      onClearHistory={clearSearchHistory}
-      onRandomize={handleRandomize}
-      onOpenFavorites={handleOpenFavorites}
-      onOpenSavedSearches={handleOpenSavedSearches}
-    />
+    <>
+      <DashboardLayout
+        brandHeader={brandHeader}
+        searchBar={searchBar}
+        mobileSearch={mobileSearch}
+        sidebar={sidebar}
+        main={mainContent}
+        isMobileOpen={isMobileOpen}
+        onMobileToggle={() => setMobileOpen(!isMobileOpen)}
+        isSidebarCollapsed={isSidebarCollapsed}
+        onSidebarToggle={() => setSidebarCollapsed(!isSidebarCollapsed)}
+        isLoading={isLoading}
+        resultsCount={results.length}
+        recentSearches={recentSearches}
+        onSelectSearch={handleSelectRecentSearch}
+        onDeleteSearch={removeSearch}
+        onClearHistory={clearSearchHistory}
+        onRandomize={handleRandomize}
+        onOpenFavorites={handleOpenFavorites}
+        onOpenSavedSearches={handleOpenSavedSearches}
+      />
+      
+      <FavoritesDialog
+        open={isFavoritesOpen}
+        onOpenChange={setFavoritesOpen}
+        favorites={favorites}
+        onSelectGame={handleSelectFavorite}
+        onRemoveFavorite={removeFavorite}
+      />
+    </>
   );
 };
