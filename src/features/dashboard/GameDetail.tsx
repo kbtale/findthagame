@@ -1,7 +1,8 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, Languages } from 'lucide-react';
 import type { GameResult } from '@/models/AppTypes';
 
 interface GameDetailProps {
@@ -21,7 +22,40 @@ export const GameDetail = ({
   hasPrev = false, 
   hasNext = false 
 }: GameDetailProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const [translatedSummary, setTranslatedSummary] = useState<string | null>(null);
+  const [translatedStoryline, setTranslatedStoryline] = useState<string | null>(null);
+  const [isTranslating, setIsTranslating] = useState(false);
+
+  const isNotEnglish = i18n.language !== 'en';
+
+  const handleTranslate = async () => {
+    if (!game) return;
+    
+    setIsTranslating(true);
+    try {
+      // Combine summary and storyline for translation
+      const textToTranslate = [game.summary, game.storyline].filter(Boolean).join('\n\n---\n\n');
+      
+      const response = await fetch('/api/translate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: textToTranslate, targetLang: i18n.language }),
+      });
+      
+      const data = await response.json();
+      if (data.translatedText) {
+        // Split back into summary and storyline
+        const parts = data.translatedText.split('---');
+        setTranslatedSummary(parts[0]?.trim() || null);
+        setTranslatedStoryline(parts[1]?.trim() || null);
+      }
+    } catch (error) {
+      console.error('Translation failed:', error);
+    } finally {
+      setIsTranslating(false);
+    }
+  };
 
   if (!game) return null;
 
@@ -37,6 +71,16 @@ export const GameDetail = ({
           {t('gameDetail.backToResults')}
         </Button>
         <div className="flex items-center gap-2">
+          {isNotEnglish && (
+            <Button
+              onClick={handleTranslate}
+              disabled={isTranslating}
+              className="flex items-center gap-2 bg-[var(--chart-1)] text-white hover:bg-[var(--chart-1)]/90"
+            >
+              <Languages className="w-4 h-4" />
+              {isTranslating ? t('gameDetail.translating') : t('gameDetail.translate')}
+            </Button>
+          )}
           <Button 
             onClick={onPrev}
             disabled={!hasPrev}
@@ -127,7 +171,7 @@ export const GameDetail = ({
           {game.summary && (
             <div>
               <h3 className="font-heading text-sm uppercase mb-2">{t('gameDetail.summary')}</h3>
-              <p className="text-sm font-base opacity-80">{game.summary}</p>
+              <p className="text-sm font-base opacity-80">{translatedSummary || game.summary}</p>
             </div>
           )}
 
@@ -135,7 +179,7 @@ export const GameDetail = ({
           {game.storyline && (
             <div>
               <h3 className="font-heading text-sm uppercase mb-2">{t('gameDetail.storyline')}</h3>
-              <p className="text-sm font-base opacity-80">{game.storyline}</p>
+              <p className="text-sm font-base opacity-80">{translatedStoryline || game.storyline}</p>
             </div>
           )}
 

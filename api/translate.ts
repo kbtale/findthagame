@@ -1,13 +1,27 @@
-/*
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import Groq from 'groq-sdk';
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
+const LANGUAGE_MAP: Record<string, string> = {
+  es: 'Spanish',
+  fr: 'French',
+  de: 'German',
+  it: 'Italian',
+  pt: 'Portuguese',
+  ja: 'Japanese',
+  ko: 'Korean',
+  zh: 'Chinese',
+  ru: 'Russian',
+  ar: 'Arabic',
+};
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  const { text, targetLang = 'Spanish' } = req.body;
+  const { text, targetLang = 'es' } = req.body;
+  const languageName = LANGUAGE_MAP[targetLang] || targetLang;
+  
   if (!text) return res.status(400).json({ error: "No text provided" });
 
   try {
@@ -15,7 +29,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       messages: [
         {
           role: "system",
-          content: `You are a translator API. Translate the user input into ${targetLang}. Output ONLY the translated text. No pleasantries, no quotes.`
+          content: `You are a translator API. Translate the user input into ${languageName}. Output ONLY the translated text. No pleasantries, no quotes.`
         },
         {
           role: "user",
@@ -35,4 +49,3 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(500).json({ error: 'Translation failed' });
   }
 }
-*/
