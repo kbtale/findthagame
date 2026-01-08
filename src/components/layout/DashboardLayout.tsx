@@ -1,7 +1,7 @@
 import { useState, useEffect, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
-import { X, SlidersHorizontal, PanelLeft, PanelLeftClose, Github, History, Trash2, Heart, Bookmark, Dice5 } from 'lucide-react';
+import { X, SlidersHorizontal, PanelLeft, PanelLeftClose, Github, History, Trash2, Heart, Bookmark, Dice5, BookmarkCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import type { RecentSearch } from '@/hooks/useRecentSearches';
@@ -22,6 +22,7 @@ interface DashboardLayoutProps {
   onSelectSearch?: (search: RecentSearch) => void;
   onDeleteSearch?: (id: string) => void;
   onClearHistory?: () => void;
+  onToggleBookmark?: (id: string) => void;
   // Action button handlers
   onRandomize?: () => void;
   onOpenFavorites?: () => void;
@@ -44,6 +45,7 @@ export const DashboardLayout = ({
   onSelectSearch,
   onDeleteSearch,
   onClearHistory,
+  onToggleBookmark,
   onRandomize,
   onOpenFavorites,
   onOpenSavedSearches,
@@ -286,6 +288,25 @@ export const DashboardLayout = ({
                         {search.resultCount} {t('dashboard.results')} • {new Date(search.timestamp).toLocaleDateString()}
                       </p>
                     </div>
+                    <Button
+                      variant="neutral"
+                      size="icon"
+                      className={cn(
+                        "shrink-0",
+                        search.isBookmarked ? "visible" : "invisible group-hover:visible"
+                      )}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onToggleBookmark?.(search.id);
+                      }}
+                      title={search.isBookmarked ? 'Remove bookmark' : 'Bookmark this search'}
+                    >
+                      {search.isBookmarked ? (
+                        <BookmarkCheck className="w-4 h-4 text-main" />
+                      ) : (
+                        <Bookmark className="w-4 h-4" />
+                      )}
+                    </Button>
                     <Button
                       variant="neutral"
                       size="icon"

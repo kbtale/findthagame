@@ -14,6 +14,7 @@ import { searchGames } from '@/api/client';
 import { useRecentSearches, type RecentSearch } from '@/hooks/useRecentSearches';
 import { useFavorites } from '@/hooks/useFavorites';
 import { FavoritesDialog } from '@/components/FavoritesDialog';
+import { SavedSearchesDialog } from '@/components/SavedSearchesDialog';
 import type { FilterState, GameResult } from '@/models/AppTypes';
 import { generateRandomFilters } from '@/utils/randomFilters';
 
@@ -37,11 +38,19 @@ export const DashboardPage = () => {
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   // Recent searches
-  const { searches: recentSearches, addSearch, removeSearch, clearAll: clearSearchHistory } = useRecentSearches();
+  const { 
+    searches: recentSearches, 
+    bookmarkedSearches,
+    addSearch, 
+    removeSearch, 
+    clearAll: clearSearchHistory,
+    toggleBookmark 
+  } = useRecentSearches();
 
   // Favorites
   const { favorites, isFavorite, toggleFavorite, removeFavorite } = useFavorites();
   const [isFavoritesOpen, setFavoritesOpen] = useState(false);
+  const [isSavedSearchesOpen, setSavedSearchesOpen] = useState(false);
 
   // Derived values
   const isLoading = status === 'loading';
@@ -134,7 +143,7 @@ export const DashboardPage = () => {
   };
 
   const handleOpenSavedSearches = () => {
-    alert('Saved Searches feature coming soon!');
+    setSavedSearchesOpen(true);
   };
 
   const brandHeader = (
@@ -238,6 +247,7 @@ export const DashboardPage = () => {
         onSelectSearch={handleSelectRecentSearch}
         onDeleteSearch={removeSearch}
         onClearHistory={clearSearchHistory}
+        onToggleBookmark={toggleBookmark}
         onRandomize={handleRandomize}
         onOpenFavorites={handleOpenFavorites}
         onOpenSavedSearches={handleOpenSavedSearches}
@@ -249,6 +259,14 @@ export const DashboardPage = () => {
         favorites={favorites}
         onSelectGame={handleSelectFavorite}
         onRemoveFavorite={removeFavorite}
+      />
+
+      <SavedSearchesDialog
+        open={isSavedSearchesOpen}
+        onOpenChange={setSavedSearchesOpen}
+        bookmarkedSearches={bookmarkedSearches}
+        onSelectSearch={handleSelectRecentSearch}
+        onUnbookmark={toggleBookmark}
       />
     </>
   );

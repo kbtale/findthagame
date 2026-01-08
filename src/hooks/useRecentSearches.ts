@@ -15,6 +15,7 @@ export interface RecentSearch {
   filters: FilterState;
   timestamp: number;
   resultCount: number;
+  isBookmarked?: boolean;
 }
 
 /**
@@ -47,7 +48,6 @@ export const useRecentSearches = () => {
   // Lazy initial state to load from localStorage
   const [searches, setSearches] = useState<RecentSearch[]>(() => loadSearches());
 
-  // Add a new search (deduplicates by filter comparison)
   const addSearch = useCallback((filters: FilterState, resultCount: number) => {
     setSearches((prev) => {
       // Remove any existing search with identical filters
@@ -76,14 +76,40 @@ export const useRecentSearches = () => {
   }, []);
 
   const clearAll = useCallback(() => {
-    setSearches([]);
-    localStorage.removeItem(STORAGE_KEY);
+    // Only clear non-bookmarked searches
+    setSearches((prev) => {
+      const bookmarked = prev.filter((s) => s.isBookmarked);
+      saveSearches(bookmarked);
+      return bookmarked;
+    });
   }, []);
+
+  // Toggle bookmark status
+  const toggleBookmark = useCallback((id: string) => {
+    setSearches((prev) => {
+      const updated = prev.map((s) =>
+        s.id === id ? { ...s, isBookmarked: !s.isBookmarked } : s
+      );
+      saveSearches(updated);
+      return updated;
+    });
+  }, []);
+
+  // Check if a search is bookmarked
+  const isBookmarked = useCallback((id: string) => {
+    return searches.some((s) => s.id === id && s.isBookmarked);
+  }, [searches]);
+
+  // Get only bookmarked searches
+  const bookmarkedSearches = searches.filter((s) => s.isBookmarked);
 
   return {
     searches,
+    bookmarkedSearches,
     addSearch,
     removeSearch,
     clearAll,
+    toggleBookmark,
+    isBookmarked,
   };
 };
