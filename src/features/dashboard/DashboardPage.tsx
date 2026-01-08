@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '@/store/store';
@@ -61,21 +61,21 @@ export const DashboardPage = () => {
     }
   };
 
-  const handleSelectGame = (index: number, origin: { x: number; y: number; width: number; height: number }) => {
+  const handleSelectGame = useCallback((index: number, origin: { x: number; y: number; width: number; height: number }) => {
     dispatch(selectGame({ index, origin }));
-  };
+  }, [dispatch]);
 
-  const handleBack = () => {
+  const handleBack = useCallback(() => {
     dispatch(clearSelection());
-  };
+  }, [dispatch]);
 
-  const handlePrev = () => {
+  const handlePrev = useCallback(() => {
     dispatch(selectPrevious());
-  };
+  }, [dispatch]);
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     dispatch(selectNext());
-  };
+  }, [dispatch]);
 
   const handleSelectRecentSearch = async (search: RecentSearch) => {
     setSearchTerm(search.filters.search);

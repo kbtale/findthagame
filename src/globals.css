@@ -72,3 +72,53 @@
     @apply font-heading;
   }
 }
+
+/* Slide-in animation for game detail view */
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.3s ease-out;
+}
+
+/* FLIP expand animation */
+@keyframes flip-expand {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-flip-expand {
+  animation: flip-expand 1s ease-out forwards;
+}
+
+/* Neobrutalist Scrollbar */
+::-webkit-scrollbar {
+  width: 18px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+  border-left: 6px solid #000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #000;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #000;
+}

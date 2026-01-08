@@ -149,7 +149,7 @@ export const DashboardLayout = ({
       {/* =========================================================================
           REGION 3: MAIN CONTENT AREA
       ========================================================================= */}
-      <main id="results-area" className="flex-1 h-full overflow-y-auto bg-background p-4 lg:p-8 relative z-10">
+      <main id="results-area" className="flex-1 h-full overflow-y-auto bg-background p-4 lg:p-8 relative z-10 scrollbar-neo">
         {/* Main Header Slot (Desktop only) */}
         <div className="hidden lg:flex items-center justify-between mb-8">
           <div className="flex items-center">
