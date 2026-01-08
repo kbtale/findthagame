@@ -1,6 +1,22 @@
-import { useReducer } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector, useDispatch } from 'react-redux';
+import type { RootState } from '@/store/store';
 import type { FilterState } from '@/models/AppTypes';
+import {
+  setPlatformId,
+  setYearRange,
+  setGenreIds,
+  setThemeIds,
+  setGameModeId,
+  setPerspectiveId,
+  setCategoryId,
+  setStatusId,
+  setDeveloperId,
+  setMinRating,
+  setAgeRatingOrg,
+  setAgeRatingValue,
+  resetFilters,
+} from '@/store/slices/detectiveSlice';
 
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
@@ -32,85 +48,6 @@ const AGE_RATING_ORG_TO_VALUES: Record<number, number[]> = {
   7: [34, 35, 36, 37, 38, 39],    // ACB: G, PG, M, MA 15+, R 18+, RC
 };
 
-// Initial state for the filter form
-const initialState: FilterState = {
-  search: '',
-  platformId: null,
-  yearRange: [1970, 2026],
-  genreIds: [],
-  themeIds: [],
-  gameModeId: null,
-  perspectiveId: null,
-  categoryId: null,
-  statusId: null,
-  developerName: '',
-  minRating: null,
-  ageRatingOrg: null,
-  ageRatingValue: null
-};
-
-// Action types for the reducer
-type FilterAction =
-  | { type: 'SET_PLATFORM_ID'; payload: number | null }
-  | { type: 'SET_YEAR_RANGE'; payload: [number, number] }
-  | { type: 'SET_GENRE_IDS'; payload: number[] }
-  | { type: 'SET_THEME_IDS'; payload: number[] }
-  | { type: 'SET_GAME_MODE_ID'; payload: number | null }
-  | { type: 'SET_PERSPECTIVE_ID'; payload: number | null }
-  | { type: 'SET_CATEGORY_ID'; payload: number | null }
-  | { type: 'SET_STATUS_ID'; payload: number | null }
-  | { type: 'SET_DEVELOPER_NAME'; payload: string }
-  | { type: 'SET_MIN_RATING'; payload: number | null }
-  | { type: 'SET_AGE_RATING_ORG'; payload: number | null }
-  | { type: 'SET_AGE_RATING_VALUE'; payload: number | null }
-  | { type: 'RESET' }
-  | { type: 'RESET_CORE' }
-  | { type: 'RESET_TIMELINE' }
-  | { type: 'RESET_CLASSIFICATION' }
-  | { type: 'RESET_METRICS' };
-
-// Reducer function
-function filterReducer(state: FilterState, action: FilterAction): FilterState {
-  switch (action.type) {
-    case 'SET_PLATFORM_ID':
-      return { ...state, platformId: action.payload };
-    case 'SET_YEAR_RANGE':
-      return { ...state, yearRange: action.payload };
-    case 'SET_GENRE_IDS':
-      return { ...state, genreIds: action.payload };
-    case 'SET_THEME_IDS':
-      return { ...state, themeIds: action.payload };
-    case 'SET_GAME_MODE_ID':
-      return { ...state, gameModeId: action.payload };
-    case 'SET_PERSPECTIVE_ID':
-      return { ...state, perspectiveId: action.payload };
-    case 'SET_CATEGORY_ID':
-      return { ...state, categoryId: action.payload };
-    case 'SET_STATUS_ID':
-      return { ...state, statusId: action.payload };
-    case 'SET_DEVELOPER_NAME':
-      return { ...state, developerName: action.payload };
-    case 'SET_MIN_RATING':
-      return { ...state, minRating: action.payload };
-    case 'SET_AGE_RATING_ORG':
-      return { ...state, ageRatingOrg: action.payload, ageRatingValue: null };
-    case 'SET_AGE_RATING_VALUE':
-      return { ...state, ageRatingValue: action.payload };
-    case 'RESET':
-      return initialState;
-    case 'RESET_CORE':
-      return { ...state, categoryId: null, statusId: null, platformId: null, developerName: '' };
-    case 'RESET_TIMELINE':
-      return { ...state, yearRange: [1970, 2026] };
-    case 'RESET_CLASSIFICATION':
-      return { ...state, genreIds: [], themeIds: [], gameModeId: null, perspectiveId: null };
-    case 'RESET_METRICS':
-      return { ...state, minRating: null, ageRatingOrg: null, ageRatingValue: null };
-    default:
-      return state;
-  }
-}
-
 interface FilterPanelProps {
   onSearch: (filters: FilterState) => void;
   onClearAll?: () => void;
@@ -118,7 +55,10 @@ interface FilterPanelProps {
 
 export const FilterPanel = ({ onSearch, onClearAll }: FilterPanelProps) => {
   const { t } = useTranslation();
-  const [filters, dispatch] = useReducer(filterReducer, initialState);
+  const dispatch = useDispatch();
+  
+  // Read filters from Redux store
+  const filters = useSelector((state: RootState) => state.detective);
 
   // Filter age rating values based on selected organization
   const filteredAgeRatingValues = filters.ageRatingOrg
@@ -128,8 +68,33 @@ export const FilterPanel = ({ onSearch, onClearAll }: FilterPanelProps) => {
     : [];
 
   const handleClearAll = () => {
-    dispatch({ type: 'RESET' });
+    dispatch(resetFilters());
     onClearAll?.();
+  };
+
+  // Helper to reset sections
+  const handleResetCore = () => {
+    dispatch(setCategoryId(null));
+    dispatch(setStatusId(null));
+    dispatch(setPlatformId(null));
+    dispatch(setDeveloperId(''));
+  };
+
+  const handleResetTimeline = () => {
+    dispatch(setYearRange([1970, 2026]));
+  };
+
+  const handleResetClassification = () => {
+    dispatch(setGenreIds([]));
+    dispatch(setThemeIds([]));
+    dispatch(setGameModeId(null));
+    dispatch(setPerspectiveId(null));
+  };
+
+  const handleResetMetrics = () => {
+    dispatch(setMinRating(null));
+    dispatch(setAgeRatingOrg(null));
+    dispatch(setAgeRatingValue(null));
   };
 
   return (
@@ -146,7 +111,7 @@ export const FilterPanel = ({ onSearch, onClearAll }: FilterPanelProps) => {
           <Tooltip>
             <TooltipTrigger asChild>
               <button
-                onClick={() => dispatch({ type: 'RESET_CORE' })}
+                onClick={handleResetCore}
                 className="ml-auto text-xs font-heading uppercase opacity-50 hover:opacity-100 transition-opacity cursor-pointer"
               >
                 {t('filters.clear')}
@@ -165,7 +130,7 @@ export const FilterPanel = ({ onSearch, onClearAll }: FilterPanelProps) => {
             <Combobox
               options={GAME_CATEGORIES.map(c => ({ value: c.id.toString(), label: c.name }))}
               value={filters.categoryId?.toString() ?? null}
-              onValueChange={(val) => dispatch({ type: 'SET_CATEGORY_ID', payload: val ? Number(val) : null })}
+              onValueChange={(val) => dispatch(setCategoryId(val ? Number(val) : null))}
               placeholder={t('filters.anyCategory')}
               searchPlaceholder={t('filters.searchCategories')}
               emptyText={t('filters.noCategoryFound')}
@@ -179,7 +144,7 @@ export const FilterPanel = ({ onSearch, onClearAll }: FilterPanelProps) => {
             <Combobox
               options={GAME_STATUSES.map(s => ({ value: s.id.toString(), label: s.name }))}
               value={filters.statusId?.toString() ?? null}
-              onValueChange={(val) => dispatch({ type: 'SET_STATUS_ID', payload: val ? Number(val) : null })}
+              onValueChange={(val) => dispatch(setStatusId(val ? Number(val) : null))}
               placeholder={t('filters.anyStatus')}
               searchPlaceholder={t('filters.searchStatuses')}
               emptyText={t('filters.noStatusFound')}
@@ -195,7 +160,7 @@ export const FilterPanel = ({ onSearch, onClearAll }: FilterPanelProps) => {
             placeholder={t('filters.developerPlaceholder')}
             className="h-9 bg-background font-base shadow-shadow"
             value={filters.developerName}
-            onChange={(e) => dispatch({ type: 'SET_DEVELOPER_NAME', payload: e.target.value })}
+            onChange={(e) => dispatch(setDeveloperId(e.target.value))}
           />
         </div>
         
@@ -205,7 +170,7 @@ export const FilterPanel = ({ onSearch, onClearAll }: FilterPanelProps) => {
           <Combobox
             options={PLATFORMS.map(p => ({ value: p.id.toString(), label: p.name }))}
             value={filters.platformId?.toString() ?? null}
-            onValueChange={(val) => dispatch({ type: 'SET_PLATFORM_ID', payload: val ? Number(val) : null })}
+            onValueChange={(val) => dispatch(setPlatformId(val ? Number(val) : null))}
             placeholder={t('filters.anyPlatform')}
             searchPlaceholder={t('filters.searchPlatforms')}
             emptyText={t('filters.noPlatformFound')}
@@ -225,7 +190,7 @@ export const FilterPanel = ({ onSearch, onClearAll }: FilterPanelProps) => {
           <Tooltip>
             <TooltipTrigger asChild>
               <button
-                onClick={() => dispatch({ type: 'RESET_TIMELINE' })}
+                onClick={handleResetTimeline}
                 className="ml-auto text-xs font-heading uppercase opacity-50 hover:opacity-100 transition-opacity cursor-pointer"
               >
                 {t('filters.clear')}
@@ -249,7 +214,7 @@ export const FilterPanel = ({ onSearch, onClearAll }: FilterPanelProps) => {
           
           <Slider 
             value={filters.yearRange}
-            onValueChange={(val) => dispatch({ type: 'SET_YEAR_RANGE', payload: val as [number, number] })}
+            onValueChange={(val) => dispatch(setYearRange(val as [number, number]))}
             min={1970} 
             max={2026} 
             step={1} 
@@ -269,7 +234,7 @@ export const FilterPanel = ({ onSearch, onClearAll }: FilterPanelProps) => {
           <Tooltip>
             <TooltipTrigger asChild>
               <button
-                onClick={() => dispatch({ type: 'RESET_CLASSIFICATION' })}
+                onClick={handleResetClassification}
                 className="ml-auto text-xs font-heading uppercase opacity-50 hover:opacity-100 transition-opacity cursor-pointer"
               >
                 {t('filters.clear')}
@@ -287,7 +252,7 @@ export const FilterPanel = ({ onSearch, onClearAll }: FilterPanelProps) => {
           <Multiselect
             options={GENRES.map(g => ({ value: g.id.toString(), label: g.name }))}
             value={filters.genreIds.map(id => id.toString())}
-            onValueChange={(newValues) => dispatch({ type: 'SET_GENRE_IDS', payload: newValues.map(Number) })}
+            onValueChange={(newValues) => dispatch(setGenreIds(newValues.map(Number)))}
             placeholder={t('filters.selectGenres')}
             searchPlaceholder={t('filters.searchGenres')}
             emptyText={t('filters.noGenreFound')}
@@ -302,7 +267,7 @@ export const FilterPanel = ({ onSearch, onClearAll }: FilterPanelProps) => {
           <Multiselect
             options={THEMES.map(t => ({ value: t.id.toString(), label: t.name }))}
             value={filters.themeIds.map(id => id.toString())}
-            onValueChange={(newValues) => dispatch({ type: 'SET_THEME_IDS', payload: newValues.map(Number) })}
+            onValueChange={(newValues) => dispatch(setThemeIds(newValues.map(Number)))}
             placeholder={t('filters.selectThemes')}
             searchPlaceholder={t('filters.searchThemes')}
             emptyText={t('filters.noThemeFound')}
@@ -318,7 +283,7 @@ export const FilterPanel = ({ onSearch, onClearAll }: FilterPanelProps) => {
             <Combobox
               options={GAME_MODES.map(m => ({ value: m.id.toString(), label: m.name }))}
               value={filters.gameModeId?.toString() ?? null}
-              onValueChange={(val) => dispatch({ type: 'SET_GAME_MODE_ID', payload: val ? Number(val) : null })}
+              onValueChange={(val) => dispatch(setGameModeId(val ? Number(val) : null))}
               placeholder={t('filters.anyMode')}
               searchPlaceholder={t('filters.searchModes')}
               emptyText={t('filters.noModeFound')}
@@ -332,7 +297,7 @@ export const FilterPanel = ({ onSearch, onClearAll }: FilterPanelProps) => {
             <Combobox
               options={PERSPECTIVES.map(p => ({ value: p.id.toString(), label: p.name }))}
               value={filters.perspectiveId?.toString() ?? null}
-              onValueChange={(val) => dispatch({ type: 'SET_PERSPECTIVE_ID', payload: val ? Number(val) : null })}
+              onValueChange={(val) => dispatch(setPerspectiveId(val ? Number(val) : null))}
               placeholder={t('filters.anyView')}
               searchPlaceholder={t('filters.searchViews')}
               emptyText={t('filters.noViewFound')}
@@ -353,7 +318,7 @@ export const FilterPanel = ({ onSearch, onClearAll }: FilterPanelProps) => {
           <Tooltip>
             <TooltipTrigger asChild>
               <button
-                onClick={() => dispatch({ type: 'RESET_METRICS' })}
+                onClick={handleResetMetrics}
                 className="ml-auto text-xs font-heading uppercase opacity-50 hover:opacity-100 transition-opacity cursor-pointer"
               >
                 {t('filters.clear')}
@@ -372,7 +337,7 @@ export const FilterPanel = ({ onSearch, onClearAll }: FilterPanelProps) => {
            </div>
            <Slider 
              value={[filters.minRating ?? 0]} 
-             onValueChange={(val) => dispatch({ type: 'SET_MIN_RATING', payload: val[0] })}
+             onValueChange={(val) => dispatch(setMinRating(val[0]))}
              min={0} 
              max={100} 
              step={5} 
@@ -386,7 +351,7 @@ export const FilterPanel = ({ onSearch, onClearAll }: FilterPanelProps) => {
             <Combobox
               options={AGE_RATING_ORGANIZATIONS.map(o => ({ value: o.id.toString(), label: o.name }))}
               value={filters.ageRatingOrg?.toString() ?? null}
-              onValueChange={(val) => dispatch({ type: 'SET_AGE_RATING_ORG', payload: val ? Number(val) : null })}
+              onValueChange={(val) => dispatch(setAgeRatingOrg(val ? Number(val) : null))}
               placeholder={t('filters.orgPlaceholder')}
               searchPlaceholder={t('filters.searchOrgs')}
               emptyText={t('filters.noOrgFound')}
@@ -400,7 +365,7 @@ export const FilterPanel = ({ onSearch, onClearAll }: FilterPanelProps) => {
             <Combobox
               options={filteredAgeRatingValues.map(r => ({ value: r.id.toString(), label: r.name }))}
               value={filters.ageRatingValue?.toString() ?? null}
-              onValueChange={(val) => dispatch({ type: 'SET_AGE_RATING_VALUE', payload: val ? Number(val) : null })}
+              onValueChange={(val) => dispatch(setAgeRatingValue(val ? Number(val) : null))}
               placeholder={t('filters.selectRating')}
               searchPlaceholder={t('filters.searchRatings')}
               emptyText={t('filters.selectOrgFirst')}

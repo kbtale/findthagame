@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '@/store/store';
 import { setLoading, setResults, setError, selectGame, clearSelection, selectNext, selectPrevious } from '@/store/slices/resultsSlice';
+import { setAllFilters, resetFilters } from '@/store/slices/detectiveSlice';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { FilterPanel } from '@/features/dashboard/filterPanel';
 import { ResultsGrid } from '@/features/dashboard/ResultsGrid';
@@ -80,6 +81,7 @@ export const DashboardPage = () => {
 
   const handleSelectRecentSearch = async (search: RecentSearch) => {
     setSearchTerm(search.filters.search);
+    dispatch(setAllFilters(search.filters)); // Update Redux filter state
     setMobileOpen(false);
     dispatch(setLoading());
 
@@ -96,6 +98,7 @@ export const DashboardPage = () => {
   // Randomize filters and trigger search
   const handleRandomize = async () => {
     const randomFilters = generateRandomFilters();
+    dispatch(setAllFilters(randomFilters)); // Update Redux filter state
     setMobileOpen(false);
     dispatch(setLoading());
 
@@ -152,7 +155,13 @@ export const DashboardPage = () => {
   );
 
   const sidebar = (
-    <FilterPanel onSearch={handleSearch} onClearAll={() => setSearchTerm('')} />
+    <FilterPanel 
+      onSearch={handleSearch} 
+      onClearAll={() => {
+        setSearchTerm('');
+        dispatch(resetFilters());
+      }}
+    />
   );
 
   // Calculate FLIP animation style from click origin

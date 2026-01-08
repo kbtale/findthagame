@@ -22,7 +22,6 @@ const initialState: FilterState = {
   ageRatingValue: null
 };
 
-// Create the slice logic using createSlice.
 export const detectiveSlice = createSlice({
   name: 'detective',
   initialState,
@@ -81,6 +80,19 @@ export const detectiveSlice = createSlice({
       state.ageRatingValue = action.payload;
     },
 
+    // Set all filters at once (for randomizer, recent searches)
+    setAllFilters: (_, action: PayloadAction<FilterState>) => {
+      return action.payload;
+    },
+
+    // Direct array setters (for FilterPanel)
+    setGenreIds: (state, action: PayloadAction<number[]>) => {
+      state.genreIds = action.payload;
+    },
+    setThemeIds: (state, action: PayloadAction<number[]>) => {
+      state.themeIds = action.payload;
+    },
+
     resetFilters: () => initialState
   },
 });
@@ -93,6 +105,8 @@ export const {
 
   toggleGenreId,
   toggleThemeId,
+  setGenreIds,
+  setThemeIds,
   setGameModeId,
   setPerspectiveId,
 
@@ -103,6 +117,7 @@ export const {
   setAgeRatingOrg,
   setAgeRatingValue,
 
+  setAllFilters,
   resetFilters,
 } = detectiveSlice.actions;
 
