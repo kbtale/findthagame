@@ -17,7 +17,6 @@ interface ResultsState {
   clickOrigin: ClickOrigin | null;
 }
 
-// Define the initial state.
 const initialState: ResultsState = {
   items: [],
   status: 'idle',
@@ -74,6 +73,19 @@ export const resultsSlice = createSlice({
         state.clickOrigin = null; // No animation for next/prev
       }
     },
+    updateGameTranslation: (state, action: PayloadAction<{ 
+      gameId: number; 
+      lang: string; 
+      summary?: string; 
+      storyline?: string 
+    }>) => {
+      const { gameId, lang, summary, storyline } = action.payload;
+      const game = state.items.find(g => g.id === gameId);
+      if (game) {
+        if (!game.translations) game.translations = {};
+        game.translations[lang] = { summary, storyline };
+      }
+    },
   },
 });
 
@@ -86,6 +98,7 @@ export const {
   clearSelection,
   selectNext,
   selectPrevious,
+  updateGameTranslation,
 } = resultsSlice.actions;
 
 export default resultsSlice.reducer;

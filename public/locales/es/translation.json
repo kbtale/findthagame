@@ -55,7 +55,7 @@
     "searchViews": "Buscar vistas...",
     "noViewFound": "Vista no encontrada.",
     "minScore": "Puntuación mín.",
-    "ratingOrg": "Org. de Clasificación",
+    "ratingOrg": "Clasificación",
     "orgPlaceholder": "Org...",
     "searchOrgs": "Buscar...",
     "noOrgFound": "No encontrado.",
@@ -126,6 +126,7 @@
     "keywords": "Palabras clave",
     "screenshots": "Capturas",
     "translate": "Traducir",
-    "translating": "Traduciendo..."
+    "translating": "Traduciendo...",
+    "seeOriginal": "Ver Original"
   }
 }

@@ -1,9 +1,86 @@
-import { useState } from 'react';
+import { useState, memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, ChevronLeft, ChevronRight, Languages } from 'lucide-react';
 import type { GameResult } from '@/models/AppTypes';
+import { updateGameTranslation } from '@/store/slices/resultsSlice';
+
+interface NavigationHeaderProps {
+  onBack?: () => void;
+  onPrev?: () => void;
+  onNext?: () => void;
+  hasPrev: boolean;
+  hasNext: boolean;
+  isNotEnglish: boolean;
+  isTranslating: boolean;
+  hasTranslation: boolean;
+  showOriginal: boolean;
+  onToggleTranslation: () => void;
+}
+
+const NavigationHeader = memo(({ 
+  onBack, 
+  onPrev, 
+  onNext, 
+  hasPrev, 
+  hasNext,
+  isNotEnglish,
+  isTranslating,
+  hasTranslation,
+  showOriginal,
+  onToggleTranslation
+}: NavigationHeaderProps) => {
+  const { t } = useTranslation();
+  
+  // Determine button text
+  const getButtonText = () => {
+    if (isTranslating) return t('gameDetail.translating');
+    if (hasTranslation && !showOriginal) return t('gameDetail.seeOriginal');
+    return t('gameDetail.translate');
+  };
+  
+  return (
+    <div className="flex items-center justify-between mb-6 p-4 bg-[var(--main)] border-2 border-border rounded-base">
+      <Button 
+        onClick={onBack}
+        className="flex items-center gap-2 bg-[var(--chart-3)] text-white hover:bg-[var(--chart-3)]/90"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        {t('gameDetail.backToResults')}
+      </Button>
+      <div className="flex items-center gap-2">
+        {isNotEnglish && (
+          <Button
+            onClick={onToggleTranslation}
+            disabled={isTranslating}
+            className="flex items-center gap-2 bg-[var(--chart-3)] text-white hover:bg-[var(--chart-3)]/90"
+          >
+            <Languages className="w-4 h-4" />
+            {getButtonText()}
+          </Button>
+        )}
+        <Button 
+          onClick={onPrev}
+          disabled={!hasPrev}
+          size="icon"
+          className="bg-[var(--chart-3)] text-white hover:bg-[var(--chart-3)]/90 disabled:opacity-50"
+        >
+          <ChevronLeft className="w-4 h-4" />
+        </Button>
+        <Button 
+          onClick={onNext}
+          disabled={!hasNext}
+          size="icon"
+          className="bg-[var(--chart-3)] text-white hover:bg-[var(--chart-3)]/90 disabled:opacity-50"
+        >
+          <ChevronRight className="w-4 h-4" />
+        </Button>
+      </div>
+    </div>
+  );
+});
 
 interface GameDetailProps {
   game: GameResult | null;
@@ -23,18 +100,23 @@ export const GameDetail = ({
   hasNext = false 
 }: GameDetailProps) => {
   const { t, i18n } = useTranslation();
-  const [translatedSummary, setTranslatedSummary] = useState<string | null>(null);
-  const [translatedStoryline, setTranslatedStoryline] = useState<string | null>(null);
+  const dispatch = useDispatch();
   const [isTranslating, setIsTranslating] = useState(false);
+  const [showOriginal, setShowOriginal] = useState(false);
 
   const isNotEnglish = i18n.language !== 'en';
+  
+  // Get cached translation from game object
+  const cachedTranslation = game?.translations?.[i18n.language];
+  const translatedSummary = cachedTranslation?.summary;
+  const translatedStoryline = cachedTranslation?.storyline;
+  const hasTranslation = Boolean(translatedSummary || translatedStoryline);
 
-  const handleTranslate = async () => {
+  const handleTranslate = useCallback(async () => {
     if (!game) return;
     
     setIsTranslating(true);
     try {
-      // Combine summary and storyline for translation
       const textToTranslate = [game.summary, game.storyline].filter(Boolean).join('\n\n---\n\n');
       
       const response = await fetch('/api/translate', {
@@ -45,60 +127,53 @@ export const GameDetail = ({
       
       const data = await response.json();
       if (data.translatedText) {
-        // Split back into summary and storyline
         const parts = data.translatedText.split('---');
-        setTranslatedSummary(parts[0]?.trim() || null);
-        setTranslatedStoryline(parts[1]?.trim() || null);
+        const summary = parts[0]?.trim();
+        const storyline = parts[1]?.trim();
+        // Store in Redux state on the game object
+        dispatch(updateGameTranslation({ 
+          gameId: game.id, 
+          lang: i18n.language, 
+          summary, 
+          storyline 
+        }));
+        setShowOriginal(false);
       }
     } catch (error) {
       console.error('Translation failed:', error);
     } finally {
       setIsTranslating(false);
     }
-  };
+  }, [game, i18n.language, dispatch]);
+
+  const handleToggleTranslation = useCallback(() => {
+    if (hasTranslation) {
+      setShowOriginal(!showOriginal);
+    } else {
+      handleTranslate();
+    }
+  }, [hasTranslation, showOriginal, handleTranslate]);
+
+  // Decide which text to display
+  const displaySummary = (hasTranslation && !showOriginal) ? translatedSummary : game?.summary;
+  const displayStoryline = (hasTranslation && !showOriginal) ? translatedStoryline : game?.storyline;
 
   if (!game) return null;
 
   return (
     <div className="pb-20">
-      {/* Navigation Header */}
-      <div className="flex items-center justify-between mb-6 p-4 bg-[--main] border-2 border-border rounded-base">
-        <Button 
-          onClick={onBack}
-          className="flex items-center gap-2 bg-[var(--chart-3)] text-white hover:bg-[var(--chart-3)]/90"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          {t('gameDetail.backToResults')}
-        </Button>
-        <div className="flex items-center gap-2">
-          {isNotEnglish && (
-            <Button
-              onClick={handleTranslate}
-              disabled={isTranslating}
-              className="flex items-center gap-2 bg-[var(--chart-1)] text-white hover:bg-[var(--chart-1)]/90"
-            >
-              <Languages className="w-4 h-4" />
-              {isTranslating ? t('gameDetail.translating') : t('gameDetail.translate')}
-            </Button>
-          )}
-          <Button 
-            onClick={onPrev}
-            disabled={!hasPrev}
-            size="icon"
-            className="bg-[var(--chart-3)] text-white hover:bg-[var(--chart-3)]/90 disabled:opacity-50"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </Button>
-          <Button 
-            onClick={onNext}
-            disabled={!hasNext}
-            size="icon"
-            className="bg-[var(--chart-3)] text-white hover:bg-[var(--chart-3)]/90 disabled:opacity-50"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </Button>
-        </div>
-      </div>
+      <NavigationHeader
+        onBack={onBack}
+        onPrev={onPrev}
+        onNext={onNext}
+        hasPrev={hasPrev}
+        hasNext={hasNext}
+        isNotEnglish={isNotEnglish}
+        isTranslating={isTranslating}
+        hasTranslation={hasTranslation}
+        showOriginal={showOriginal}
+        onToggleTranslation={handleToggleTranslation}
+      />
 
       {/* Game Content */}
       <div className="bg-background border-2 border-border rounded-base shadow-shadow">
@@ -171,7 +246,7 @@ export const GameDetail = ({
           {game.summary && (
             <div>
               <h3 className="font-heading text-sm uppercase mb-2">{t('gameDetail.summary')}</h3>
-              <p className="text-sm font-base opacity-80">{translatedSummary || game.summary}</p>
+              <p className="text-sm font-base opacity-80">{displaySummary}</p>
             </div>
           )}
 
@@ -179,7 +254,7 @@ export const GameDetail = ({
           {game.storyline && (
             <div>
               <h3 className="font-heading text-sm uppercase mb-2">{t('gameDetail.storyline')}</h3>
-              <p className="text-sm font-base opacity-80">{translatedStoryline || game.storyline}</p>
+              <p className="text-sm font-base opacity-80">{displayStoryline}</p>
             </div>
           )}
 

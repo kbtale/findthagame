@@ -126,6 +126,7 @@
     "keywords": "키워드",
     "screenshots": "스크린샷",
     "translate": "번역",
-    "translating": "번역 중..."
+    "translating": "번역 중...",
+    "seeOriginal": "원문 보기"
   }
 }

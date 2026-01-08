@@ -126,6 +126,7 @@
     "keywords": "关键词",
     "screenshots": "截图",
     "translate": "翻译",
-    "translating": "翻译中..."
+    "translating": "翻译中...",
+    "seeOriginal": "查看原文"
   }
 }

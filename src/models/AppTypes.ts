@@ -27,6 +27,8 @@ export interface GameResult {
   summary?: string;
   themes: string[];
   year?: number;
+  // Translation cache (keyed by language, e.g., "es")
+  translations?: Record<string, { summary?: string; storyline?: string }>;
 }
 
 // Defines the structure for the Redux state that holds the user's active filters.
