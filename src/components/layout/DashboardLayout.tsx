@@ -1,7 +1,7 @@
 import { useState, useEffect, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
-import { X, SlidersHorizontal, PanelLeft, PanelLeftClose, Github, History, Star, Trash2 } from 'lucide-react';
+import { X, SlidersHorizontal, PanelLeft, PanelLeftClose, Github, History, Trash2, Heart, Bookmark, Dice5 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import type { RecentSearch } from '@/hooks/useRecentSearches';
@@ -63,7 +63,7 @@ export const DashboardLayout = ({
 
   return (
     <div className={cn(
-      "min-h-screen w-full bg-background text-foreground font-base flex flex-col lg:grid overflow-hidden transition-all duration-300",
+      "min-h-screen w-full bg-background text-foreground font-base flex flex-col lg:grid overflow-y-auto transition-all duration-300",
       isSidebarCollapsed ? "lg:grid-cols-[0px_1fr]" : "lg:grid-cols-[390px_1fr]"
     )}>
       
@@ -71,26 +71,61 @@ export const DashboardLayout = ({
           REGION 1: DESKTOP SIDEBAR (Visible ≥ 1024px)
       ========================================================================= */}
       <aside className={cn(
-        "hidden lg:flex flex-col h-full border-r-2 border-border bg-background relative z-20 transition-all duration-300 overflow-hidden",
-        isSidebarCollapsed ? "w-0 opacity-0" : "w-full opacity-100"
+        "hidden lg:flex flex-col h-full bg-main relative z-20 transition-all duration-300 p-4 pr-0",
+        isSidebarCollapsed 
+          ? "w-0 opacity-0 p-0 overflow-hidden" 
+          : "w-full opacity-100 overflow-visible"
       )}>
         
-        {/* Brand Header Slot */}
-        {brandHeader && (
-          <div className="py-3 px-6 border-b-2 border-border bg-main text-main-foreground flex justify-center">
-            <div className="h-[72px]">
+        {/* Logo + Action Buttons Row */}
+        <div className="flex items-center gap-2 ml-[12px] mb-[-33px] z-10 relative">
+          {/* Logo Box */}
+          {brandHeader && (
+            <div className="h-18 px-4 flex items-center justify-center border-2 border-border bg-main shadow-shadow rounded-base">
               {brandHeader}
             </div>
-          </div>
-        )}
-
-        {/* Scrollable Control Center */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-8 custom-scrollbar">
-          {/* Search Bar Slot */}
-          {searchBar}
+          )}
           
-          {/* Sidebar Content Slot */}
-          {sidebar}
+          {/* Action Buttons */}
+          <Button
+            variant="neutral"
+            size="icon"
+            className="bg-main"
+            onClick={() => alert('Favorites coming soon!')}
+            title="Favorites"
+          >
+            <Heart className="w-5 h-5" fill="currentColor" />
+          </Button>
+          <Button
+            variant="neutral"
+            size="icon"
+            className="bg-main"
+            onClick={() => alert('Bookmarks coming soon!')}
+            title="Bookmarks"
+          >
+            <Bookmark className="w-5 h-5" fill="currentColor" />
+          </Button>
+          <Button
+            variant="neutral"
+            size="icon"
+            className="bg-main"
+            onClick={() => alert('Randomizer coming soon!')}
+            title="Random Game"
+          >
+            <Dice5 className="w-5 h-5" />
+          </Button>
+        </div>
+        
+        {/* Filter Panel Box - floating on orange, extends right */}
+        <div className="flex-1 border-2 border-border bg-background shadow-shadow overflow-y-auto mr-[-18px] rounded-base">
+          {/* Scrollable Control Center */}
+          <div className="p-6 pt-8 space-y-6 mt-[12px]">
+            {/* Search Bar Slot */}
+            {searchBar}
+            
+            {/* Sidebar Content Slot */}
+            {sidebar}
+          </div>
         </div>
       </aside>
 
@@ -189,13 +224,8 @@ export const DashboardLayout = ({
               variant="neutral"
               onClick={() => window.open('https://github.com/kbtale/findthagame', '_blank')}
             >
-              <Github className="w-4 h-4 mr-1" />
-              {starCount !== null && (
-                <>
-                  <Star className="w-3 h-3 fill-current mr-1" />
-                  {starCount}
-                </>
-              )}
+              <Github className="w-4 h-4" />
+              {starCount !== null && starCount}
             </Button>
           </div>
         </div>

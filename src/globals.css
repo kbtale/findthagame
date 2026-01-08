@@ -112,7 +112,7 @@
 
 ::-webkit-scrollbar-track {
   background: var(--background);
-  border-left: 6px solid #000;
+  border-left: 3px solid #000;
 }
 
 ::-webkit-scrollbar-thumb {
