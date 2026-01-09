@@ -50,83 +50,84 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
+    const startTime = Date.now();
+    console.log(`[TIMING] Request started at ${new Date().toISOString()}`);
+
     // 4. AUTHENTICATION
     // -------------------------------------------------------
-    // Request a valid access token from the TokenManager singleton.
-    // If the cached token is expired, this line pauses to fetch a new one from Twitch.
+    const authStart = Date.now();
     const token = await TokenManager.getInstance().getToken();    
     const clientId = process.env.TWITCH_CLIENT_ID;
+    console.log(`[TIMING] Auth completed in ${Date.now() - authStart}ms`);
 
     if (!clientId) throw new Error('TWITCH_CLIENT_ID is missing');
 
     // 5. TRANSLATE SEARCH QUERY (if needed)
     // -------------------------------------------------------
-    // If user is searching in a non-English language, translate to English first.
     const { uiLanguage, search: originalSearch, ...restBody } = req.body;
     let translatedSearch = originalSearch;
     
     if (originalSearch && needsTranslation(originalSearch, uiLanguage)) {
-      console.log(`Translating search from ${uiLanguage}: "${originalSearch}"`);
+      const translateStart = Date.now();
+      console.log(`[TIMING] Starting translation from ${uiLanguage}: "${originalSearch}"`);
       translatedSearch = await translateToEnglish(originalSearch);
-      console.log(`Translated to: "${translatedSearch}"`);
+      console.log(`[TIMING] Translation completed in ${Date.now() - translateStart}ms → "${translatedSearch}"`);
     }
     
     // 6. BUILD THE QUERY
     // -------------------------------------------------------
-    // Take the JSON body sent by React (req.body) and pass it to the builder function.
+    const buildStart = Date.now();
     const queryParams = { ...restBody, search: translatedSearch };
     const igdbQueryString = buildIgdbQuery(queryParams);
+    console.log(`[TIMING] Query built in ${Date.now() - buildStart}ms`);
     console.log('IGDB Query:', igdbQueryString);
 
-    // 6. EXECUTE IGDB API CALL
+    // 7. EXECUTE IGDB API CALL
     // -------------------------------------------------------
-    // Send the request to the external IGDB API.
+    const igdbStart = Date.now();
     const igdbResponse = await fetch('https://api.igdb.com/v4/games', {
       method: 'POST',
       headers: {
         'Client-ID': clientId,
         'Authorization': `Bearer ${token}`,
-        'Content-Type': 'text/plain',    // Content-Type required by IGDB.
+        'Content-Type': 'text/plain',
       },
       body: igdbQueryString,
     });
+    console.log(`[TIMING] IGDB API call completed in ${Date.now() - igdbStart}ms`);
 
-    // 7. HANDLE UPSTREAM ERRORS
+    // 8. HANDLE UPSTREAM ERRORS
     // -------------------------------------------------------
-    // Check if the upstream API response indicates failure.
     if (!igdbResponse.ok) {
       const errorText = await igdbResponse.text();
       console.error('IGDB API Error:', errorText);
       throw new Error(`IGDB responded with ${igdbResponse.status}: ${errorText}`);
     }
 
-    // 8. RETURN SUCCESSFUL DATA
+    // 9. PARSE AND SCORE RESULTS
     // -------------------------------------------------------
-    // Parse the JSON data returned by IGDB.
+    const parseStart = Date.now();
     const rawGames = (await igdbResponse.json()) as IGDBGame[];
-    console.log(`IGDB returned ${rawGames.length} games`);
-    console.log('Raw games data:', JSON.stringify(rawGames, null, 2));
+    console.log(`[TIMING] JSON parsed in ${Date.now() - parseStart}ms (${rawGames.length} games)`);
 
-    // Score every single game
-    // Passing the game AND the user's filters (req.body) to the scoring engine.
+    const scoreStart = Date.now();
     const scoredGames = rawGames.map((game) => {
       return {
-        ...game, // Keep all original data
+        ...game,
         match_score: calculateMatchScore(game, req.body),
       };
     });
 
-    // Sort by score (Highest first), use rating as tie-breaker when scores are equal
     scoredGames.sort((a, b) => {
       const scoreDiff = b.match_score - a.match_score;
       if (scoreDiff !== 0) return scoreDiff;
       return (b.total_rating ?? 0) - (a.total_rating ?? 0);
     });
+    console.log(`[TIMING] Scoring completed in ${Date.now() - scoreStart}ms`);
 
-    // Return only the top 50 best matches
     const topResults = scoredGames.slice(0, 50);
 
-    // Send the improved list back to the frontend
+    console.log(`[TIMING] TOTAL request time: ${Date.now() - startTime}ms`);
     return res.status(200).json(topResults);
 
   } catch (error: unknown) {
