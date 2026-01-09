@@ -4,7 +4,8 @@
     "tagline": "Trova i videogiochi che la tua mente non ricorda"
   },
   "dashboard": {
-    "gameName": "Nome del gioco",
+    "keywords": "Parole chiave",
+    "keywordsTooltip": "Inserisci una parola che ricordi dal nome o dalla descrizione",
     "searchPlaceholder": "Cerca...",
     "mobileSearchPlaceholder": "Tocca per configurare...",
     "recentInquiries": "Ricerche recenti",

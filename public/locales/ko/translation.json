@@ -4,7 +4,8 @@
     "tagline": "기억나지 않는 게임을 찾아보세요"
   },
   "dashboard": {
-    "gameName": "게임 이름",
+    "keywords": "키워드",
+    "keywordsTooltip": "이름이나 설명에서 기억나는 단어를 입력하세요",
     "searchPlaceholder": "검색...",
     "mobileSearchPlaceholder": "눌러서 검색 설정...",
     "recentInquiries": "최근 검색",

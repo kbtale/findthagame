@@ -4,7 +4,8 @@
     "tagline": "Find the videogames that your mind can't"
   },
   "dashboard": {
-    "gameName": "Game Name",
+    "keywords": "Keywords",
+    "keywordsTooltip": "Enter any word you remember from the name or description",
     "searchPlaceholder": "Search...",
     "mobileSearchPlaceholder": "Tap to configure search...",
     "recentInquiries": "Recent Searches",

@@ -4,7 +4,8 @@
     "tagline": "Finde die Videospiele, die dein Verstand nicht findet"
   },
   "dashboard": {
-    "gameName": "Spielname",
+    "keywords": "Schlüsselwörter",
+    "keywordsTooltip": "Gib ein Wort ein, das du vom Namen oder der Beschreibung erinnerst",
     "searchPlaceholder": "Suchen...",
     "mobileSearchPlaceholder": "Tippen zum Konfigurieren...",
     "recentInquiries": "Letzte Suchanfragen",

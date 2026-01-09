@@ -9,6 +9,7 @@ import { FilterPanel } from '@/features/dashboard/filterPanel';
 import { ResultsGrid } from '@/features/dashboard/ResultsGrid';
 import { GameDetail } from '@/features/dashboard/GameDetail';
 import { Input } from '@/components/ui/input';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Search } from 'lucide-react';
 import { searchGames } from '@/api/client';
 import { useRecentSearches, type RecentSearch } from '@/hooks/useRecentSearches';
@@ -163,7 +164,18 @@ export const DashboardPage = () => {
 
   const searchBar = (
     <div className="space-y-2">
-      <label className="text-xs font-heading uppercase tracking-widest">{t('dashboard.gameName')}</label>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <label className="text-xs font-heading uppercase tracking-widest cursor-help">
+              {t('dashboard.keywords')}
+            </label>
+          </TooltipTrigger>
+          <TooltipContent>
+            {t('dashboard.keywordsTooltip')}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
       <div className="relative">
         <Input 
           placeholder={t('dashboard.searchPlaceholder')} 

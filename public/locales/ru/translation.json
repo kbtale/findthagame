@@ -4,7 +4,8 @@
     "tagline": "Найдите игры, которые ваша память не может восстановить"
   },
   "dashboard": {
-    "gameName": "Название игры",
+    "keywords": "Ключевые слова",
+    "keywordsTooltip": "Введите любое слово, которое помните из названия или описания",
     "searchPlaceholder": "Поиск...",
     "mobileSearchPlaceholder": "Нажмите для настройки...",
     "recentInquiries": "Недавние поиски",

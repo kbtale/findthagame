@@ -4,7 +4,8 @@
     "tagline": "اعثر على ألعاب الفيديو التي لا يستطيع عقلك تذكرها"
   },
   "dashboard": {
-    "gameName": "اسم اللعبة",
+    "keywords": "كلمات مفتاحية",
+    "keywordsTooltip": "أدخل أي كلمة تتذكرها من الاسم أو الوصف",
     "searchPlaceholder": "بحث...",
     "mobileSearchPlaceholder": "انقر لتكوين البحث...",
     "recentInquiries": "عمليات البحث الأخيرة",

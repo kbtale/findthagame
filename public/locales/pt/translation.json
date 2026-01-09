@@ -4,7 +4,8 @@
     "tagline": "Encontre os jogos que a sua mente não consegue"
   },
   "dashboard": {
-    "gameName": "Nome do Jogo",
+    "keywords": "Palavras-chave",
+    "keywordsTooltip": "Digite qualquer palavra que você lembra do nome ou descrição",
     "searchPlaceholder": "Pesquisar...",
     "mobileSearchPlaceholder": "Toque para configurar...",
     "recentInquiries": "Pesquisas Recentes",

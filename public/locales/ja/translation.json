@@ -4,7 +4,8 @@
     "tagline": "思い出せないゲームを見つけよう"
   },
   "dashboard": {
-    "gameName": "ゲーム名",
+    "keywords": "キーワード",
+    "keywordsTooltip": "名前や説明から覚えている単語を入力してください",
     "searchPlaceholder": "検索...",
     "mobileSearchPlaceholder": "タップして検索設定...",
     "recentInquiries": "最近の検索",
