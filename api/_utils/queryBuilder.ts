@@ -63,11 +63,10 @@ export const buildIgdbQuery = (params: QueryParams): string => {
     const fullTerm = params.search.replace(/"/g, '\\"');
     const keywords = parseSearchTerms(params.search);
     
-    // Full phrase: core fields only (no storyline/keywords - individual words will cover those)
+    // Full phrase: just name and alt_names (minimal)
     const fullPhraseFields = [
       'name',
       'alternative_names.name',
-      'summary',
     ];
     
     // 1st keyword: thorough search including storyline and keywords
@@ -79,10 +78,15 @@ export const buildIgdbQuery = (params: QueryParams): string => {
       'keywords.name',
     ];
     
-    // 2nd+ keywords: focused on name-like and tag fields
-    const otherKeywordFields = [
+    // 2nd keyword: name, alt, and keywords
+    const secondKeywordFields = [
       'name',
       'alternative_names.name',
+      'keywords.name',
+    ];
+    
+    // 3rd+ keywords: only keywords.name (exact match)
+    const laterKeywordFields = [
       'keywords.name',
     ];
     
@@ -93,14 +97,22 @@ export const buildIgdbQuery = (params: QueryParams): string => {
       allClauses.push(`${field} ~ *"${fullTerm}"*`);
     });
     
-    // Add individual keyword clauses (if different from full term)
+    // Add individual keyword clauses
     if (keywords.length > 0) {
       keywords.forEach((keyword, index) => {
         const escapedKeyword = keyword.replace(/"/g, '\\"');
-        const fields = index === 0 ? firstKeywordFields : otherKeywordFields;
+        let fields: string[];
+        if (index === 0) {
+          fields = firstKeywordFields;
+        } else if (index === 1) {
+          fields = secondKeywordFields;
+        } else {
+          fields = laterKeywordFields;
+        }
+        
         fields.forEach(field => {
           if (field === 'keywords.name') {
-            // Exact match for keywords.name (single words, no wildcards needed)
+            // Exact match for keywords.name
             allClauses.push(`${field} ~ "${escapedKeyword}"`);
           } else {
             allClauses.push(`${field} ~ *"${escapedKeyword}"*`);
