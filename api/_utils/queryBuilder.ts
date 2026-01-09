@@ -99,7 +99,12 @@ export const buildIgdbQuery = (params: QueryParams): string => {
         const escapedKeyword = keyword.replace(/"/g, '\\"');
         const fields = index === 0 ? firstKeywordFields : otherKeywordFields;
         fields.forEach(field => {
-          allClauses.push(`${field} ~ *"${escapedKeyword}"*`);
+          if (field === 'keywords.name') {
+            // Exact match for keywords.name (single words, no wildcards needed)
+            allClauses.push(`${field} ~ "${escapedKeyword}"`);
+          } else {
+            allClauses.push(`${field} ~ *"${escapedKeyword}"*`);
+          }
         });
       });
     }
