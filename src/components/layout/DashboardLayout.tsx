@@ -89,7 +89,7 @@ export const DashboardLayout = ({
 
   return (
     <div className={cn(
-      "min-h-screen w-full bg-background text-foreground font-base flex flex-col lg:grid overflow-y-auto transition-all duration-300",
+      "min-h-screen w-full bg-background text-foreground font-base flex flex-col lg:grid overflow-y-auto overflow-x-hidden transition-all duration-300",
       isSidebarCollapsed ? "lg:grid-cols-[0px_1fr]" : "lg:grid-cols-[390px_1fr]"
     )}>
       
@@ -154,7 +154,7 @@ export const DashboardLayout = ({
         </div>
         
         {/* Filter Panel Box - floating on orange, extends right */}
-        <div className="flex-1 border-2 border-border bg-background shadow-shadow overflow-y-auto mr-[-18px] rounded-base">
+        <div className="border-2 border-border bg-background shadow-shadow overflow-y-auto mr-[-18px] rounded-base">
           {/* Scrollable Control Center */}
           <div className="p-6 pt-8 space-y-6 mt-[12px]">
             {/* Search Bar Slot */}
