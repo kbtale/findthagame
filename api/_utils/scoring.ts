@@ -6,32 +6,7 @@
 
 import type { IGDBGame, IGDBNamedItem } from '../../src/models/IGDBTypes.js';
 import type { QueryParams } from './queryBuilder.js';
-
-// Stop words to filter out (same as queryBuilder.ts)
-const STOP_WORDS = new Set([
-  'a', 'an', 'the', 'and', 'or', 'but', 'nor', 'so', 'yet',
-  'of', 'in', 'on', 'at', 'to', 'for', 'with', 'by', 'from', 'up', 'down',
-  'into', 'onto', 'upon', 'out', 'off', 'over', 'under', 'through', 'between',
-  'about', 'after', 'before', 'during', 'without', 'within', 'along', 'across',
-  'i', 'me', 'my', 'you', 'your', 'he', 'him', 'his', 'she', 'her', 'it', 'its',
-  'we', 'us', 'our', 'they', 'them', 'their', 'who', 'what', 'which', 'this', 'that',
-  'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had',
-  'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might', 'must',
-  'can', 'get', 'got', 'go', 'goes', 'went', 'come', 'came',
-  'as', 'if', 'when', 'than', 'because', 'while', 'where', 'how', 'all', 'each',
-  'every', 'both', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'not',
-  'only', 'same', 'too', 'very', 'just', 'also', 'now', 'here', 'there', 'then',
-  'game', 'games', 'edition', 'version', 'vol', 'part'
-]);
-
-const MIN_WORD_LENGTH = 3;
-
-const parseSearchTerms = (searchString: string): string[] => {
-  return searchString
-    .toLowerCase()
-    .split(/\s+/)
-    .filter(word => word.length >= MIN_WORD_LENGTH && !STOP_WORDS.has(word));
-};
+import { parseSearchTerms } from './searchUtils.js';
 
 // ═══════════════════════════════════════════════════════════════════
 // CONFIGURATION
