@@ -69,12 +69,11 @@ export const buildIgdbQuery = (params: QueryParams): string => {
       'alternative_names.name',
     ];
     
-    // 1st keyword: thorough search including storyline and keywords
+    // 1st keyword: thorough search (no storyline)
     const firstKeywordFields = [
       'name',
       'alternative_names.name',
       'summary',
-      'storyline',
       'keywords.name',
     ];
     
@@ -111,12 +110,8 @@ export const buildIgdbQuery = (params: QueryParams): string => {
         }
         
         fields.forEach(field => {
-          if (field === 'keywords.name') {
-            // Exact match for keywords.name
-            allClauses.push(`${field} ~ "${escapedKeyword}"`);
-          } else {
-            allClauses.push(`${field} ~ *"${escapedKeyword}"*`);
-          }
+          // All fields use wildcards (keywords.name has multi-word phrases)
+          allClauses.push(`${field} ~ *"${escapedKeyword}"*`);
         });
       });
     }
