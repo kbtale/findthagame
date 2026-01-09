@@ -202,7 +202,6 @@ export const buildIgdbQuery = (params: QueryParams): string => {
   const limitString = 'limit 150;';
 
   // Combine all parts into one final string separated by spaces.
-  // Note: We don't use IGDB's "search" command because it doesn't work well with short/partial terms.
   // Instead, we rely on WHERE wildcards (name ~ *"term"*) which provides better partial matching.
   return `${fields} ${whereString} ${limitString}`;
 };
