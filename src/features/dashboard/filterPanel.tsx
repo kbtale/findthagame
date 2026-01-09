@@ -283,16 +283,16 @@ export const FilterPanel = ({ onSearch, onClearAll }: FilterPanelProps) => {
           </Tooltip>
         </div>
 
-        {/* Tags (Genres + Themes) - Multiselect */}
+        {/* Genres (includes Themes) - Multiselect */}
         <div className="space-y-1.5">
-          <Label className="text-xs uppercase font-heading">{t('filters.tags')}</Label>
+          <Label className="text-xs uppercase font-heading">{t('filters.genres')}</Label>
           <Multiselect
             options={TAGS_OPTIONS}
             value={currentTags}
             onValueChange={handleTagsChange}
-            placeholder={t('filters.selectTags')}
-            searchPlaceholder={t('filters.searchTags')}
-            emptyText={t('filters.noTagFound')}
+            placeholder={t('filters.selectGenres')}
+            searchPlaceholder={t('filters.searchGenres')}
+            emptyText={t('filters.noGenreFound')}
             maxDisplayItems={4}
             className="shadow-shadow"
           />

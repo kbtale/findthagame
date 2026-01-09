@@ -7,6 +7,32 @@
 import type { IGDBGame, IGDBNamedItem } from '../../src/models/IGDBTypes.js';
 import type { QueryParams } from './queryBuilder.js';
 
+// Stop words to filter out (same as queryBuilder.ts)
+const STOP_WORDS = new Set([
+  'a', 'an', 'the', 'and', 'or', 'but', 'nor', 'so', 'yet',
+  'of', 'in', 'on', 'at', 'to', 'for', 'with', 'by', 'from', 'up', 'down',
+  'into', 'onto', 'upon', 'out', 'off', 'over', 'under', 'through', 'between',
+  'about', 'after', 'before', 'during', 'without', 'within', 'along', 'across',
+  'i', 'me', 'my', 'you', 'your', 'he', 'him', 'his', 'she', 'her', 'it', 'its',
+  'we', 'us', 'our', 'they', 'them', 'their', 'who', 'what', 'which', 'this', 'that',
+  'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had',
+  'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might', 'must',
+  'can', 'get', 'got', 'go', 'goes', 'went', 'come', 'came',
+  'as', 'if', 'when', 'than', 'because', 'while', 'where', 'how', 'all', 'each',
+  'every', 'both', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'not',
+  'only', 'same', 'too', 'very', 'just', 'also', 'now', 'here', 'there', 'then',
+  'game', 'games', 'edition', 'version', 'vol', 'part'
+]);
+
+const MIN_WORD_LENGTH = 3;
+
+const parseSearchTerms = (searchString: string): string[] => {
+  return searchString
+    .toLowerCase()
+    .split(/\s+/)
+    .filter(word => word.length >= MIN_WORD_LENGTH && !STOP_WORDS.has(word));
+};
+
 // ═══════════════════════════════════════════════════════════════════
 // CONFIGURATION
 // ═══════════════════════════════════════════════════════════════════
@@ -16,6 +42,7 @@ const Weights = {
   text: {
     exactName: 3.0,    
     partialName: 1.5,
+    keywordMatch: 0.4, // Bonus per individual keyword match
     keyword: 0.8,      
     altName: 0.5,
     context: 0.3,
@@ -70,23 +97,46 @@ export const calculateMatchScore = (game: IGDBGame, query: QueryParams): number 
 
 /**
  * Stage 1: Text Relevance Score
+ * Now supports multi-keyword matching for broader searches.
  */
 const scoreText = (game: IGDBGame, term: string): number => {
   if (!term) return 0;
 
   const name = game.name?.toLowerCase() ?? '';
   const { text: w } = Weights;
+  const termLower = term.toLowerCase();
 
-  const nameScore =
-    name === term ? w.exactName :        
-    name.includes(term) ? w.partialName :
-    0;
+  // Score full phrase match
+  let score = 0;
+  if (name === termLower) {
+    score += w.exactName;
+  } else if (name.includes(termLower)) {
+    score += w.partialName;
+  }
 
-  const keywordScore = containsTerm(game.keywords, term) ? w.keyword : 0;
-  const altNameScore = containsTerm(game.alternative_names, term) ? w.altName : 0;
-  const contextScore = includesTerm(game.summary, term) || includesTerm(game.storyline, term) ? w.context : 0;
+  // Check full phrase in other fields
+  if (containsTerm(game.keywords, termLower)) score += w.keyword;
+  if (containsTerm(game.alternative_names, termLower)) score += w.altName;
+  if (includesTerm(game.summary, termLower) || includesTerm(game.storyline, termLower)) score += w.context;
 
-  return nameScore + keywordScore + altNameScore + contextScore;
+  // Multikeyword scoring: parse into individual words and score each
+  const keywords = parseSearchTerms(term);
+  if (keywords.length > 1) {
+    let keywordHits = 0;
+    for (const keyword of keywords) {
+      if (name.includes(keyword) ||
+          containsTerm(game.keywords, keyword) ||
+          containsTerm(game.alternative_names, keyword) ||
+          includesTerm(game.summary, keyword) ||
+          includesTerm(game.storyline, keyword)) {
+        keywordHits++;
+      }
+    }
+    // Add bonus proportional to how many keywords matched
+    score += keywordHits * w.keywordMatch;
+  }
+
+  return score;
 };
 
 /**

@@ -1,3 +1,39 @@
+// Stop words to filter out from multi-keyword searches
+const STOP_WORDS = new Set([
+  // Articles
+  'a', 'an', 'the',
+  // Conjunctions
+  'and', 'or', 'but', 'nor', 'so', 'yet',
+  // Prepositions
+  'of', 'in', 'on', 'at', 'to', 'for', 'with', 'by', 'from', 'up', 'down',
+  'into', 'onto', 'upon', 'out', 'off', 'over', 'under', 'through', 'between',
+  'about', 'after', 'before', 'during', 'without', 'within', 'along', 'across',
+  // Pronouns
+  'i', 'me', 'my', 'you', 'your', 'he', 'him', 'his', 'she', 'her', 'it', 'its',
+  'we', 'us', 'our', 'they', 'them', 'their', 'who', 'what', 'which', 'this', 'that',
+  // Verbs (common/auxiliary)
+  'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had',
+  'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might', 'must',
+  'can', 'get', 'got', 'go', 'goes', 'went', 'come', 'came',
+  // Other common words
+  'as', 'if', 'when', 'than', 'because', 'while', 'where', 'how', 'all', 'each',
+  'every', 'both', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'not',
+  'only', 'same', 'too', 'very', 'just', 'also', 'now', 'here', 'there', 'then',
+  // Gaming-specific common words
+  'game', 'games', 'edition', 'version', 'vol', 'part'
+]);
+
+// Minimum word length to include in search
+const MIN_WORD_LENGTH = 3;
+
+// Parse search string into meaningful keywords
+const parseSearchTerms = (searchString: string): string[] => {
+  return searchString
+    .toLowerCase()
+    .split(/\s+/)
+    .filter(word => word.length >= MIN_WORD_LENGTH && !STOP_WORDS.has(word));
+};
+
 export interface QueryParams {
   search?: string;
 
@@ -58,16 +94,38 @@ export const buildIgdbQuery = (params: QueryParams): string => {
   const whereClauses: string[] = []
 
   if (params.search) {
-    const term = params.search.replace(/"/g, '\\"');
-    const searchClauses = [
-      `name ~ *"${term}"*`,
-      `alternative_names.name ~ *"${term}"*`,
-      `summary ~ *"${term}"*`,
-      `storyline ~ *"${term}"*`,
-      `keywords.name ~ *"${term}"*`,
+    const fullTerm = params.search.replace(/"/g, '\\"');
+    const keywords = parseSearchTerms(params.search);
+    
+    const searchFields = [
+      'name',
+      'alternative_names.name',
+      'summary',
+      'storyline',
+      'keywords.name',
     ];
     
-    whereClauses.push(`(${searchClauses.join(' | ')})`);
+    // Start with full phrase match for each field
+    const allClauses: string[] = [];
+    
+    // Add full phrase clauses
+    searchFields.forEach(field => {
+      allClauses.push(`${field} ~ *"${fullTerm}"*`);
+    });
+    
+    // Add individual keyword clauses (if different from full term)
+    if (keywords.length > 1 || (keywords.length === 1 && keywords[0].toLowerCase() !== fullTerm.toLowerCase())) {
+      keywords.forEach(keyword => {
+        const escapedKeyword = keyword.replace(/"/g, '\\"');
+        searchFields.forEach(field => {
+          allClauses.push(`${field} ~ *"${escapedKeyword}"*`);
+        });
+      });
+    }
+    
+    // Remove duplicates and join with OR
+    const uniqueClauses = [...new Set(allClauses)];
+    whereClauses.push(`(${uniqueClauses.join(' | ')})`);
   }
 
   if (params.developerName) {
@@ -95,11 +153,11 @@ export const buildIgdbQuery = (params: QueryParams): string => {
     },
     {
       key: 'genreIds', 
-      build: (v) => `genres = (${(v as number[]).join(',')})` 
+      build: (v) => `genres = (${(v as number[]).join('|')})` 
     },
     {
       key: 'themeIds', 
-      build: (v) => `themes = (${(v as number[]).join(',')})` 
+      build: (v) => `themes = (${(v as number[]).join('|')})` 
     },
     {
       key: 'gameModeId', 
