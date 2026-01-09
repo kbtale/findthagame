@@ -1,10 +1,19 @@
-import { useState, useEffect, type ReactNode } from 'react';
+import { useState, useEffect, Suspense, lazy, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { X, SlidersHorizontal, PanelLeft, PanelLeftClose, Github, History, Trash2, Heart, Bookmark, Dice5, BookmarkCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import type { RecentSearch } from '@/hooks/useRecentSearches';
+
+// Lazy load Lottie for easter egg cats
+const Lottie = lazy(() => import('lottie-react'));
+
+// Random cat animation URLs
+const EASTER_EGG_CATS = [
+  '/cats/RandomCat.json',
+  '/cats/RandomCat2.json',
+];
 
 interface DashboardLayoutProps {
   brandHeader?: ReactNode;
@@ -52,6 +61,7 @@ export const DashboardLayout = ({
 }: DashboardLayoutProps) => {
   const [isRecentSearchesOpen, setRecentSearchesOpen] = useState(false);
   const [starCount, setStarCount] = useState<number | null>(null);
+  const [easterEggCat, setEasterEggCat] = useState<object | null>(null);
   const { t } = useTranslation();
 
   // Fetch GitHub stars on mount
@@ -79,18 +89,29 @@ export const DashboardLayout = ({
       {/* =========================================================================
           REGION 1: DESKTOP SIDEBAR (Visible ≥ 1024px)
       ========================================================================= */}
-      <aside className={cn(
-        "hidden lg:flex flex-col h-full bg-main relative z-20 transition-all duration-300 p-4 pr-0",
-        isSidebarCollapsed 
-          ? "w-0 opacity-0 p-0 overflow-hidden" 
-          : "w-full opacity-100 overflow-visible"
-      )}>
+      <aside 
+        className={cn(
+          "hidden lg:flex flex-col h-full bg-main relative z-20 transition-all duration-300 p-4 pr-0 mr-[3cm] border-r-6 border-black",
+          isSidebarCollapsed 
+            ? "w-0 opacity-0 p-0 overflow-hidden" 
+            : "w-full opacity-100 overflow-visible"
+        )}
+      >
         
         {/* Logo + Action Buttons Row */}
         <div className="flex items-center gap-2 ml-[12px] mb-[-33px] z-10 relative">
-          {/* Logo Box */}
+          {/* Logo Box - clickable for easter egg */}
           {brandHeader && (
-            <div className="h-18 px-4 flex items-center justify-center border-2 border-border bg-main shadow-shadow rounded-base">
+            <div 
+              className="h-18 px-4 flex items-center justify-center border-2 border-border bg-main shadow-shadow rounded-base cursor-pointer"
+              onClick={() => {
+                const catUrl = EASTER_EGG_CATS[Math.floor(Math.random() * EASTER_EGG_CATS.length)];
+                fetch(catUrl).then(r => r.json()).then(data => {
+                  setEasterEggCat(data);
+                  setTimeout(() => setEasterEggCat(null), 3000);
+                });
+              }}
+            >
               {brandHeader}
             </div>
           )}
@@ -219,9 +240,18 @@ export const DashboardLayout = ({
           
           {/* Right: Menu Buttons */}
           <div className="flex items-center gap-2">
-            {/* Results Count Button */}
+            {/* Results Count Button - clickable for easter egg */}
             {getResultText() && (
-              <Button variant="neutral" onClick={() => {}}>
+              <Button 
+                variant="neutral" 
+                onClick={() => {
+                  const catUrl = EASTER_EGG_CATS[Math.floor(Math.random() * EASTER_EGG_CATS.length)];
+                  fetch(catUrl).then(r => r.json()).then(data => {
+                    setEasterEggCat(data);
+                    setTimeout(() => setEasterEggCat(null), 3000);
+                  });
+                }}
+              >
                 {getResultText()}
               </Button>
             )}
@@ -325,6 +355,20 @@ export const DashboardLayout = ({
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Easter Egg Cat - fixed bottom right */}
+      {easterEggCat && (
+        <Suspense fallback={null}>
+          <div className="fixed bottom-4 right-4 z-50 animate-in fade-in slide-in-from-bottom-4 duration-300">
+            <Lottie
+              animationData={easterEggCat}
+              loop
+              autoplay
+              className="w-32 h-32"
+            />
+          </div>
+        </Suspense>
+      )}
 
     </div>
   );

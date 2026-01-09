@@ -91,7 +91,7 @@ export const ResultsGrid = ({
               animationData={animationData}
               loop
               autoplay
-              className="w-48 h-48"
+              className="w-48 h-48 mb-[-1rem]"
             />
           )}
         </Suspense>
