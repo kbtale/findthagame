@@ -1,4 +1,4 @@
-import { useState, useEffect, Suspense, lazy, type ReactNode } from 'react';
+import { useState, useEffect, useRef, Suspense, lazy, type ReactNode, type ComponentType } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { X, SlidersHorizontal, PanelLeft, PanelLeftClose, Github, History, Trash2, Heart, Bookmark, Dice5, BookmarkCheck } from 'lucide-react';
@@ -6,14 +6,19 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import type { RecentSearch } from '@/hooks/useRecentSearches';
 
-// Lazy load Lottie for easter egg cats
-const Lottie = lazy(() => import('lottie-react'));
-
-// Random cat animation URLs
-const EASTER_EGG_CATS = [
-  '/cats/RandomCat.json',
-  '/cats/RandomCat2.json',
-];
+// Lazy load Lottie for easter egg cats (same pattern as ResultsGrid)
+const Lottie = lazy(() => 
+  import('lottie-react').then(mod => ({
+    default: (mod as unknown as { default: { default: ComponentType<{ 
+      animationData: object; 
+      loop?: boolean; 
+      autoplay?: boolean; 
+      className?: string;
+      lottieRef?: React.MutableRefObject<{ setDirection: (dir: number) => void; play: () => void } | null>;
+      onComplete?: () => void;
+    }> } }).default.default
+  }))
+);
 
 interface DashboardLayoutProps {
   brandHeader?: ReactNode;
@@ -62,6 +67,8 @@ export const DashboardLayout = ({
   const [isRecentSearchesOpen, setRecentSearchesOpen] = useState(false);
   const [starCount, setStarCount] = useState<number | null>(null);
   const [easterEggCat, setEasterEggCat] = useState<object | null>(null);
+  const [isReversing, setIsReversing] = useState(false);
+  const lottieRef = useRef<{ setDirection: (dir: number) => void; play: () => void } | null>(null);
   const { t } = useTranslation();
 
   // Fetch GitHub stars on mount
@@ -105,10 +112,10 @@ export const DashboardLayout = ({
             <div 
               className="h-18 px-4 flex items-center justify-center border-2 border-border bg-main shadow-shadow rounded-base cursor-pointer"
               onClick={() => {
-                const catUrl = EASTER_EGG_CATS[Math.floor(Math.random() * EASTER_EGG_CATS.length)];
-                fetch(catUrl).then(r => r.json()).then(data => {
+                // Logo always shows RandomCat.json
+                setIsReversing(false);
+                fetch('/cats/RandomCat.json').then(r => r.json()).then(data => {
                   setEasterEggCat(data);
-                  setTimeout(() => setEasterEggCat(null), 3000);
                 });
               }}
             >
@@ -245,10 +252,10 @@ export const DashboardLayout = ({
               <Button 
                 variant="neutral" 
                 onClick={() => {
-                  const catUrl = EASTER_EGG_CATS[Math.floor(Math.random() * EASTER_EGG_CATS.length)];
-                  fetch(catUrl).then(r => r.json()).then(data => {
+                  // Results button always shows RandomCat2.json
+                  setIsReversing(false);
+                  fetch('/cats/RandomCat2.json').then(r => r.json()).then(data => {
                     setEasterEggCat(data);
-                    setTimeout(() => setEasterEggCat(null), 3000);
                   });
                 }}
               >
@@ -359,12 +366,25 @@ export const DashboardLayout = ({
       {/* Easter Egg Cat - fixed bottom right */}
       {easterEggCat && (
         <Suspense fallback={null}>
-          <div className="fixed bottom-4 right-4 z-50 animate-in fade-in slide-in-from-bottom-4 duration-300">
+          <div className="fixed bottom-0 right-4 z-50">
             <Lottie
+              lottieRef={lottieRef}
               animationData={easterEggCat}
-              loop
+              loop={false}
               autoplay
-              className="w-32 h-32"
+              onComplete={() => {
+                if (!isReversing) {
+                  // Forward complete → play reverse
+                  setIsReversing(true);
+                  lottieRef.current?.setDirection(-1);
+                  lottieRef.current?.play();
+                } else {
+                  // Reverse complete → hide
+                  setEasterEggCat(null);
+                  setIsReversing(false);
+                }
+              }}
+              className="w-48 h-48"
             />
           </div>
         </Suspense>
