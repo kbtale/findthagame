@@ -11,8 +11,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // -------------------------------------------------------
   // Define a list of "safe" domains that are allowed to talk to this API.
   const allowedOrigins = [
-    'http://localhost:5173', // local React development server.
-    // 'https://findthagame.vercel.app' // (Future) environment.
+    'http://localhost:5173', // Local React development server.
+    'https://findthagame.vercel.app'
   ];
 
   const origin = req.headers.origin as string;

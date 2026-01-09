@@ -4,6 +4,7 @@
     "tagline": "Find the videogames that your mind can't"
   },
   "dashboard": {
+    "optionalFieldsHint": "All fields are optional, enter just what you remember!",
     "keywords": "Keywords",
     "keywordsTooltip": "Enter any word you remember from the name or description",
     "searchPlaceholder": "Search...",

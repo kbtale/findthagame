@@ -4,6 +4,7 @@
     "tagline": "Trouvez les jeux vidéo que votre esprit a oubliés"
   },
   "dashboard": {
+    "optionalFieldsHint": "Tous les champs sont optionnels, entrez seulement ce dont vous vous souvenez !",
     "keywords": "Mots-clés",
     "keywordsTooltip": "Entrez un mot dont vous vous souvenez du nom ou de la description",
     "searchPlaceholder": "Rechercher...",

@@ -4,6 +4,7 @@
     "tagline": "Trova i videogiochi che la tua mente non ricorda"
   },
   "dashboard": {
+    "optionalFieldsHint": "Tutti i campi sono opzionali, inserisci solo ciò che ricordi!",
     "keywords": "Parole chiave",
     "keywordsTooltip": "Inserisci una parola che ricordi dal nome o dalla descrizione",
     "searchPlaceholder": "Cerca...",

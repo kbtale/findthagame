@@ -164,6 +164,9 @@ export const DashboardPage = () => {
 
   const searchBar = (
     <div className="space-y-2">
+      <p className="text-sm text-muted-foreground italic">
+        {t('dashboard.optionalFieldsHint')}
+      </p>
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>

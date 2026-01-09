@@ -4,6 +4,7 @@
     "tagline": "Encontre os jogos que a sua mente não consegue"
   },
   "dashboard": {
+    "optionalFieldsHint": "Todos os campos são opcionais, insira apenas o que você lembra!",
     "keywords": "Palavras-chave",
     "keywordsTooltip": "Digite qualquer palavra que você lembra do nome ou descrição",
     "searchPlaceholder": "Pesquisar...",

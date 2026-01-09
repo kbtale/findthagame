@@ -4,6 +4,7 @@
     "tagline": "寻找你记忆中遗忘的游戏"
   },
   "dashboard": {
+    "optionalFieldsHint": "所有字段都是可选的，只需输入您记得的内容！",
     "keywords": "关键词",
     "keywordsTooltip": "输入您记得的名称或描述中的任何词",
     "searchPlaceholder": "搜索...",

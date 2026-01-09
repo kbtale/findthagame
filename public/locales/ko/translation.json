@@ -4,6 +4,7 @@
     "tagline": "기억나지 않는 게임을 찾아보세요"
   },
   "dashboard": {
+    "optionalFieldsHint": "모든 필드는 선택 사항입니다, 기억나는 것만 입력하세요!",
     "keywords": "키워드",
     "keywordsTooltip": "이름이나 설명에서 기억나는 단어를 입력하세요",
     "searchPlaceholder": "검색...",
