@@ -28,7 +28,6 @@ export const DashboardPage = () => {
   const results = useSelector((state: RootState) => state.results.items);
   const status = useSelector((state: RootState) => state.results.status);
   const selectedIndex = useSelector((state: RootState) => state.results.selectedIndex);
-  const clickOrigin = useSelector((state: RootState) => state.results.clickOrigin);
 
   // =========================================================================
   // LOCAL STATE
@@ -36,6 +35,8 @@ export const DashboardPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isMobileOpen, setMobileOpen] = useState(false);
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [isExiting, setIsExiting] = useState(false);
+  const [isFirstSelection, setIsFirstSelection] = useState(true);
 
   // Recent searches
   const { 
@@ -80,10 +81,20 @@ export const DashboardPage = () => {
 
   const handleSelectGame = useCallback((index: number, origin: { x: number; y: number; width: number; height: number }) => {
     dispatch(selectGame({ index, origin }));
-  }, [dispatch]);
+    // Auto-scroll to top
+    document.getElementById('results-area')?.scrollTo({ top: 0, behavior: 'smooth' });
+    if (isFirstSelection) {
+      setTimeout(() => setIsFirstSelection(false), 350);
+    }
+  }, [dispatch, isFirstSelection]);
 
   const handleBack = useCallback(() => {
-    dispatch(clearSelection());
+    setIsExiting(true);
+    setTimeout(() => {
+      dispatch(clearSelection());
+      setIsExiting(false);
+      setIsFirstSelection(true); // Reset for next selection
+    }, 300); // Match animation duration
   }, [dispatch]);
 
   const handlePrev = useCallback(() => {
@@ -188,23 +199,18 @@ export const DashboardPage = () => {
     />
   );
 
-  // Calculate FLIP animation style from click origin
-  const getFlipStyle = (): React.CSSProperties | undefined => {
-    if (!clickOrigin) return undefined;
-    return {
-      '--flip-origin-x': `${clickOrigin.x}px`,
-      '--flip-origin-y': `${clickOrigin.y}px`,
-      '--flip-origin-w': `${clickOrigin.width}px`,
-      '--flip-origin-h': `${clickOrigin.height}px`,
-    } as React.CSSProperties;
+  // Get animation class based on state
+  const getDetailAnimationClass = () => {
+    if (isExiting) return 'animate-slide-out-right';
+    if (isFirstSelection) return 'animate-slide-in-right';
+    return ''; // No animation when switching between games
   };
 
   // Conditionally render grid or detail view
   const mainContent = selectedGame ? (
     <div 
-      key={`detail-${selectedIndex}`}
-      className="animate-flip-expand"
-      style={getFlipStyle()}
+      key="game-detail"
+      className={getDetailAnimationClass()}
     >
       <GameDetail 
         game={selectedGame}

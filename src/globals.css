@@ -89,6 +89,22 @@
   animation: slide-in-right 0.3s ease-out;
 }
 
+/* Slide-out animation for game detail exit */
+@keyframes slide-out-right {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+.animate-slide-out-right {
+  animation: slide-out-right 0.3s ease-out forwards;
+}
+
 /* FLIP expand animation */
 @keyframes flip-expand {
   0% {

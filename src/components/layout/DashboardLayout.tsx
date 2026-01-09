@@ -231,7 +231,7 @@ export const DashboardLayout = ({
             )}
             {/* Show brand header when sidebar is collapsed */}
             <div className={cn(
-              "h-12 transition-all duration-300",
+              "h-16 transition-all duration-300",
               isSidebarCollapsed ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4 pointer-events-none"
             )}>
               {brandHeader}
