@@ -149,11 +149,10 @@ export const buildIgdbQuery = (params: QueryParams): string => {
 
   const whereString = whereClauses.length > 0 ? `where ${whereClauses.join(' & ')};` : '';
   
-  const searchString = params.search ? `search "${params.search.replace(/"/g, '\\"')}";` : '';
-  
   const limitString = 'limit 500;';
 
   // Combine all parts into one final string separated by spaces.
-  // Example: "fields ...; search "Mario"; where platforms = (8); limit 500;"
-  return `${fields} ${searchString} ${whereString} ${limitString}`;
+  // Note: We don't use IGDB's "search" command because it doesn't work well with short/partial terms.
+  // Instead, we rely on WHERE wildcards (name ~ *"term"*) which provides better partial matching.
+  return `${fields} ${whereString} ${limitString}`;
 };

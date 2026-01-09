@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '@/store/store';
@@ -95,6 +96,42 @@ export const FilterPanel = ({ onSearch, onClearAll }: FilterPanelProps) => {
     dispatch(setMinRating(null));
     dispatch(setAgeRatingOrg(null));
     dispatch(setAgeRatingValue(null));
+  };
+
+  // Prepare combined options for Tags (Genres + Themes)
+  const TAGS_OPTIONS = useMemo(() => {
+    const genreOptions = GENRES.map(g => ({ 
+      value: `G-${g.id}`, 
+      label: g.name, 
+      type: 'Genre' 
+    }));
+    const themeOptions = THEMES.map(t => ({ 
+      value: `T-${t.id}`, 
+      label: t.name, 
+      type: 'Theme' 
+    }));
+    
+    return [...genreOptions, ...themeOptions].sort((a, b) => a.label.localeCompare(b.label));
+  }, []);
+
+  // Calculate current selected tags from separate Redux states
+  const currentTags = useMemo(() => [
+    ...filters.genreIds.map(id => `G-${id}`),
+    ...filters.themeIds.map(id => `T-${id}`)
+  ], [filters.genreIds, filters.themeIds]);
+
+  // Handle changes by splitting tags back into genres and themes
+  const handleTagsChange = (newValues: string[]) => {
+    const newGenreIds = newValues
+      .filter(v => v.startsWith('G-'))
+      .map(v => Number(v.replace('G-', '')));
+    
+    const newThemeIds = newValues
+      .filter(v => v.startsWith('T-'))
+      .map(v => Number(v.replace('T-', '')));
+
+    dispatch(setGenreIds(newGenreIds));
+    dispatch(setThemeIds(newThemeIds));
   };
 
   return (
@@ -246,32 +283,17 @@ export const FilterPanel = ({ onSearch, onClearAll }: FilterPanelProps) => {
           </Tooltip>
         </div>
 
-        {/* Genre - Multiselect */}
+        {/* Tags (Genres + Themes) - Multiselect */}
         <div className="space-y-1.5">
-          <Label className="text-xs uppercase font-heading">{t('filters.genres')}</Label>
+          <Label className="text-xs uppercase font-heading">{t('filters.tags')}</Label>
           <Multiselect
-            options={GENRES.map(g => ({ value: g.id.toString(), label: g.name }))}
-            value={filters.genreIds.map(id => id.toString())}
-            onValueChange={(newValues) => dispatch(setGenreIds(newValues.map(Number)))}
-            placeholder={t('filters.selectGenres')}
-            searchPlaceholder={t('filters.searchGenres')}
-            emptyText={t('filters.noGenreFound')}
-            maxDisplayItems={2}
-            className="shadow-shadow"
-          />
-        </div>
-
-        {/* Theme - Multiselect */}
-        <div className="space-y-1.5">
-          <Label className="text-xs uppercase font-heading">{t('filters.themes')}</Label>
-          <Multiselect
-            options={THEMES.map(t => ({ value: t.id.toString(), label: t.name }))}
-            value={filters.themeIds.map(id => id.toString())}
-            onValueChange={(newValues) => dispatch(setThemeIds(newValues.map(Number)))}
-            placeholder={t('filters.selectThemes')}
-            searchPlaceholder={t('filters.searchThemes')}
-            emptyText={t('filters.noThemeFound')}
-            maxDisplayItems={2}
+            options={TAGS_OPTIONS}
+            value={currentTags}
+            onValueChange={handleTagsChange}
+            placeholder={t('filters.selectTags')}
+            searchPlaceholder={t('filters.searchTags')}
+            emptyText={t('filters.noTagFound')}
+            maxDisplayItems={4}
             className="shadow-shadow"
           />
         </div>
