@@ -7,6 +7,7 @@
 import axios, { AxiosError } from 'axios';
 import type { FilterState, GameResult } from '@/models/AppTypes';
 import type { IGDBGame } from '@/models/IGDBTypes';
+import i18n from '@/config/i18n';
 
 interface ScoredIGDBGame extends IGDBGame {
   match_score: number;
@@ -41,8 +42,14 @@ agent.interceptors.response.use(
  * POSTs filters to /api/search and maps the result to GameResult[]
  */
 export const searchGames = async (filters: FilterState): Promise<GameResult[]> => {
+  // Include current UI language for translation detection on backend
+  const payload = {
+    ...filters,
+    uiLanguage: i18n.language || 'en',
+  };
+  
   // Execute the request using the axios agent
-  const { data } = await agent.post<ScoredIGDBGame[]>('/search', filters);
+  const { data } = await agent.post<ScoredIGDBGame[]>('/search', payload);
 
   // Transform Data (Adapter Pattern)
   return data.map((game) => {

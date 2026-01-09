@@ -2,6 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { TokenManager } from './_utils/tokenManager.js';
 import { buildIgdbQuery } from './_utils/queryBuilder.js';
 import { calculateMatchScore } from './_utils/scoring.js';
+import { needsTranslation, translateToEnglish } from './_utils/translateSearch.js';
 import type { IGDBGame } from '../src/models/IGDBTypes.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -58,11 +59,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     if (!clientId) throw new Error('TWITCH_CLIENT_ID is missing');
 
-    // 5. BUILD THE QUERY
+    // 5. TRANSLATE SEARCH QUERY (if needed)
+    // -------------------------------------------------------
+    // If user is searching in a non-English language, translate to English first.
+    const { uiLanguage, search: originalSearch, ...restBody } = req.body;
+    let translatedSearch = originalSearch;
+    
+    if (originalSearch && needsTranslation(originalSearch, uiLanguage)) {
+      console.log(`Translating search from ${uiLanguage}: "${originalSearch}"`);
+      translatedSearch = await translateToEnglish(originalSearch);
+      console.log(`Translated to: "${translatedSearch}"`);
+    }
+    
+    // 6. BUILD THE QUERY
     // -------------------------------------------------------
     // Take the JSON body sent by React (req.body) and pass it to the builder function.
-    // This converts { search: "Mario" } into "fields *; search "Mario";".
-    const igdbQueryString = buildIgdbQuery(req.body);
+    const queryParams = { ...restBody, search: translatedSearch };
+    const igdbQueryString = buildIgdbQuery(queryParams);
     console.log('IGDB Query:', igdbQueryString);
 
     // 6. EXECUTE IGDB API CALL
