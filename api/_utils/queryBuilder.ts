@@ -63,7 +63,15 @@ export const buildIgdbQuery = (params: QueryParams): string => {
     const fullTerm = params.search.replace(/"/g, '\\"');
     const keywords = parseSearchTerms(params.search);
     
-    const searchFields = [
+    // Full phrase: core fields only (no storyline/keywords - individual words will cover those)
+    const fullPhraseFields = [
+      'name',
+      'alternative_names.name',
+      'summary',
+    ];
+    
+    // 1st keyword: thorough search including storyline and keywords
+    const firstKeywordFields = [
       'name',
       'alternative_names.name',
       'summary',
@@ -71,25 +79,31 @@ export const buildIgdbQuery = (params: QueryParams): string => {
       'keywords.name',
     ];
     
-    // Start with full phrase match for each field
+    // 2nd+ keywords: focused on name-like and tag fields
+    const otherKeywordFields = [
+      'name',
+      'alternative_names.name',
+      'keywords.name',
+    ];
+    
     const allClauses: string[] = [];
     
     // Add full phrase clauses
-    searchFields.forEach(field => {
+    fullPhraseFields.forEach(field => {
       allClauses.push(`${field} ~ *"${fullTerm}"*`);
     });
     
     // Add individual keyword clauses (if different from full term)
-    if (keywords.length > 1 || (keywords.length === 1 && keywords[0].toLowerCase() !== fullTerm.toLowerCase())) {
-      keywords.forEach(keyword => {
+    if (keywords.length > 0) {
+      keywords.forEach((keyword, index) => {
         const escapedKeyword = keyword.replace(/"/g, '\\"');
-        searchFields.forEach(field => {
+        const fields = index === 0 ? firstKeywordFields : otherKeywordFields;
+        fields.forEach(field => {
           allClauses.push(`${field} ~ *"${escapedKeyword}"*`);
         });
       });
     }
     
-    // Remove duplicates and join with OR
     const uniqueClauses = [...new Set(allClauses)];
     whereClauses.push(`(${uniqueClauses.join(' | ')})`);
   }
