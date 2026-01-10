@@ -51,7 +51,8 @@ const NavigationHeader = memo(({
         className="flex items-center gap-2 bg-[var(--chart-3)] text-white hover:bg-[var(--chart-3)]/90"
       >
         <ArrowLeft className="w-4 h-4" />
-        {t('gameDetail.backToResults')}
+        <span className="hidden md:inline">{t('gameDetail.backToResults')}</span>
+        <span className="md:hidden">{t('gameDetail.back')}</span>
       </Button>
       <div className="flex items-center gap-2">
         {isNotEnglish && (
@@ -235,8 +236,8 @@ export const GameDetail = ({
                 )}
               </div>
 
-              {/* Stats Row */}
-              <div className="grid grid-cols-3 gap-4 text-sm">
+              {/* Stats Row - Desktop only */}
+              <div className="hidden md:grid grid-cols-3 gap-4 text-sm">
                 <div>
                   <span className="font-heading uppercase text-xs opacity-60">{t('gameDetail.rating')}</span>
                   <p className="font-heading text-main text-lg">{game.rating ? `${game.rating}%` : '—'}</p>
@@ -259,6 +260,26 @@ export const GameDetail = ({
               <div className="inline-block px-3 py-1 bg-main text-main-foreground rounded-base border-2 border-border">
                 <span className="font-heading text-sm">{game.matchScore.toFixed(2)} {t('results.match')}</span>
               </div>
+            </div>
+          </div>
+
+          {/* Stats Row - Mobile only (below card, above summary) */}
+          <div className="md:hidden grid grid-cols-3 gap-4 text-sm">
+            <div>
+              <span className="font-heading uppercase text-xs opacity-60">{t('gameDetail.rating')}</span>
+              <p className="font-heading text-main text-lg">{game.rating ? `${game.rating}%` : '—'}</p>
+            </div>
+            <div>
+              <span className="font-heading uppercase text-xs opacity-60">{t('results.status')}</span>
+              <p className="font-base">
+                {game.status !== undefined ? t(`gameStatus.${game.status}`, { defaultValue: `Status ${game.status}` }) : '—'}
+              </p>
+            </div>
+            <div>
+              <span className="font-heading uppercase text-xs opacity-60">{t('results.category')}</span>
+              <p className="font-base">
+                {game.category !== undefined ? t(`gameCategory.${game.category}`, { defaultValue: `Category ${game.category}` }) : '—'}
+              </p>
             </div>
           </div>
 

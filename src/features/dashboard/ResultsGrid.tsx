@@ -194,36 +194,61 @@ export const ResultsGrid = ({
       </div>
       
       {/* Pagination */}
-      {totalPages > 1 && (
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious 
-                onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
-                className={currentPage === 1 ? 'opacity-50 pointer-events-none' : ''}
-              />
-            </PaginationItem>
-            
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-              <PaginationItem key={page}>
-                <PaginationLink
-                  onClick={() => handlePageChange(page)}
-                  isActive={page === currentPage}
-                >
-                  {page}
-                </PaginationLink>
+      {totalPages > 1 && (() => {
+        // On mobile, show fewer page numbers
+        const getVisiblePages = () => {
+          if (totalPages <= 5) return Array.from({ length: totalPages }, (_, i) => i + 1);
+          
+          const pages: (number | 'ellipsis')[] = [];
+          if (currentPage <= 3) {
+            pages.push(1, 2, 3, 'ellipsis', totalPages);
+          } else if (currentPage >= totalPages - 2) {
+            pages.push(1, 'ellipsis', totalPages - 2, totalPages - 1, totalPages);
+          } else {
+            pages.push(1, 'ellipsis', currentPage, 'ellipsis', totalPages);
+          }
+          return pages;
+        };
+        
+        const visiblePages = getVisiblePages();
+        
+        return (
+          <Pagination className="overflow-x-auto">
+            <PaginationContent className="flex-wrap justify-center gap-1">
+              <PaginationItem>
+                <PaginationPrevious 
+                  onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
+                  className={currentPage === 1 ? 'opacity-50 pointer-events-none' : ''}
+                />
               </PaginationItem>
-            ))}
-            
-            <PaginationItem>
-              <PaginationNext 
-                onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
-                className={currentPage === totalPages ? 'opacity-50 pointer-events-none' : ''}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      )}
+              
+              {visiblePages.map((page, idx) => 
+                page === 'ellipsis' ? (
+                  <PaginationItem key={`ellipsis-${idx}`}>
+                    <span className="px-2">…</span>
+                  </PaginationItem>
+                ) : (
+                  <PaginationItem key={page}>
+                    <PaginationLink
+                      onClick={() => handlePageChange(page)}
+                      isActive={page === currentPage}
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                )
+              )}
+              
+              <PaginationItem>
+                <PaginationNext 
+                  onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
+                  className={currentPage === totalPages ? 'opacity-50 pointer-events-none' : ''}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        );
+      })()}
     </div>
   );
 };

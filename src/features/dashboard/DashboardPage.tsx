@@ -170,7 +170,7 @@ export const DashboardPage = () => {
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <label className="text-xs font-heading uppercase tracking-widest cursor-help">
+            <label className="text-xs font-heading uppercase tracking-widest">
               {t('dashboard.keywords')}
             </label>
           </TooltipTrigger>
@@ -206,7 +206,8 @@ export const DashboardPage = () => {
 
   const sidebar = (
     <FilterPanel 
-      onSearch={handleSearch} 
+      onSearch={handleSearch}
+      isLoading={isLoading}
       onClearAll={() => {
         setSearchTerm('');
         dispatch(resetFilters());

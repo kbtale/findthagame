@@ -52,9 +52,10 @@ const AGE_RATING_ORG_TO_VALUES: Record<number, number[]> = {
 interface FilterPanelProps {
   onSearch: (filters: FilterState) => void;
   onClearAll?: () => void;
+  isLoading?: boolean;
 }
 
-export const FilterPanel = ({ onSearch, onClearAll }: FilterPanelProps) => {
+export const FilterPanel = ({ onSearch, onClearAll, isLoading = false }: FilterPanelProps) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   
@@ -285,7 +286,14 @@ export const FilterPanel = ({ onSearch, onClearAll }: FilterPanelProps) => {
 
         {/* Genres (includes Themes) - Multiselect */}
         <div className="space-y-1.5">
-          <Label className="text-xs uppercase font-heading">{t('filters.genres')}</Label>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Label className="text-xs uppercase font-heading">{t('filters.genres')}</Label>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p className="max-w-xs">{t('filters.genreHint')}</p>
+            </TooltipContent>
+          </Tooltip>
           <Multiselect
             options={TAGS_OPTIONS}
             value={currentTags}
@@ -404,7 +412,8 @@ export const FilterPanel = ({ onSearch, onClearAll }: FilterPanelProps) => {
       <div className="space-y-3">
         <Button 
           onClick={() => onSearch(filters)}
-          className="w-full h-12 text-lg font-heading uppercase tracking-widest bg-main text-main-foreground border-2 border-border shadow-shadow hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:translate-x-[4px] active:translate-y-[4px] transition-all"
+          disabled={isLoading}
+          className="w-full h-12 text-lg font-heading uppercase tracking-widest bg-main text-main-foreground border-2 border-border shadow-shadow hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:translate-x-[4px] active:translate-y-[4px] transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-x-0 disabled:hover:translate-y-0 disabled:hover:shadow-shadow"
         >
           {t('filters.search')}
         </Button>

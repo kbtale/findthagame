@@ -83,7 +83,7 @@ export const DashboardLayout = ({
   const getResultText = () => {
     if (isLoading) return t('dashboard.waitingForResults');
     if (resultsCount === 0) return null;
-    if (resultsCount >= 50) return t('dashboard.gamesFoundPlus', { count: 50 });
+    if (resultsCount >= 160) return t('dashboard.gamesFoundPlus', { count: 160 });
     return t('dashboard.gamesFound', { count: resultsCount });
   };
 
@@ -177,13 +177,30 @@ export const DashboardLayout = ({
           <div className="h-12">
             {brandHeader}
           </div>
-          <Button
-            variant="neutral"
-            size="icon"
-            onClick={() => window.open('https://github.com/kbtale/findthagame', '_blank')}
-          >
-            <Github className="w-5 h-5" />
-          </Button>
+          <div className="flex items-center gap-1">
+            {onOpenSavedSearches && (
+              <Button variant="neutral" size="icon" onClick={onOpenSavedSearches} title="Saved Searches">
+                <BookmarkCheck className="w-5 h-5" />
+              </Button>
+            )}
+            {onOpenFavorites && (
+              <Button variant="neutral" size="icon" onClick={onOpenFavorites} title="Favorites">
+                <Heart className="w-5 h-5" />
+              </Button>
+            )}
+            {onRandomize && (
+              <Button variant="neutral" size="icon" onClick={onRandomize} title="Random Search">
+                <Dice5 className="w-5 h-5" />
+              </Button>
+            )}
+            <Button
+              variant="neutral"
+              size="icon"
+              onClick={() => window.open('https://github.com/kbtale/findthagame', '_blank')}
+            >
+              <Github className="w-5 h-5" />
+            </Button>
+          </div>
         </div>
         
         {/* Top Bar: Search + Toggle */}
