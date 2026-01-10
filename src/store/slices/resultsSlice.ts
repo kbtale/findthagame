@@ -13,6 +13,7 @@ interface ResultsState {
   items: GameResult[];
   status: 'idle' | 'loading' | 'success' | 'error';
   error: string | null;
+  selectedGame: GameResult | null;
   selectedIndex: number | null;
   clickOrigin: ClickOrigin | null;
 }
@@ -21,6 +22,7 @@ const initialState: ResultsState = {
   items: [],
   status: 'idle',
   error: null,
+  selectedGame: null,
   selectedIndex: null,
   clickOrigin: null,
 };
@@ -36,6 +38,7 @@ export const resultsSlice = createSlice({
     setResults: (state, action: PayloadAction<GameResult[]>) => {
       state.status = 'success';
       state.items = action.payload;
+      state.selectedGame = null;
       state.selectedIndex = null;
       state.clickOrigin = null;
     },
@@ -43,6 +46,7 @@ export const resultsSlice = createSlice({
       state.status = 'error';
       state.error = action.payload;
       state.items = [];
+      state.selectedGame = null;
       state.selectedIndex = null;
       state.clickOrigin = null;
     },
@@ -50,27 +54,43 @@ export const resultsSlice = createSlice({
       state.status = 'idle';
       state.items = [];
       state.error = null;
+      state.selectedGame = null;
       state.selectedIndex = null;
       state.clickOrigin = null;
     },
+    // Select a game from search results by index
     selectGame: (state, action: PayloadAction<{ index: number; origin: ClickOrigin }>) => {
-      state.selectedIndex = action.payload.index;
+      const game = state.items[action.payload.index];
+      if (game) {
+        state.selectedGame = game;
+        state.selectedIndex = action.payload.index;
+        state.clickOrigin = action.payload.origin;
+      }
+    },
+    // Select an external game (favorites, etc.)
+    selectExternalGame: (state, action: PayloadAction<{ game: GameResult; origin: ClickOrigin }>) => {
+      state.selectedGame = action.payload.game;
+      state.selectedIndex = null;  // Not in results, no index
       state.clickOrigin = action.payload.origin;
     },
     clearSelection: (state) => {
+      state.selectedGame = null;
       state.selectedIndex = null;
       state.clickOrigin = null;
     },
     selectNext: (state) => {
+      // Only works when navigating within results
       if (state.selectedIndex !== null && state.selectedIndex < state.items.length - 1) {
         state.selectedIndex += 1;
+        state.selectedGame = state.items[state.selectedIndex];
         state.clickOrigin = null; // No animation for next/prev
       }
     },
     selectPrevious: (state) => {
       if (state.selectedIndex !== null && state.selectedIndex > 0) {
         state.selectedIndex -= 1;
-        state.clickOrigin = null; // No animation for next/prev
+        state.selectedGame = state.items[state.selectedIndex];
+        state.clickOrigin = null;
       }
     },
     updateGameTranslation: (state, action: PayloadAction<{ 
@@ -85,6 +105,11 @@ export const resultsSlice = createSlice({
         if (!game.translations) game.translations = {};
         game.translations[lang] = { summary, storyline };
       }
+      // Also update selectedGame if it's the same game
+      if (state.selectedGame?.id === gameId) {
+        if (!state.selectedGame.translations) state.selectedGame.translations = {};
+        state.selectedGame.translations[lang] = { summary, storyline };
+      }
     },
   },
 });
@@ -95,6 +120,7 @@ export const {
   setError, 
   resetResults,
   selectGame,
+  selectExternalGame,
   clearSelection,
   selectNext,
   selectPrevious,

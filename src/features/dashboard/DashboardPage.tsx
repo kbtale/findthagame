@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '@/store/store';
-import { setLoading, setResults, setError, selectGame, clearSelection, selectNext, selectPrevious } from '@/store/slices/resultsSlice';
+import { setLoading, setResults, setError, selectGame, selectExternalGame, clearSelection, selectNext, selectPrevious } from '@/store/slices/resultsSlice';
 import { setAllFilters, resetFilters } from '@/store/slices/detectiveSlice';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { FilterPanel } from '@/features/dashboard/filterPanel';
@@ -28,6 +28,7 @@ export const DashboardPage = () => {
   // =========================================================================
   const results = useSelector((state: RootState) => state.results.items);
   const status = useSelector((state: RootState) => state.results.status);
+  const selectedGame = useSelector((state: RootState) => state.results.selectedGame);
   const selectedIndex = useSelector((state: RootState) => state.results.selectedIndex);
   const filters = useSelector((state: RootState) => state.detective);
 
@@ -57,7 +58,7 @@ export const DashboardPage = () => {
 
   // Derived values
   const isLoading = status === 'loading';
-  const selectedGame = selectedIndex !== null ? results[selectedIndex] : null;
+  // Navigation only works when viewing a game from results (has valid index)
   const hasPrev = selectedIndex !== null && selectedIndex > 0;
   const hasNext = selectedIndex !== null && selectedIndex < results.length - 1;
 
@@ -147,11 +148,8 @@ export const DashboardPage = () => {
   };
 
   const handleSelectFavorite = (game: GameResult) => {
-    // Find the game index in results and select it
-    const index = results.findIndex(r => r.id === game.id);
-    if (index !== -1) {
-      dispatch(selectGame({ index, origin: { x: 0, y: 0, width: 0, height: 0 } }));
-    }
+    // Select external game directly
+    dispatch(selectExternalGame({ game, origin: { x: 0, y: 0, width: 0, height: 0 } }));
     setFavoritesOpen(false);
   };
 

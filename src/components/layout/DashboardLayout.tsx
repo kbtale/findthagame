@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef, Suspense, lazy, type ReactNode, type ComponentType } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
-import { X, SlidersHorizontal, PanelLeft, PanelLeftClose, Github, History, Trash2, Heart, Bookmark, Dice5, BookmarkCheck } from 'lucide-react';
+import { X, SlidersHorizontal, PanelLeft, PanelLeftClose, Github, History, Trash2, Heart, Bookmark, Dice5, BookmarkCheck, Info, Coffee, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import type { RecentSearch } from '@/hooks/useRecentSearches';
+import { AboutDialog } from '@/components/AboutDialog';
 
 // Lazy load Lottie for easter egg cats (same pattern as ResultsGrid)
 const Lottie = lazy(() => 
@@ -69,6 +70,7 @@ export const DashboardLayout = ({
   const [easterEggCat, setEasterEggCat] = useState<object | null>(null);
   const [isReversing, setIsReversing] = useState(false);
   const [lastEasterEggTime, setLastEasterEggTime] = useState<number>(0);
+  const [isAboutOpen, setAboutOpen] = useState(false);
   const lottieRef = useRef<{ setDirection: (dir: number) => void; play: () => void } | null>(null);
   const { t } = useTranslation();
 
@@ -94,7 +96,7 @@ export const DashboardLayout = ({
     )}>
       
       {/* =========================================================================
-          REGION 1: DESKTOP SIDEBAR (Visible ≥ 1024px)
+          REGION 1: DESKTOP SIDEBAR (Visible >= 1024px)
       ========================================================================= */}
       <aside 
         className={cn(
@@ -110,7 +112,7 @@ export const DashboardLayout = ({
           {/* Logo Box - clickable for easter egg */}
           {brandHeader && (
             <div 
-              className="h-18 px-4 flex items-center justify-center border-2 border-border bg-main shadow-shadow rounded-base cursor-pointer"
+              className="h-18 px-4 flex items-center justify-center border-2 border-border bg-main shadow-shadow rounded-base cursor-pointer relative"
               onClick={() => {
                 // Logo always shows RandomCat.json
                 const now = Date.now();
@@ -155,6 +157,15 @@ export const DashboardLayout = ({
           >
             <Dice5 className="w-5 h-5" />
           </Button>
+          <Button
+            variant="neutral"
+            size="icon"
+            className="bg-main"
+            onClick={() => setAboutOpen(true)}
+            title="About"
+          >
+            <Info className="w-5 h-5" />
+          </Button>
         </div>
         
         {/* Filter Panel Box - floating on orange, extends right */}
@@ -178,8 +189,20 @@ export const DashboardLayout = ({
         
         {/* Brand Header - Mobile */}
         <div className="p-4 pb-2 bg-main border-b-2 border-border flex items-center justify-between">
-          <div className="h-12">
-            {brandHeader}
+          <div className="flex items-center gap-2">
+            <div className="h-12">
+              {brandHeader}
+            </div>
+            {/* Info button next to logo on mobile */}
+            <Button
+              variant="neutral"
+              size="icon"
+              onClick={() => setAboutOpen(true)}
+              title="About"
+              className="h-8 w-8"
+            >
+              <Info className="w-4 h-4" />
+            </Button>
           </div>
           <div className="flex items-center gap-1">
             {/* History - opens recent searches dialog */}
@@ -246,7 +269,7 @@ export const DashboardLayout = ({
       {/* =========================================================================
           REGION 3: MAIN CONTENT AREA
       ========================================================================= */}
-      <main id="results-area" className="flex-1 h-full overflow-y-auto bg-background p-4 lg:p-8 relative z-10 scrollbar-neo">
+      <main id="results-area" className="flex flex-col min-h-full h-full overflow-y-auto bg-background p-4 lg:p-8 relative z-10 scrollbar-neo">
         {/* Main Header Slot (Desktop only) */}
         <div className="hidden lg:flex items-center justify-between mb-8">
           <div className="flex items-center">
@@ -306,7 +329,39 @@ export const DashboardLayout = ({
         </div>
 
         {/* Main Content Slot */}
-        {main}
+        <div className="flex-1">
+          {main}
+        </div>
+
+        {/* Footer */}
+        <footer className="hidden lg:block mt-auto mx-0 mb-0 p-4 border-2 border-border bg-main shadow-shadow rounded-base">
+          <div className="flex items-center justify-center gap-4 flex-wrap">
+            <span className="text-sm text-main-foreground">Powered by the</span>
+            <Button 
+              variant="neutral" 
+              size="sm" 
+              asChild
+            >
+              <a 
+                href="https://www.igdb.com/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                IGDB API
+              </a>
+            </Button>
+            <span className="text-sm text-main-foreground italic">Not affiliated with IGDB or Twitch</span>
+            <Button 
+              size="sm"
+              onClick={() => window.open('https://ko-fi.com/U7U11S2E9Q', '_blank')}
+              className="gap-2 bg-[var(--chart-3)] text-white hover:bg-[var(--chart-3)]/90 border-2 border-border shadow-shadow"
+            >
+              <Coffee className="w-4 h-4" />
+              Support me on Ko-fi
+              <ExternalLink className="w-3 h-3 opacity-50" />
+            </Button>
+          </div>
+        </footer>
       </main>
 
       {/* Recent Searches Dialog */}
@@ -399,12 +454,10 @@ export const DashboardLayout = ({
               autoplay
               onComplete={() => {
                 if (!isReversing) {
-                  // Forward complete → play reverse
                   setIsReversing(true);
                   lottieRef.current?.setDirection(-1);
                   lottieRef.current?.play();
                 } else {
-                  // Reverse complete → hide
                   setEasterEggCat(null);
                   setIsReversing(false);
                 }
@@ -414,6 +467,10 @@ export const DashboardLayout = ({
           </div>
         </Suspense>
       )}
+      {/* About Dialog */}
+      <AboutDialog open={isAboutOpen} onOpenChange={setAboutOpen} />
+
+
 
     </div>
   );
