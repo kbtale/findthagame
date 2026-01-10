@@ -114,7 +114,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const scoredGames = rawGames.map((game) => {
       return {
         ...game,
-        match_score: calculateMatchScore(game, req.body),
+        match_score: calculateMatchScore(game, queryParams),
       };
     });
 

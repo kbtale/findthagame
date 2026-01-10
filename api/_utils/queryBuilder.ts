@@ -144,11 +144,11 @@ export const buildIgdbQuery = (params: QueryParams): string => {
     },
     {
       key: 'genreIds', 
-      build: (v) => `genres = (${(v as number[]).join('|')})` 
+      build: (v) => `genres = (${(v as number[]).join(',')})` 
     },
     {
       key: 'themeIds', 
-      build: (v) => `themes = (${(v as number[]).join('|')})` 
+      build: (v) => `themes = (${(v as number[]).join(',')})` 
     },
     {
       key: 'gameModeId', 

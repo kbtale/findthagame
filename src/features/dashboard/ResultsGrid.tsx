@@ -12,6 +12,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
+import { SearchLoading } from '@/components/SearchLoading';
 
 const Lottie = lazy(() => 
   import('lottie-react').then(mod => ({
@@ -96,16 +97,7 @@ export const ResultsGrid = ({
   };
   
   if (isLoading) {
-    return (
-      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 pb-20">
-        {Array.from({ length: 12 }).map((_, i) => (
-          <div 
-            key={i} 
-            className="aspect-[264/374] bg-main/30 border-2 border-border rounded-base animate-pulse"
-          />
-        ))}
-      </div>
-    );
+    return <SearchLoading />;
   }
 
   // No search yet - show welcome message with cat
