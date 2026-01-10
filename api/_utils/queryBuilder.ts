@@ -63,58 +63,30 @@ export const buildIgdbQuery = (params: QueryParams): string => {
     const fullTerm = params.search.replace(/"/g, '\\"');
     const keywords = parseSearchTerms(params.search);
     
-    // Full phrase: just name and alt_names (minimal)
-    const fullPhraseFields = [
-      'name',
-      'alternative_names.name',
-    ];
-    
-    // 1st keyword: thorough search (no storyline)
-    const firstKeywordFields = [
+    // Search fields for initial IGDB query
+    // Only query the full phrase + 1st keyword - other keywords handled by local scoring
+    const searchFields = [
       'name',
       'alternative_names.name',
       'summary',
       'keywords.name',
     ];
     
-    // 2nd keyword: name, alt, and keywords
-    const secondKeywordFields = [
-      'name',
-      'alternative_names.name',
-      'keywords.name',
-    ];
-    
-    // 3rd+ keywords: only keywords.name (exact match)
-    const laterKeywordFields = [
-      'keywords.name',
-    ];
-    
     const allClauses: string[] = [];
     
     // Add full phrase clauses
-    fullPhraseFields.forEach(field => {
-      allClauses.push(`${field} ~ *"${fullTerm}"*`);
-    });
+    allClauses.push(`name ~ *"${fullTerm}"*`);
+    allClauses.push(`alternative_names.name ~ *"${fullTerm}"*`);
     
-    // Add individual keyword clauses
+    // Add 1st keyword to all fields (primary filter)
     if (keywords.length > 0) {
-      keywords.forEach((keyword, index) => {
-        const escapedKeyword = keyword.replace(/"/g, '\\"');
-        let fields: string[];
-        if (index === 0) {
-          fields = firstKeywordFields;
-        } else if (index === 1) {
-          fields = secondKeywordFields;
-        } else {
-          fields = laterKeywordFields;
-        }
-        
-        fields.forEach(field => {
-          // All fields use wildcards (keywords.name has multi-word phrases)
-          allClauses.push(`${field} ~ *"${escapedKeyword}"*`);
-        });
+      const firstKeyword = keywords[0].replace(/"/g, '\\"');
+      searchFields.forEach(field => {
+        allClauses.push(`${field} ~ *"${firstKeyword}"*`);
       });
     }
+    
+    // Remaining keywords (2nd, 3rd, etc.) are handled by local scoring
     
     const uniqueClauses = [...new Set(allClauses)];
     whereClauses.push(`(${uniqueClauses.join(' | ')})`);
@@ -199,7 +171,7 @@ export const buildIgdbQuery = (params: QueryParams): string => {
 
   const whereString = whereClauses.length > 0 ? `where ${whereClauses.join(' & ')};` : '';
   
-  const limitString = 'limit 100;';
+  const limitString = 'limit 500;';
 
   // Combine all parts into one final string separated by spaces.
   // Instead, we rely on WHERE wildcards (name ~ *"term"*) which provides better partial matching.
