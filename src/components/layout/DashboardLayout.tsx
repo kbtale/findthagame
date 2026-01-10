@@ -10,9 +10,9 @@ import type { RecentSearch } from '@/hooks/useRecentSearches';
 const Lottie = lazy(() => 
   import('lottie-react').then(mod => ({
     default: (mod as unknown as { default: { default: ComponentType<{ 
-      animationData: object; 
-      loop?: boolean; 
-      autoplay?: boolean; 
+      animationData: object;
+      loop?: boolean;
+      autoplay?: boolean;
       className?: string;
       lottieRef?: React.MutableRefObject<{ setDirection: (dir: number) => void; play: () => void } | null>;
       onComplete?: () => void;
@@ -312,8 +312,8 @@ export const DashboardLayout = ({
               onClick={onClearHistory}
               className="absolute top-4 right-16"
             >
-              <Trash2 className="w-4 h-4 mr-1" />
-              {t('dashboard.clearHistory')}
+              <Trash2 className="w-4 h-4 md:mr-1" />
+              <span className="hidden md:inline">{t('dashboard.clearHistory')}</span>
             </Button>
           )}
           <DialogHeader>
@@ -351,7 +351,7 @@ export const DashboardLayout = ({
                       size="icon"
                       className={cn(
                         "shrink-0",
-                        search.isBookmarked ? "visible" : "invisible group-hover:visible"
+                        search.isBookmarked ? "visible" : "md:invisible md:group-hover:visible"
                       )}
                       onClick={(e) => {
                         e.stopPropagation();
@@ -364,7 +364,7 @@ export const DashboardLayout = ({
                     <Button
                       variant="neutral"
                       size="icon"
-                      className="shrink-0 invisible group-hover:visible"
+                      className="shrink-0 md:invisible md:group-hover:visible"
                       onClick={(e) => {
                         e.stopPropagation();
                         onDeleteSearch?.(search.id);
