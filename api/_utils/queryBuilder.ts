@@ -199,7 +199,7 @@ export const buildIgdbQuery = (params: QueryParams): string => {
 
   const whereString = whereClauses.length > 0 ? `where ${whereClauses.join(' & ')};` : '';
   
-  const limitString = 'limit 150;';
+  const limitString = 'limit 100;';
 
   // Combine all parts into one final string separated by spaces.
   // Instead, we rely on WHERE wildcards (name ~ *"term"*) which provides better partial matching.

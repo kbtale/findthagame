@@ -125,7 +125,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
     console.log(`[TIMING] Scoring completed in ${Date.now() - scoreStart}ms`);
 
-    const topResults = scoredGames.slice(0, 150);
+    const topResults = scoredGames.slice(0, 100);
 
     console.log(`[TIMING] TOTAL request time: ${Date.now() - startTime}ms`);
     return res.status(200).json(topResults);
