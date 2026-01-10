@@ -125,7 +125,44 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
     console.log(`[TIMING] Scoring completed in ${Date.now() - scoreStart}ms`);
 
-    const topResults = scoredGames.slice(0, 100);
+    // 10. FETCH SCREENSHOTS FOR TOP RESULTS
+    // -------------------------------------------------------
+    const topResults = scoredGames.slice(0, 160);
+    const gameIds = topResults.map(g => g.id);
+    
+    const screenshotStart = Date.now();
+    const screenshotQuery = `fields game, url; where game = (${gameIds.join(',')}); limit 500;`;
+    const screenshotResponse = await fetch('https://api.igdb.com/v4/screenshots', {
+      method: 'POST',
+      headers: {
+        'Client-ID': clientId,
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'text/plain',
+      },
+      body: screenshotQuery,
+    });
+    
+    if (screenshotResponse.ok) {
+      const screenshots = (await screenshotResponse.json()) as Array<{ game: number; url: string }>;
+      console.log(`[TIMING] Screenshots fetched in ${Date.now() - screenshotStart}ms (${screenshots.length} screenshots)`);
+      
+      // Group screenshots by game ID
+      const screenshotsByGame = new Map<number, string[]>();
+      for (const ss of screenshots) {
+        if (!screenshotsByGame.has(ss.game)) {
+          screenshotsByGame.set(ss.game, []);
+        }
+        screenshotsByGame.get(ss.game)!.push(ss.url);
+      }
+      
+      // Merge screenshots into results
+      for (const game of topResults) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (game as any).screenshots = screenshotsByGame.get(game.id)?.map(url => ({ url })) ?? [];
+      }
+    } else {
+      console.error(`[TIMING] Screenshots fetch failed in ${Date.now() - screenshotStart}ms`);
+    }
 
     console.log(`[TIMING] TOTAL request time: ${Date.now() - startTime}ms`);
     return res.status(200).json(topResults);
