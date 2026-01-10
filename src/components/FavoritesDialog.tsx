@@ -72,7 +72,7 @@ export const FavoritesDialog = ({
                 <Button
                   variant="neutral"
                   size="icon"
-                  className="opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8"
+                  className="md:opacity-0 md:group-hover:opacity-100 transition-opacity h-8 w-8"
                   onClick={(e) => {
                     e.stopPropagation();
                     onRemoveFavorite(game.id);

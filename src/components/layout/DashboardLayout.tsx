@@ -68,6 +68,7 @@ export const DashboardLayout = ({
   const [starCount, setStarCount] = useState<number | null>(null);
   const [easterEggCat, setEasterEggCat] = useState<object | null>(null);
   const [isReversing, setIsReversing] = useState(false);
+  const [lastEasterEggTime, setLastEasterEggTime] = useState<number>(0);
   const lottieRef = useRef<{ setDirection: (dir: number) => void; play: () => void } | null>(null);
   const { t } = useTranslation();
 
@@ -113,10 +114,14 @@ export const DashboardLayout = ({
               className="h-18 px-4 flex items-center justify-center border-2 border-border bg-main shadow-shadow rounded-base cursor-pointer"
               onClick={() => {
                 // Logo always shows RandomCat.json
-                setIsReversing(false);
-                fetch('/cats/RandomCat.json').then(r => r.json()).then(data => {
-                  setEasterEggCat(data);
-                });
+                const now = Date.now();
+                if (now - lastEasterEggTime > 10000) {
+                  setLastEasterEggTime(now);
+                  setIsReversing(false);
+                  fetch('/cats/RandomCat.json').then(r => r.json()).then(data => {
+                    setEasterEggCat(data);
+                  });
+                }
               }}
             >
               {brandHeader}
@@ -274,10 +279,14 @@ export const DashboardLayout = ({
                 variant="neutral" 
                 onClick={() => {
                   // Results button always shows RandomCat2.json
-                  setIsReversing(false);
-                  fetch('/cats/RandomCat2.json').then(r => r.json()).then(data => {
-                    setEasterEggCat(data);
-                  });
+                  const now = Date.now();
+                  if (now - lastEasterEggTime > 10000) {
+                    setLastEasterEggTime(now);
+                    setIsReversing(false);
+                    fetch('/cats/RandomCat2.json').then(r => r.json()).then(data => {
+                      setEasterEggCat(data);
+                    });
+                  }
                 }}
               >
                 {getResultText()}

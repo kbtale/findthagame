@@ -54,9 +54,10 @@ interface FilterPanelProps {
   onSearch: (filters: FilterState) => void;
   onClearAll?: () => void;
   isLoading?: boolean;
+  searchTerm?: string;
 }
 
-export const FilterPanel = ({ onSearch, onClearAll, isLoading = false }: FilterPanelProps) => {
+export const FilterPanel = ({ onSearch, onClearAll, isLoading = false, searchTerm = '' }: FilterPanelProps) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [showNoKeywordsDialog, setShowNoKeywordsDialog] = useState(false);
@@ -65,7 +66,8 @@ export const FilterPanel = ({ onSearch, onClearAll, isLoading = false }: FilterP
   const filters = useSelector((state: RootState) => state.detective);
 
   const handleSearchClick = () => {
-    if (!filters.search || filters.search.trim() === '') {
+    // Check if search term is empty using the passed prop
+    if (!searchTerm || searchTerm.trim() === '') {
       setShowNoKeywordsDialog(true);
     } else {
       onSearch(filters);
@@ -435,7 +437,7 @@ export const FilterPanel = ({ onSearch, onClearAll, isLoading = false }: FilterP
 
         {/* No Keywords Confirmation Dialog */}
         <Dialog open={showNoKeywordsDialog} onOpenChange={setShowNoKeywordsDialog}>
-          <DialogContent className="max-w-sm">
+          <DialogContent className="max-w-sm [&>button]:hidden">
             <DialogHeader>
               <DialogTitle className="font-heading">{t('filters.noKeywordsTitle')}</DialogTitle>
               <DialogDescription>{t('filters.noKeywordsDescription')}</DialogDescription>

@@ -208,6 +208,7 @@ export const DashboardPage = () => {
     <FilterPanel 
       onSearch={handleSearch}
       isLoading={isLoading}
+      searchTerm={searchTerm}
       onClearAll={() => {
         setSearchTerm('');
         dispatch(resetFilters());

@@ -124,6 +124,9 @@ export const ResultsGrid = ({
           <p className="text-sm font-base">
             {t('results.welcomeSearch')}
           </p>
+          <p className="text-sm font-base md:hidden text-muted-foreground">
+            {t('dashboard.optionalFieldsHint')}
+          </p>
         </div>
       </div>
     );
