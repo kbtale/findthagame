@@ -156,18 +156,33 @@ export const buildIgdbQuery = (params: QueryParams): string => {
   // If search term EXISTS, return a multi-query
   const escapedSearch = params.search.replace(/"/g, '\\"');
 
-  // Query 1: Strict (uses IGDB 'search' param for full phrase relevance)
-  const strictWhere = filterClauses.length > 0 ? `where ${filterClauses.join(' & ')};` : '';
-  const query1 = `query games "Strict" { fields ${FIELDS_LIST}; search "${escapedSearch}"; ${strictWhere} limit 100; };`;
+  // Query 1: Strict (searches the FULL PHRASE in name and alt_names)
+  // Note: We use 'where' with name match instead of 'search' because 'search' is not supported in multiquery
+  const strictTextClause = `(name ~ *"${escapedSearch}"* | alternative_names.name ~ *"${escapedSearch}"*)`;
+  const strictClauses = [...filterClauses, strictTextClause];
+  const strictWhere = `\twhere ${strictClauses.join(' & ')};`;
+  const query1Parts = [
+    `query games "Strict" {`,
+    `\tfields ${FIELDS_LIST};`,
+    strictWhere,
+    `\tlimit 100;`,
+    `};`
+  ].filter(line => line.trim()).join('\n');
 
-  // Query 2: Broad (uses keyword-based matching)
+  // Query 2: Broad (uses keyword-based matching, NO full phrase)
   const broadTextClauses = buildBroadTextClauses(params.search);
   const allBroadClauses = [...filterClauses];
   if (broadTextClauses.length > 0) {
     allBroadClauses.push(`(${broadTextClauses.join(' | ')})`);
   }
-  const broadWhere = allBroadClauses.length > 0 ? `where ${allBroadClauses.join(' & ')};` : '';
-  const query2 = `query games "Broad" { fields ${FIELDS_LIST}; ${broadWhere} limit 300; };`;
+  const broadWhere = allBroadClauses.length > 0 ? `\twhere ${allBroadClauses.join(' & ')};` : '';
+  const query2Parts = [
+    `query games "Broad" {`,
+    `\tfields ${FIELDS_LIST};`,
+    broadWhere,
+    `\tlimit 300;`,
+    `};`
+  ].filter(line => line.trim()).join('\n');
 
-  return `${query1}\n${query2}`;
+  return `${query1Parts}\n\n${query2Parts}`;
 };
