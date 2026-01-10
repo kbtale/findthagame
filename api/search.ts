@@ -84,8 +84,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // 7. EXECUTE IGDB API CALL
     // -------------------------------------------------------
+    // For multi-query, we need to use the multiquery endpoint
+    const isMultiQuery = igdbQueryString.includes('query games');
+    const igdbEndpoint = isMultiQuery 
+      ? 'https://api.igdb.com/v4/multiquery'
+      : 'https://api.igdb.com/v4/games';
+
     const igdbStart = Date.now();
-    const igdbResponse = await fetch('https://api.igdb.com/v4/games', {
+    const igdbResponse = await fetch(igdbEndpoint, {
       method: 'POST',
       headers: {
         'Client-ID': clientId,
@@ -104,12 +110,38 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       throw new Error(`IGDB responded with ${igdbResponse.status}: ${errorText}`);
     }
 
-    // 9. PARSE AND SCORE RESULTS
+    // 9. PARSE AND MERGE RESULTS
     // -------------------------------------------------------
     const parseStart = Date.now();
-    const rawGames = (await igdbResponse.json()) as IGDBGame[];
+    const rawData = await igdbResponse.json();
+    
+    let rawGames: IGDBGame[] = [];
+    
+    if (isMultiQuery && Array.isArray(rawData)) {
+      // Multi-query response: [{ name: "Strict", result: [...] }, { name: "Broad", result: [...] }]
+      const strictResults = rawData.find((r: { name: string; result: IGDBGame[] }) => r.name === "Strict")?.result || [];
+      const broadResults = rawData.find((r: { name: string; result: IGDBGame[] }) => r.name === "Broad")?.result || [];
+      
+      console.log(`[TIMING] Multi-query: Strict=${strictResults.length}, Broad=${broadResults.length}`);
+      
+      // Merge and deduplicate by ID (Strict results take priority)
+      const gameMap = new Map<number, IGDBGame>();
+      strictResults.forEach((g: IGDBGame) => gameMap.set(g.id, g));
+      broadResults.forEach((g: IGDBGame) => {
+        if (!gameMap.has(g.id)) gameMap.set(g.id, g);
+      });
+      
+      rawGames = Array.from(gameMap.values());
+      console.log(`[TIMING] Merged and deduplicated: ${rawGames.length} unique games`);
+    } else {
+      // Single query response
+      rawGames = rawData as IGDBGame[];
+    }
+    
     console.log(`[TIMING] JSON parsed in ${Date.now() - parseStart}ms (${rawGames.length} games)`);
 
+    // 10. SCORE ALL RESULTS
+    // -------------------------------------------------------
     const scoreStart = Date.now();
     const scoredGames = rawGames.map((game) => {
       return {
@@ -125,9 +157,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
     console.log(`[TIMING] Scoring completed in ${Date.now() - scoreStart}ms`);
 
-    // 10. FETCH SCREENSHOTS FOR TOP RESULTS
+    // 11. FETCH SCREENSHOTS FOR TOP RESULTS
     // -------------------------------------------------------
-    const topResults = scoredGames.slice(0, 160);
+    const topResults = scoredGames.slice(0, 200);
     const gameIds = topResults.map(g => g.id);
     
     const screenshotStart = Date.now();

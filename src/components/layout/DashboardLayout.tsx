@@ -84,7 +84,6 @@ export const DashboardLayout = ({
   const getResultText = () => {
     if (isLoading) return t('dashboard.waitingForResults');
     if (resultsCount === 0) return null;
-    if (resultsCount >= 160) return t('dashboard.gamesFoundPlus', { count: 160 });
     return t('dashboard.gamesFound', { count: resultsCount });
   };
 
