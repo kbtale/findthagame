@@ -158,12 +158,7 @@ export const buildIgdbQuery = (params: QueryParams): string => {
 
   // Query 1: Strict (uses IGDB 'search' param for full phrase relevance)
   const strictWhere = filterClauses.length > 0 ? `where ${filterClauses.join(' & ')};` : '';
-  const query1 = `query games "Strict" {
-    fields ${FIELDS_LIST};
-    search "${escapedSearch}";
-    ${strictWhere}
-    limit 100;
-  };`;
+  const query1 = `query games "Strict" { fields ${FIELDS_LIST}; search "${escapedSearch}"; ${strictWhere} limit 100; };`;
 
   // Query 2: Broad (uses keyword-based matching)
   const broadTextClauses = buildBroadTextClauses(params.search);
@@ -172,11 +167,7 @@ export const buildIgdbQuery = (params: QueryParams): string => {
     allBroadClauses.push(`(${broadTextClauses.join(' | ')})`);
   }
   const broadWhere = allBroadClauses.length > 0 ? `where ${allBroadClauses.join(' & ')};` : '';
-  const query2 = `query games "Broad" {
-    fields ${FIELDS_LIST};
-    ${broadWhere}
-    limit 300;
-  };`;
+  const query2 = `query games "Broad" { fields ${FIELDS_LIST}; ${broadWhere} limit 300; };`;
 
   return `${query1}\n${query2}`;
 };
