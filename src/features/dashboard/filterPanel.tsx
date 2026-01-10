@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '@/store/store';
@@ -26,6 +26,7 @@ import { Combobox } from '@/components/ui/combobox';
 import { Input } from '@/components/ui/input';
 import { Multiselect } from '@/components/ui/multiselect';
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/components/ui/tooltip';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { 
   PLATFORMS, 
   GENRES, 
@@ -58,9 +59,23 @@ interface FilterPanelProps {
 export const FilterPanel = ({ onSearch, onClearAll, isLoading = false }: FilterPanelProps) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const [showNoKeywordsDialog, setShowNoKeywordsDialog] = useState(false);
   
   // Read filters from Redux store
   const filters = useSelector((state: RootState) => state.detective);
+
+  const handleSearchClick = () => {
+    if (!filters.search || filters.search.trim() === '') {
+      setShowNoKeywordsDialog(true);
+    } else {
+      onSearch(filters);
+    }
+  };
+
+  const handleConfirmSearch = () => {
+    setShowNoKeywordsDialog(false);
+    onSearch(filters);
+  };
 
   // Filter age rating values based on selected organization
   const filteredAgeRatingValues = filters.ageRatingOrg
@@ -411,12 +426,30 @@ export const FilterPanel = ({ onSearch, onClearAll, isLoading = false }: FilterP
       ================================================== */}
       <div className="space-y-3">
         <Button 
-          onClick={() => onSearch(filters)}
+          onClick={handleSearchClick}
           disabled={isLoading}
           className="w-full h-12 text-lg font-heading uppercase tracking-widest bg-main text-main-foreground border-2 border-border shadow-shadow hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:translate-x-[4px] active:translate-y-[4px] transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-x-0 disabled:hover:translate-y-0 disabled:hover:shadow-shadow"
         >
           {t('filters.search')}
         </Button>
+
+        {/* No Keywords Confirmation Dialog */}
+        <Dialog open={showNoKeywordsDialog} onOpenChange={setShowNoKeywordsDialog}>
+          <DialogContent className="max-w-sm">
+            <DialogHeader>
+              <DialogTitle className="font-heading">{t('filters.noKeywordsTitle')}</DialogTitle>
+              <DialogDescription>{t('filters.noKeywordsDescription')}</DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="flex gap-2 justify-end">
+              <Button variant="neutral" onClick={() => setShowNoKeywordsDialog(false)}>
+                {t('filters.cancel')}
+              </Button>
+              <Button onClick={handleConfirmSearch}>
+                {t('filters.proceed')}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
         
         <Button 
           onClick={handleClearAll}

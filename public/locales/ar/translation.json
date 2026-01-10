@@ -72,7 +72,11 @@
     "selectOrgFirst": "اختر هيئة أولاً.",
     "clearAll": "مسح جميع الفلاتر",
     "clear": "مسح",
-    "clearSection": "مسح هذا القسم"
+    "clearSection": "مسح هذا القسم",
+    "noKeywordsTitle": "لا توجد كلمات مفتاحية",
+    "noKeywordsDescription": "أنت على وشك البحث عن ألعاب بدون كلمات مفتاحية. قد يؤدي ذلك إلى ظهور نتائج كثيرة. هل تريد المتابعة؟",
+    "cancel": "إلغاء",
+    "proceed": "متابعة"
   },
   "results": {
     "noResults": "لا توجد نتائج",

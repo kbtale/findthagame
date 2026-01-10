@@ -72,7 +72,11 @@
     "selectOrgFirst": "Sélectionnez une org.",
     "clearAll": "Tout effacer",
     "clear": "Effacer",
-    "clearSection": "Effacer la section"
+    "clearSection": "Effacer la section",
+    "noKeywordsTitle": "Aucun mot-clé",
+    "noKeywordsDescription": "Vous allez rechercher des jeux sans mots-clés. Cela peut retourner beaucoup de résultats. Voulez-vous continuer?",
+    "cancel": "Annuler",
+    "proceed": "Continuer"
   },
   "results": {
     "noResults": "Aucun résultat",

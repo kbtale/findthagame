@@ -72,7 +72,11 @@
     "selectOrgFirst": "Zuerst Org. wählen.",
     "clearAll": "Alle Filter löschen",
     "clear": "Löschen",
-    "clearSection": "Abschnitt löschen"
+    "clearSection": "Abschnitt löschen",
+    "noKeywordsTitle": "Keine Suchbegriffe",
+    "noKeywordsDescription": "Sie suchen ohne Suchbegriffe. Dies kann viele Ergebnisse liefern. Möchten Sie fortfahren?",
+    "cancel": "Abbrechen",
+    "proceed": "Fortfahren"
   },
   "results": {
     "noResults": "Keine Ergebnisse",

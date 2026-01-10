@@ -72,7 +72,11 @@
     "selectOrgFirst": "Select an org first.",
     "clearAll": "Clear All Filters",
     "clear": "Clear",
-    "clearSection": "Clear this section"
+    "clearSection": "Clear this section",
+    "noKeywordsTitle": "No Keywords Entered",
+    "noKeywordsDescription": "You're about to search for games without keywords. This may return many results. Do you want to proceed?",
+    "cancel": "Cancel",
+    "proceed": "Proceed"
   },
   "results": {
     "noResults": "No Results",

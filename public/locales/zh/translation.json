@@ -72,7 +72,11 @@
     "selectOrgFirst": "请先选择机构。",
     "clearAll": "清除所有筛选",
     "clear": "清除",
-    "clearSection": "清除此部分"
+    "clearSection": "清除此部分",
+    "noKeywordsTitle": "未输入关键词",
+    "noKeywordsDescription": "您将在没有关键词的情况下搜索游戏。这可能会返回很多结果。是否继续？",
+    "cancel": "取消",
+    "proceed": "继续"
   },
   "results": {
     "noResults": "无结果",

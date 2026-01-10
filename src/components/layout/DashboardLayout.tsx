@@ -178,6 +178,10 @@ export const DashboardLayout = ({
             {brandHeader}
           </div>
           <div className="flex items-center gap-1">
+            {/* History - opens recent searches dialog */}
+            <Button variant="neutral" size="icon" onClick={() => setRecentSearchesOpen(true)} title="Search History">
+              <History className="w-5 h-5" />
+            </Button>
             {onOpenSavedSearches && (
               <Button variant="neutral" size="icon" onClick={onOpenSavedSearches} title="Saved Searches">
                 <BookmarkCheck className="w-5 h-5" />
@@ -355,11 +359,7 @@ export const DashboardLayout = ({
                       }}
                       title={search.isBookmarked ? 'Remove bookmark' : 'Bookmark this search'}
                     >
-                      {search.isBookmarked ? (
-                        <BookmarkCheck className="w-4 h-4 text-main" />
-                      ) : (
-                        <Bookmark className="w-4 h-4" />
-                      )}
+                      <Bookmark className="w-4 h-4" fill={search.isBookmarked ? "currentColor" : "none"} />
                     </Button>
                     <Button
                       variant="neutral"

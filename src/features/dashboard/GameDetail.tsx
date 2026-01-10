@@ -59,10 +59,11 @@ const NavigationHeader = memo(({
           <Button
             onClick={onToggleTranslation}
             disabled={isTranslating}
-            className="flex items-center gap-2 bg-[var(--chart-3)] text-white hover:bg-[var(--chart-3)]/90"
+            size="icon"
+            className="bg-[var(--chart-3)] text-white hover:bg-[var(--chart-3)]/90 md:w-auto md:px-4"
           >
             <Languages className="w-4 h-4" />
-            {getButtonText()}
+            <span className="hidden md:inline md:ml-2">{getButtonText()}</span>
           </Button>
         )}
         <Button

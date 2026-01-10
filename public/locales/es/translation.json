@@ -72,7 +72,11 @@
     "selectOrgFirst": "Selecciona una org. primero.",
     "clearAll": "Borrar filtros",
     "clear": "Borrar",
-    "clearSection": "Borrar esta sección"
+    "clearSection": "Borrar esta sección",
+    "noKeywordsTitle": "Sin palabras clave",
+    "noKeywordsDescription": "Vas a buscar juegos sin palabras clave. Esto puede devolver muchos resultados. ¿Deseas continuar?",
+    "cancel": "Cancelar",
+    "proceed": "Continuar"
   },
   "results": {
     "noResults": "Sin resultados",

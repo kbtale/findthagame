@@ -72,7 +72,11 @@
     "selectOrgFirst": "先に機関を選択してください。",
     "clearAll": "全フィルタ解除",
     "clear": "解除",
-    "clearSection": "このセクションを解除"
+    "clearSection": "このセクションを解除",
+    "noKeywordsTitle": "キーワードなし",
+    "noKeywordsDescription": "キーワードなしでゲームを検索しようとしています。多くの結果が返される可能性があります。続行しますか？",
+    "cancel": "キャンセル",
+    "proceed": "続行"
   },
   "results": {
     "noResults": "結果なし",
