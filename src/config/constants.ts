@@ -6,6 +6,87 @@
  */
 
 export const PLATFORMS = [
+  // === PRIORITY PLATFORMS (Most searched for old games) ===
+
+  // --- PC/Computing ---
+  { id: 6, name: 'PC (Microsoft Windows)' },
+  { id: 13, name: 'DOS' },
+  { id: 3, name: 'Linux' },
+  { id: 82, name: 'Web browser' },
+
+  // --- Nintendo (oldest first) ---
+  { id: 18, name: 'Nintendo Entertainment System' },
+  { id: 99, name: 'Family Computer' },
+  { id: 33, name: 'Game Boy' },
+  { id: 19, name: 'Super Nintendo Entertainment System' },
+  { id: 58, name: 'Super Famicom' },
+  { id: 22, name: 'Game Boy Color' },
+  { id: 4, name: 'Nintendo 64' },
+  { id: 24, name: 'Game Boy Advance' },
+  { id: 21, name: 'Nintendo GameCube' },
+  { id: 20, name: 'Nintendo DS' },
+  { id: 5, name: 'Wii' },
+  { id: 37, name: 'Nintendo 3DS' },
+  { id: 41, name: 'Wii U' },
+  { id: 130, name: 'Nintendo Switch' },
+  { id: 508, name: 'Nintendo Switch 2' },
+  { id: 87, name: 'Virtual Boy' },
+  { id: 51, name: 'Family Computer Disk System' },
+  { id: 416, name: '64DD' },
+  { id: 159, name: 'Nintendo DSi' },
+  { id: 137, name: 'New Nintendo 3DS' },
+
+  // --- Sega (oldest first) ---
+  { id: 64, name: 'Sega Master System/Mark III' },
+  { id: 29, name: 'Sega Mega Drive/Genesis' },
+  { id: 35, name: 'Sega Game Gear' },
+  { id: 78, name: 'Sega CD' },
+  { id: 30, name: 'Sega 32X' },
+  { id: 32, name: 'Sega Saturn' },
+  { id: 23, name: 'Dreamcast' },
+  { id: 84, name: 'SG-1000' },
+  { id: 482, name: 'Sega CD 32X' },
+
+  // --- PlayStation (oldest first) ---
+  { id: 7, name: 'PlayStation' },
+  { id: 8, name: 'PlayStation 2' },
+  { id: 38, name: 'PlayStation Portable' },
+  { id: 9, name: 'PlayStation 3' },
+  { id: 46, name: 'PlayStation Vita' },
+  { id: 48, name: 'PlayStation 4' },
+  { id: 167, name: 'PlayStation 5' },
+  { id: 390, name: 'PlayStation VR2' },
+  { id: 165, name: 'PlayStation VR' },
+  { id: 441, name: 'PocketStation' },
+
+  // --- Atari (oldest first) ---
+  { id: 59, name: 'Atari 2600' },
+  { id: 66, name: 'Atari 5200' },
+  { id: 60, name: 'Atari 7800' },
+  { id: 65, name: 'Atari 8-bit' },
+  { id: 63, name: 'Atari ST/STE' },
+  { id: 61, name: 'Atari Lynx' },
+  { id: 62, name: 'Atari Jaguar' },
+  { id: 410, name: 'Atari Jaguar CD' },
+
+  // --- Xbox ---
+  { id: 11, name: 'Xbox' },
+  { id: 12, name: 'Xbox 360' },
+  { id: 49, name: 'Xbox One' },
+  { id: 169, name: 'Xbox Series X|S' },
+
+  // --- Mobile ---
+  { id: 34, name: 'Android' },
+  { id: 39, name: 'iOS' },
+  { id: 14, name: 'Mac' },
+  { id: 55, name: 'Legacy Mobile Device' },
+  { id: 74, name: 'Windows Phone' },
+  { id: 73, name: 'BlackBerry OS' },
+  { id: 405, name: 'Windows Mobile' },
+  { id: 417, name: 'Palm OS' },
+
+  // === REMAINING PLATFORMS ===
+
   // --- 1st gen (1972–1980) ---
   { id: 88, name: 'Odyssey' },
   { id: 140, name: 'AY-3-8500' },
@@ -31,9 +112,6 @@ export const PLATFORMS = [
   { id: 70, name: 'Vectrex' },
   { id: 473, name: 'Arcadia 2001' },
   { id: 68, name: 'ColecoVision' },
-  { id: 66, name: 'Atari 5200' },
-  { id: 60, name: 'Atari 7800' },
-  { id: 65, name: 'Atari 8-bit' },
   { id: 129, name: 'Texas Instruments TI-99' },
   { id: 126, name: 'TRS-80' },
   { id: 151, name: 'TRS-80 Color Computer' },
@@ -43,13 +121,7 @@ export const PLATFORMS = [
   { id: 100, name: 'Analogue electronics' },
 
   // --- 3rd gen (1983–2003) ---
-  { id: 99, name: 'Family Computer' },
-  { id: 18, name: 'Nintendo Entertainment System' },
-  { id: 64, name: 'Sega Master System/Mark III' },
-  { id: 84, name: 'SG-1000' },
   { id: 376, name: 'Epoch Super Cassette Vision' },
-  { id: 51, name: 'Family Computer Disk System' },
-  { id: 13, name: 'DOS' },
   { id: 25, name: 'Amstrad CPC' },
   { id: 69, name: 'BBC Microcomputer System' },
   { id: 15, name: 'Commodore C64/128/MAX' },
@@ -67,23 +139,13 @@ export const PLATFORMS = [
   { id: 86, name: 'TurboGrafx-16/PC Engine' },
   { id: 128, name: 'PC Engine SuperGrafx' },
   { id: 150, name: 'Turbografx-16/PC Engine CD' },
-  { id: 29, name: 'Sega Mega Drive/Genesis' },
-  { id: 78, name: 'Sega CD' },
-  { id: 30, name: 'Sega 32X' },
-  { id: 482, name: 'Sega CD 32X' },
-  { id: 19, name: 'Super Nintendo Entertainment System' },
-  { id: 58, name: 'Super Famicom' },
   { id: 131, name: 'Super NES CD-ROM System' },
   { id: 80, name: 'Neo Geo AES' },
   { id: 79, name: 'Neo Geo MVS' },
-  { id: 33, name: 'Game Boy' },
-  { id: 61, name: 'Atari Lynx' },
-  { id: 35, name: 'Sega Game Gear' },
   { id: 506, name: 'Amstrad GX4000' },
   { id: 480, name: 'Super A\'Can' },
   { id: 408, name: 'Mega Duck/Cougar Boy' },
   { id: 16, name: 'Amiga' },
-  { id: 63, name: 'Atari ST/STE' },
   { id: 27, name: 'MSX' },
   { id: 53, name: 'MSX2' },
   { id: 125, name: 'PC-8800 Series' },
@@ -94,15 +156,8 @@ export const PLATFORMS = [
   // --- 5th gen (1993–2006) ---
   { id: 50, name: '3DO Interactive Multiplayer' },
   { id: 114, name: 'Amiga CD32' },
-  { id: 62, name: 'Atari Jaguar' },
-  { id: 410, name: 'Atari Jaguar CD' },
-  { id: 32, name: 'Sega Saturn' },
-  { id: 7, name: 'PlayStation' },
-  { id: 4, name: 'Nintendo 64' },
-  { id: 416, name: '64DD' },
   { id: 380, name: 'Casio Loopy' },
   { id: 476, name: 'Apple Pippin' },
-  { id: 87, name: 'Virtual Boy' },
   { id: 136, name: 'Neo Geo CD' },
   { id: 379, name: 'Game.com' },
   { id: 117, name: 'Philips CD-i' },
@@ -115,12 +170,6 @@ export const PLATFORMS = [
   { id: 475, name: 'R-Zone' },
 
   // --- 6th gen (1998–2015) ---
-  { id: 23, name: 'Dreamcast' },
-  { id: 8, name: 'PlayStation 2' },
-  { id: 21, name: 'Nintendo GameCube' },
-  { id: 11, name: 'Xbox' },
-  { id: 24, name: 'Game Boy Advance' },
-  { id: 22, name: 'Game Boy Color' },
   { id: 119, name: 'Neo Geo Pocket' },
   { id: 120, name: 'Neo Geo Pocket Color' },
   { id: 57, name: 'WonderSwan' },
@@ -128,30 +177,14 @@ export const PLATFORMS = [
   { id: 124, name: 'SwanCrystal' },
   { id: 42, name: 'N-Gage' },
   { id: 44, name: 'Tapwave Zodiac' },
-  { id: 441, name: 'PocketStation' },
   { id: 440, name: 'Visual Memory Unit / Visual Memory System' },
   { id: 240, name: 'Zeebo' },
 
   // --- 7th gen (2004–2017) ---
-  { id: 12, name: 'Xbox 360' },
-  { id: 9, name: 'PlayStation 3' },
-  { id: 5, name: 'Wii' },
-  { id: 20, name: 'Nintendo DS' },
-  { id: 159, name: 'Nintendo DSi' },
-  { id: 38, name: 'PlayStation Portable' },
   { id: 306, name: 'Satellaview' },
   { id: 439, name: 'V.Smile' },
-  { id: 74, name: 'Windows Phone' },
-  { id: 73, name: 'BlackBerry OS' },
 
   // --- 8th gen (2011–PRESENTE) ---
-  { id: 37, name: 'Nintendo 3DS' },
-  { id: 137, name: 'New Nintendo 3DS' },
-  { id: 46, name: 'PlayStation Vita' },
-  { id: 41, name: 'Wii U' },
-  { id: 48, name: 'PlayStation 4' },
-  { id: 49, name: 'Xbox One' },
-  { id: 130, name: 'Nintendo Switch' },
   { id: 72, name: 'Ouya' },
   { id: 170, name: 'Google Stadia' },
   { id: 203, name: 'DUPLICATE Stadia' },
@@ -162,26 +195,12 @@ export const PLATFORMS = [
   { id: 164, name: 'Daydream' },
 
   // --- 9th gen (2020–PRESENTE) ---
-  { id: 167, name: 'PlayStation 5' },
-  { id: 169, name: 'Xbox Series X|S' },
-  { id: 508, name: 'Nintendo Switch 2' },
   { id: 471, name: 'Meta Quest 3' },
-  { id: 390, name: 'PlayStation VR2' },
   { id: 472, name: 'visionOS' },
 
-  // --- Modern computers & phones ---
-  { id: 6, name: 'PC (Microsoft Windows)' },
-  { id: 3, name: 'Linux' },
-  { id: 14, name: 'Mac' },
-  { id: 34, name: 'Android' },
-  { id: 39, name: 'iOS' },
-  { id: 55, name: 'Legacy Mobile Device' },
-  { id: 82, name: 'Web browser' },
-  { id: 405, name: 'Windows Mobile' },
-  { id: 417, name: 'Palm OS' },
+
 
   // --- VR ---
-  { id: 165, name: 'PlayStation VR' },
   { id: 386, name: 'Meta Quest 2' },
   { id: 384, name: 'Oculus Quest' },
   { id: 385, name: 'Oculus Rift' },

@@ -29,6 +29,7 @@ export const DashboardPage = () => {
   const results = useSelector((state: RootState) => state.results.items);
   const status = useSelector((state: RootState) => state.results.status);
   const selectedIndex = useSelector((state: RootState) => state.results.selectedIndex);
+  const filters = useSelector((state: RootState) => state.detective);
 
   // =========================================================================
   // LOCAL STATE
@@ -184,6 +185,7 @@ export const DashboardPage = () => {
           placeholder={t('dashboard.searchPlaceholder')} 
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && handleSearch(filters)}
           className="pl-10 bg-secondary-background border-border shadow-shadow font-base" 
         />
         <Search className="absolute left-3 top-2.5 h-5 w-5 opacity-50" />
@@ -197,6 +199,7 @@ export const DashboardPage = () => {
         placeholder={t('dashboard.mobileSearchPlaceholder')} 
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
+        onKeyDown={(e) => e.key === 'Enter' && handleSearch(filters)}
         className="pl-10 bg-secondary-background font-bold border-border shadow-none focus:shadow-shadow transition-all"
         onFocus={() => setMobileOpen(true)} 
       />
