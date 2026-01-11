@@ -380,7 +380,7 @@ export const FilterPanel = ({ onSearch, onClearAll, isLoading = false, searchTer
         <div className="space-y-3 px-1">
            <div className="flex justify-between items-center">
             <Label className="text-xs uppercase font-heading">{t('filters.minScore')}</Label>
-            <span className="bg-foreground text-background text-xs font-heading px-1 py-0.5 rounded-[2px]">{filters.minRating ?? 0}%</span>
+            <span className="bg-foreground text-background text-xs font-heading px-1 py-0.5 rounded-[2px]">{((filters.minRating ?? 0) / 10).toFixed(1)} ★</span>
            </div>
            <Slider 
              value={[filters.minRating ?? 0]} 
