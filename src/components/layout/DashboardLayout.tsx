@@ -350,6 +350,20 @@ export const DashboardLayout = ({
                 IGDB API
               </a>
             </Button>
+            <span className="text-sm text-main-foreground">&</span>
+            <Button 
+              variant="neutral" 
+              size="sm" 
+              asChild
+            >
+              <a 
+                href="https://groq.com/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                Groq AI
+              </a>
+            </Button>
             <span className="text-sm text-main-foreground italic">Not affiliated with IGDB or Twitch</span>
             <Button 
               size="sm"

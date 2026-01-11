@@ -52,7 +52,15 @@ export const AboutDialog = ({ open, onOpenChange }: AboutDialogProps) => {
               >
                 IGDB API
               </a>
-              . All game data and imagery are provided by the Internet Game Database.
+              . All game data and imagery are provided by the Internet Game Database. Translations are powered by{' '}
+              <a
+                href="https://groq.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-main hover:underline font-medium"
+              >
+                Groq AI
+              </a>.
             </p>
           </section>
 
