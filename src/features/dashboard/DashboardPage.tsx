@@ -36,6 +36,7 @@ export const DashboardPage = () => {
   // LOCAL STATE
   // =========================================================================
   const [searchTerm, setSearchTerm] = useState('');
+  const [page, setPage] = useState(1);
   const [isMobileOpen, setMobileOpen] = useState(false);
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
@@ -67,6 +68,7 @@ export const DashboardPage = () => {
   // =========================================================================
   const handleSearch = async (filters: FilterState) => {
     setMobileOpen(false);
+    setPage(1);
     dispatch(setLoading());
 
     const fullFilters = { ...filters, search: searchTerm };
@@ -129,6 +131,7 @@ export const DashboardPage = () => {
     const randomFilters = generateRandomFilters();
     dispatch(setAllFilters(randomFilters)); // Update Redux filter state
     setMobileOpen(false);
+    setPage(1);
     dispatch(setLoading());
 
     try {
@@ -246,6 +249,8 @@ export const DashboardPage = () => {
       results={results}
       isLoading={isLoading}
       hasSearched={status === 'success'}
+      currentPage={page}
+      onPageChange={setPage}
       onSelectGame={handleSelectGame}
     />
   );

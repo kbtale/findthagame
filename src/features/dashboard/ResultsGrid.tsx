@@ -41,6 +41,8 @@ interface ResultsGridProps {
   results?: GameResult[];
   isLoading?: boolean;
   hasSearched?: boolean;
+  currentPage?: number;
+  onPageChange?: (page: number) => void;
   onSelectGame?: (index: number, origin: ClickOrigin) => void;
 }
 
@@ -48,6 +50,8 @@ export const ResultsGrid = ({
   results = [], 
   isLoading = false,
   hasSearched = false,
+  currentPage = 1,
+  onPageChange,
   onSelectGame 
 }: ResultsGridProps) => {
   const { t } = useTranslation();
@@ -56,13 +60,9 @@ export const ResultsGrid = ({
   const [animationData, setAnimationData] = useState<object | null>(null);
   
   const ITEMS_PER_PAGE = 20;
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(results.length / ITEMS_PER_PAGE);
   
+  const totalPages = Math.ceil(results.length / ITEMS_PER_PAGE);
   const safePage = Math.min(currentPage, Math.max(1, totalPages));
-  if (safePage !== currentPage) {
-    setCurrentPage(safePage);
-  }
 
   // Fetch animation JSON when welcome screen is shown
   useEffect(() => {
@@ -87,12 +87,12 @@ export const ResultsGrid = ({
   };
   
   const paginatedResults = results.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
+    (safePage - 1) * ITEMS_PER_PAGE,
+    safePage * ITEMS_PER_PAGE
   );
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+    onPageChange?.(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   
