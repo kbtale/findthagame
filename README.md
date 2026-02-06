@@ -12,8 +12,8 @@ Powered by the [IGDB API](https://api-docs.igdb.com/) and  [Groq AI](https://gro
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![Shadcn UI](https://img.shields.io/badge/shadcn%2Fui-000000?style=for-the-badge&logo=shadcnui&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
-![FINDTHAGAME2](https://github.com/user-attachments/assets/2ef6423f-1a41-4877-919a-36d26b0b8f47)
-</div>
+
+https://github.com/user-attachments/assets/a6e10484-587e-466a-a8de-b02ac710de9a
 
 ## Features
 
