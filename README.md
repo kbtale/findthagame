@@ -14,6 +14,7 @@ Powered by the [IGDB API](https://api-docs.igdb.com/) and  [Groq AI](https://gro
 ![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
 
 https://github.com/user-attachments/assets/a6e10484-587e-466a-a8de-b02ac710de9a
+</div>
 
 ## Features
 
