@@ -160,7 +160,7 @@ export const ResultsGrid = ({
           <Button
             variant={viewMode === 'card' ? 'default' : 'neutral'}
             size="sm"
-            className="rounded-none border-0 shadow-none"
+            className="rounded-none border-0 shadow-none hover:translate-x-0 hover:translate-y-0"
             onClick={() => onViewModeChange?.('card')}
           >
             <LayoutGrid className="h-4 w-4" />
@@ -169,7 +169,7 @@ export const ResultsGrid = ({
           <Button
             variant={viewMode === 'list' ? 'default' : 'neutral'}
             size="sm"
-            className="rounded-none border-0 shadow-none border-l-2 border-border"
+            className="rounded-none border-0 shadow-none border-l-2 border-border hover:translate-x-0 hover:translate-y-0"
             onClick={() => onViewModeChange?.('list')}
           >
             <List className="h-4 w-4" />
