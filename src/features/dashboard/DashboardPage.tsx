@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '@/store/store';
@@ -41,7 +41,20 @@ export const DashboardPage = () => {
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
   const [isFirstSelection, setIsFirstSelection] = useState(true);
-  const [resultsViewMode, setResultsViewMode] = useState<'card' | 'list'>('card');
+  const [resultsViewMode, setResultsViewMode] = useState<'card' | 'list'>(() => {
+    return (localStorage.getItem('resultsViewMode') as 'card' | 'list') || 'card';
+  });
+  const [sortBy, setSortBy] = useState<string>(() => {
+    return localStorage.getItem('sortBy') || 'relevance';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('resultsViewMode', resultsViewMode);
+  }, [resultsViewMode]);
+
+  useEffect(() => {
+    localStorage.setItem('sortBy', sortBy);
+  }, [sortBy]);
 
   // Recent searches
   const { 
@@ -255,6 +268,8 @@ export const DashboardPage = () => {
       onSelectGame={handleSelectGame}
       viewMode={resultsViewMode}
       onViewModeChange={setResultsViewMode}
+      sortBy={sortBy}
+      onSortByChange={setSortBy}
     />
   );
 
