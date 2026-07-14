@@ -100,6 +100,16 @@
     "noResultsTitle": "No games found",
     "noResultsDescription": "Try adjusting your filters or search term to find more games."
   },
+  "sorting": {
+    "title": "Sort by",
+    "relevance": "Relevance",
+    "nameAsc": "Name (A-Z)",
+    "nameDesc": "Name (Z-A)",
+    "newest": "Release Date (Newest)",
+    "oldest": "Release Date (Oldest)",
+    "ratingDesc": "Rating (Highest)",
+    "ratingAsc": "Rating (Lowest)"
+  },
   "gameStatus": {
     "0": "Released",
     "2": "Alpha",
