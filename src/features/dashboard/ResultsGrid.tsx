@@ -63,8 +63,6 @@ export const ResultsGrid = ({
   
   const [randomCatPath] = useState(() => getRandomCat());
   const [animationData, setAnimationData] = useState<object | null>(null);
-  const [isViewToggleHovered, setIsViewToggleHovered] = useState(false);
-  
   const ITEMS_PER_PAGE = 20;
   
   const totalPages = Math.ceil(results.length / ITEMS_PER_PAGE);
@@ -158,16 +156,12 @@ export const ResultsGrid = ({
     <div className="flex flex-col gap-6 pb-20">
       <div className="flex justify-end">
         <div
-          className={`inline-flex border-2 border-border rounded-base overflow-hidden shadow-shadow transition-all ${
-            isViewToggleHovered ? 'translate-x-boxShadowX translate-y-boxShadowY shadow-none' : ''
-          }`}
-          onMouseEnter={() => setIsViewToggleHovered(true)}
-          onMouseLeave={() => setIsViewToggleHovered(false)}
+          className="inline-flex border-2 border-border rounded-base overflow-hidden shadow-shadow"
         >
           <Button
             variant={viewMode === 'card' ? 'default' : 'neutral'}
             size="sm"
-            className="rounded-none border-0 shadow-none hover:translate-x-0 hover:translate-y-0"
+            className="rounded-none border-0 shadow-none hover:translate-x-0 hover:translate-y-0 hover:shadow-shadow"
             onClick={() => onViewModeChange?.('card')}
           >
             <LayoutGrid className="h-4 w-4" />
@@ -176,7 +170,7 @@ export const ResultsGrid = ({
           <Button
             variant={viewMode === 'list' ? 'default' : 'neutral'}
             size="sm"
-            className="rounded-none border-0 shadow-none border-l-2 border-border hover:translate-x-0 hover:translate-y-0"
+            className="rounded-none border-0 shadow-none border-l-2 border-border hover:translate-x-0 hover:translate-y-0 hover:shadow-shadow"
             onClick={() => onViewModeChange?.('list')}
           >
             <List className="h-4 w-4" />
