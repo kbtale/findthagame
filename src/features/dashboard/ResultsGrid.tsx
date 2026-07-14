@@ -45,6 +45,8 @@ interface ResultsGridProps {
   currentPage?: number;
   onPageChange?: (page: number) => void;
   onSelectGame?: (index: number, origin: ClickOrigin) => void;
+  viewMode?: 'card' | 'list';
+  onViewModeChange?: (mode: 'card' | 'list') => void;
 }
 
 export const ResultsGrid = ({ 
@@ -53,13 +55,14 @@ export const ResultsGrid = ({
   hasSearched = false,
   currentPage = 1,
   onPageChange,
-  onSelectGame 
+  onSelectGame,
+  viewMode = 'card',
+  onViewModeChange
 }: ResultsGridProps) => {
   const { t } = useTranslation();
   
   const [randomCatPath] = useState(() => getRandomCat());
   const [animationData, setAnimationData] = useState<object | null>(null);
-  const [viewMode, setViewMode] = useState<'card' | 'list'>('card');
   
   const ITEMS_PER_PAGE = 20;
   
@@ -158,7 +161,7 @@ export const ResultsGrid = ({
             variant={viewMode === 'card' ? 'default' : 'neutral'}
             size="sm"
             className="rounded-none border-0 shadow-none"
-            onClick={() => setViewMode('card')}
+            onClick={() => onViewModeChange?.('card')}
           >
             <LayoutGrid className="h-4 w-4" />
             {t('results.cardView')}
@@ -167,7 +170,7 @@ export const ResultsGrid = ({
             variant={viewMode === 'list' ? 'default' : 'neutral'}
             size="sm"
             className="rounded-none border-0 shadow-none border-l-2 border-border"
-            onClick={() => setViewMode('list')}
+            onClick={() => onViewModeChange?.('list')}
           >
             <List className="h-4 w-4" />
             {t('results.listView')}
