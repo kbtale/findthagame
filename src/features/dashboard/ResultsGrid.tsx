@@ -1,4 +1,4 @@
-import { useState, useEffect, lazy, Suspense, type ComponentType } from 'react';
+import { useState, useEffect, useMemo, lazy, Suspense, type ComponentType } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { GameResult } from '@/models/AppTypes';
 import type { MouseEvent } from 'react';
@@ -14,6 +14,13 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination';
 import { SearchLoading } from '@/components/SearchLoading';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 const Lottie = lazy(() => 
   import('lottie-react').then(mod => ({
@@ -47,6 +54,8 @@ interface ResultsGridProps {
   onSelectGame?: (index: number, origin: ClickOrigin) => void;
   viewMode?: 'card' | 'list';
   onViewModeChange?: (mode: 'card' | 'list') => void;
+  sortBy?: string;
+  onSortByChange?: (sortBy: string) => void;
 }
 
 export const ResultsGrid = ({ 
@@ -57,26 +66,76 @@ export const ResultsGrid = ({
   onPageChange,
   onSelectGame,
   viewMode = 'card',
-  onViewModeChange
+  onViewModeChange,
+  sortBy = 'relevance',
+  onSortByChange
 }: ResultsGridProps) => {
   const { t } = useTranslation();
   
   const [randomCatPath] = useState(() => getRandomCat());
   const [animationData, setAnimationData] = useState<object | null>(null);
   const ITEMS_PER_PAGE = 20;
-  
-  const totalPages = Math.ceil(results.length / ITEMS_PER_PAGE);
+
+  const sortedResults = useMemo(() => {
+    const items = [...results];
+    switch (sortBy) {
+      case 'nameAsc':
+        return items.sort((a, b) => a.title.localeCompare(b.title));
+      case 'nameDesc':
+        return items.sort((a, b) => b.title.localeCompare(a.title));
+      case 'newest':
+        return items.sort((a, b) => {
+          const yearA = a.year ?? 0;
+          const yearB = b.year ?? 0;
+          if (yearA !== yearB) {
+            return yearB - yearA;
+          }
+          return a.title.localeCompare(b.title);
+        });
+      case 'oldest':
+        return items.sort((a, b) => {
+          const yearA = a.year ?? 9999;
+          const yearB = b.year ?? 9999;
+          if (yearA !== yearB) {
+            return yearA - yearB;
+          }
+          return a.title.localeCompare(b.title);
+        });
+      case 'ratingDesc':
+        return items.sort((a, b) => {
+          const ratingA = a.rating ?? -1;
+          const ratingB = b.rating ?? -1;
+          if (ratingA !== ratingB) {
+            return ratingB - ratingA;
+          }
+          return a.title.localeCompare(b.title);
+        });
+      case 'ratingAsc':
+        return items.sort((a, b) => {
+          const ratingA = a.rating ?? 999;
+          const ratingB = b.rating ?? 999;
+          if (ratingA !== ratingB) {
+            return ratingA - ratingB;
+          }
+          return a.title.localeCompare(b.title);
+        });
+      case 'relevance':
+      default:
+        return items.sort((a, b) => b.matchScore - a.matchScore);
+    }
+  }, [results, sortBy]);
+
+  const totalPages = Math.ceil(sortedResults.length / ITEMS_PER_PAGE);
   const safePage = Math.min(currentPage, Math.max(1, totalPages));
 
-  // Fetch animation JSON when welcome screen is shown
   useEffect(() => {
-    if (!hasSearched && results.length === 0) {
+    if (!hasSearched && sortedResults.length === 0) {
       fetch(randomCatPath)
         .then(res => res.json())
         .then(data => setAnimationData(data))
         .catch(console.error);
     }
-  }, [hasSearched, results.length, randomCatPath]);
+  }, [hasSearched, sortedResults.length, randomCatPath]);
 
   const handleCardClick = (e: MouseEvent<HTMLElement>, index: number) => {
     const element = e.currentTarget;
@@ -89,8 +148,8 @@ export const ResultsGrid = ({
     };
     onSelectGame?.(index, origin);
   };
-  
-  const paginatedResults = results.slice(
+
+  const paginatedResults = sortedResults.slice(
     (safePage - 1) * ITEMS_PER_PAGE,
     safePage * ITEMS_PER_PAGE
   );
@@ -154,7 +213,22 @@ export const ResultsGrid = ({
 
   return (
     <div className="flex flex-col gap-6 pb-20">
-      <div className="flex justify-end gap-2">
+      <div className="flex justify-end gap-2 items-center">
+        <Select value={sortBy} onValueChange={onSortByChange}>
+          <SelectTrigger className="h-9 w-[180px] md:w-[220px] bg-secondary-background text-foreground shadow-shadow hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none transition-all cursor-pointer">
+            <SelectValue placeholder={t('sorting.title')} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="relevance">{t('sorting.relevance')}</SelectItem>
+            <SelectItem value="nameAsc">{t('sorting.nameAsc')}</SelectItem>
+            <SelectItem value="nameDesc">{t('sorting.nameDesc')}</SelectItem>
+            <SelectItem value="newest">{t('sorting.newest')}</SelectItem>
+            <SelectItem value="oldest">{t('sorting.oldest')}</SelectItem>
+            <SelectItem value="ratingDesc">{t('sorting.ratingDesc')}</SelectItem>
+            <SelectItem value="ratingAsc">{t('sorting.ratingAsc')}</SelectItem>
+          </SelectContent>
+        </Select>
+
         <Button
           variant={viewMode === 'card' ? 'default' : 'neutral'}
           size="sm"
