@@ -41,6 +41,7 @@ export const DashboardPage = () => {
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
   const [isFirstSelection, setIsFirstSelection] = useState(true);
+  const [resultsViewMode, setResultsViewMode] = useState<'card' | 'list'>('card');
 
   // Recent searches
   const { 
@@ -252,6 +253,8 @@ export const DashboardPage = () => {
       currentPage={page}
       onPageChange={setPage}
       onSelectGame={handleSelectGame}
+      viewMode={resultsViewMode}
+      onViewModeChange={setResultsViewMode}
     />
   );
 

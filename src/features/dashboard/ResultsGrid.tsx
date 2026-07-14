@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next';
 import type { GameResult } from '@/models/AppTypes';
 import type { MouseEvent } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Star } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { LayoutGrid, List, Star } from 'lucide-react';
 import {
   Pagination,
   PaginationContent,
@@ -44,6 +45,8 @@ interface ResultsGridProps {
   currentPage?: number;
   onPageChange?: (page: number) => void;
   onSelectGame?: (index: number, origin: ClickOrigin) => void;
+  viewMode?: 'card' | 'list';
+  onViewModeChange?: (mode: 'card' | 'list') => void;
 }
 
 export const ResultsGrid = ({ 
@@ -52,13 +55,14 @@ export const ResultsGrid = ({
   hasSearched = false,
   currentPage = 1,
   onPageChange,
-  onSelectGame 
+  onSelectGame,
+  viewMode = 'card',
+  onViewModeChange
 }: ResultsGridProps) => {
   const { t } = useTranslation();
   
   const [randomCatPath] = useState(() => getRandomCat());
   const [animationData, setAnimationData] = useState<object | null>(null);
-  
   const ITEMS_PER_PAGE = 20;
   
   const totalPages = Math.ceil(results.length / ITEMS_PER_PAGE);
@@ -74,9 +78,9 @@ export const ResultsGrid = ({
     }
   }, [hasSearched, results.length, randomCatPath]);
 
-  const handleCardClick = (e: MouseEvent<HTMLDivElement>, index: number) => {
-    const card = e.currentTarget;
-    const rect = card.getBoundingClientRect();
+  const handleCardClick = (e: MouseEvent<HTMLElement>, index: number) => {
+    const element = e.currentTarget;
+    const rect = element.getBoundingClientRect();
     const origin: ClickOrigin = {
       x: rect.left,
       y: rect.top,
@@ -150,50 +154,102 @@ export const ResultsGrid = ({
 
   return (
     <div className="flex flex-col gap-6 pb-20">
-      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-        {paginatedResults.map((game, index) => (
-          <div 
-            key={game.id} 
-            onClick={(e) => handleCardClick(e, (currentPage - 1) * ITEMS_PER_PAGE + index)}
-            className="group relative aspect-[264/374] bg-white border-2 border-border rounded-base shadow-shadow flex flex-col justify-between overflow-visible hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all cursor-pointer"
-          >
-            {/* Badges - Top Left (outside box) */}
-            <div className="absolute -top-2 -left-2 z-10 flex gap-1">
-              {game.rating && (
-                <Badge>
-                  <Star className="w-3 h-3 fill-current" />
-                  {(game.rating / 10).toFixed(1)}
-                </Badge>
-              )}
-              {game.matchScore !== undefined && (
-                <Badge variant="neutral">
-                  {t('results.match')}: {game.matchScore.toFixed(3)}
-                </Badge>
-              )}
-            </div>
+      <div className="flex justify-end gap-2">
+        <Button
+          variant={viewMode === 'card' ? 'default' : 'neutral'}
+          size="sm"
+          className="hover:translate-x-0 hover:translate-y-0"
+          onClick={() => onViewModeChange?.('card')}
+        >
+          <LayoutGrid className="h-4 w-4" />
+          {t('results.cardView')}
+        </Button>
+        <Button
+          variant={viewMode === 'list' ? 'default' : 'neutral'}
+          size="sm"
+          className="hover:translate-x-0 hover:translate-y-0"
+          onClick={() => onViewModeChange?.('list')}
+        >
+          <List className="h-4 w-4" />
+          {t('results.listView')}
+        </Button>
+      </div>
 
-            {/* Image Area */}
-            <div className="w-full h-full bg-secondary-background flex items-center justify-center overflow-hidden rounded-base">
-              {game.coverUrl ? (
-                <img 
-                  src={game.coverUrl} 
-                  alt={game.title}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <span className="font-heading opacity-20">{t('results.noImage')}</span>
-              )}
+      <div className={viewMode === 'card' ? 'grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6' : 'flex flex-col gap-3'}>
+        {paginatedResults.map((game, index) => {
+          const gameIndex = (currentPage - 1) * ITEMS_PER_PAGE + index;
+          return viewMode === 'card' ? (
+            <div 
+              key={game.id} 
+              onClick={(e) => handleCardClick(e, gameIndex)}
+              className="group relative aspect-[264/374] bg-white border-2 border-border rounded-base shadow-shadow flex flex-col justify-between overflow-visible hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all cursor-pointer"
+            >
+              <div className="absolute -top-2 -left-2 z-10 flex gap-1">
+                {game.rating && (
+                  <Badge>
+                    <Star className="w-3 h-3 fill-current" />
+                    {(game.rating / 10).toFixed(1)}
+                  </Badge>
+                )}
+                {game.matchScore !== undefined && (
+                  <Badge variant="neutral">
+                    {t('results.match')}: {game.matchScore.toFixed(3)}
+                  </Badge>
+                )}
+              </div>
+
+              <div className="w-full h-full bg-secondary-background flex items-center justify-center overflow-hidden rounded-base">
+                {game.coverUrl ? (
+                  <img 
+                    src={game.coverUrl} 
+                    alt={game.title}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="font-heading opacity-20">{t('results.noImage')}</span>
+                )}
+              </div>
+              
+              <div className="absolute bottom-0 w-full p-3 bg-background/90 border-t-2 border-border backdrop-blur-sm">
+                <h4 className="font-heading text-sm truncate">{game.title}</h4>
+                <span className="text-xs font-base opacity-70">
+                  {game.year ?? '—'}
+                </span>
+              </div>
             </div>
-            
-            {/* Meta Overlay */}
-            <div className="absolute bottom-0 w-full p-3 bg-background/90 border-t-2 border-border backdrop-blur-sm">
-              <h4 className="font-heading text-sm truncate">{game.title}</h4>
-              <span className="text-xs font-base opacity-70">
-                {game.year ?? '—'}
-              </span>
+          ) : (
+            <div
+              key={game.id}
+              onClick={(e) => handleCardClick(e, gameIndex)}
+              className="group border-2 border-border rounded-base bg-white shadow-shadow hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all cursor-pointer p-3 flex items-center gap-4"
+            >
+              <div className="h-16 w-12 shrink-0 rounded-base bg-secondary-background overflow-hidden flex items-center justify-center">
+                {game.coverUrl ? (
+                  <img src={game.coverUrl} alt={game.title} className="h-full w-full object-cover" />
+                ) : (
+                  <span className="text-[10px] font-heading opacity-20">{t('results.noImage')}</span>
+                )}
+              </div>
+              <div className="min-w-0 flex-1">
+                <h4 className="font-heading text-sm truncate">{game.title}</h4>
+                <span className="text-xs font-base opacity-70">{game.year ?? '—'}</span>
+              </div>
+              <div className="flex gap-1 flex-wrap justify-end">
+                {game.rating && (
+                  <Badge>
+                    <Star className="w-3 h-3 fill-current" />
+                    {(game.rating / 10).toFixed(1)}
+                  </Badge>
+                )}
+                {game.matchScore !== undefined && (
+                  <Badge variant="neutral">
+                    {t('results.match')}: {game.matchScore.toFixed(3)}
+                  </Badge>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
       
       {/* Pagination */}
