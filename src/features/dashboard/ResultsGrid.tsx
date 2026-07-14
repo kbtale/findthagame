@@ -154,29 +154,25 @@ export const ResultsGrid = ({
 
   return (
     <div className="flex flex-col gap-6 pb-20">
-      <div className="flex justify-end">
-        <div
-          className="inline-flex border-2 border-border rounded-base overflow-hidden shadow-shadow"
+      <div className="flex justify-end gap-2">
+        <Button
+          variant={viewMode === 'card' ? 'default' : 'neutral'}
+          size="sm"
+          className="hover:translate-x-0 hover:translate-y-0"
+          onClick={() => onViewModeChange?.('card')}
         >
-          <Button
-            variant={viewMode === 'card' ? 'default' : 'neutral'}
-            size="sm"
-            className="rounded-none border-0 shadow-none hover:translate-x-0 hover:translate-y-0 hover:shadow-shadow"
-            onClick={() => onViewModeChange?.('card')}
-          >
-            <LayoutGrid className="h-4 w-4" />
-            {t('results.cardView')}
-          </Button>
-          <Button
-            variant={viewMode === 'list' ? 'default' : 'neutral'}
-            size="sm"
-            className="rounded-none border-0 shadow-none border-l-2 border-border hover:translate-x-0 hover:translate-y-0 hover:shadow-shadow"
-            onClick={() => onViewModeChange?.('list')}
-          >
-            <List className="h-4 w-4" />
-            {t('results.listView')}
-          </Button>
-        </div>
+          <LayoutGrid className="h-4 w-4" />
+          {t('results.cardView')}
+        </Button>
+        <Button
+          variant={viewMode === 'list' ? 'default' : 'neutral'}
+          size="sm"
+          className="hover:translate-x-0 hover:translate-y-0"
+          onClick={() => onViewModeChange?.('list')}
+        >
+          <List className="h-4 w-4" />
+          {t('results.listView')}
+        </Button>
       </div>
 
       <div className={viewMode === 'card' ? 'grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6' : 'flex flex-col gap-3'}>
