@@ -8,6 +8,7 @@ import { LoadingFallback } from './components/LoadingFallback'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { routeTree } from './routeTree.gen'
 import { FavoritesProvider } from '@/hooks/useFavorites'
+import { Analytics } from '@vercel/analytics/react'
 
 // Initialize the router
 const router = createRouter({ routeTree })
@@ -28,6 +29,7 @@ createRoot(document.getElementById('root')!).render(
         </FavoritesProvider>
       </Suspense>
     </Provider>
+    <Analytics />
   </StrictMode>,
 )
 
