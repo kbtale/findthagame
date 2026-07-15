@@ -5,6 +5,8 @@ import type { RootState } from '@/store/store';
 import { selectGame, setCurrentPage, setSortBy } from '@/store/slices/resultsSlice';
 import { ResultsGrid } from '@/features/dashboard/ResultsGrid';
 
+let savedScrollPosition = 0;
+
 export const Route = createFileRoute('/')({
   component: SearchResultsPage,
 });
@@ -34,6 +36,7 @@ function SearchResultsPage() {
   const handleSelectGame = useCallback((index: number, origin: { x: number; y: number; width: number; height: number }) => {
     const game = results[index];
     if (game) {
+      savedScrollPosition = containerRef.current?.scrollTop ?? 0;
       dispatch(selectGame({ index, origin }));
       navigate({ to: '/game/$gameId', params: { gameId: game.id.toString() } });
     }
@@ -49,14 +52,27 @@ function SearchResultsPage() {
   const scrollEntry = useElementScrollRestoration({ id: 'results-area' });
 
   useLayoutEffect(() => {
-    if (scrollEntry && containerRef.current && results.length > 0) {
+    if (status === 'loading') {
+      savedScrollPosition = 0;
+      return;
+    }
+
+    if (!containerRef.current || results.length === 0) return;
+
+    if (scrollEntry && (scrollEntry.scrollY > 0 || scrollEntry.scrollX > 0)) {
       containerRef.current.scrollTo({
         left: scrollEntry.scrollX,
         top: scrollEntry.scrollY,
         behavior: 'instant',
       });
+    } else if (savedScrollPosition > 0) {
+      containerRef.current.scrollTo({
+        top: savedScrollPosition,
+        behavior: 'instant',
+      });
+      savedScrollPosition = 0;
     }
-  }, [scrollEntry, results]);
+  }, [scrollEntry, results, status]);
 
   return (
     <div 
