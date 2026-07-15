@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, ChevronLeft, ChevronRight, Languages, Heart } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, Languages, Heart, Share2 } from 'lucide-react';
+import { toast } from 'sonner';
 import type { GameResult } from '@/models/AppTypes';
 import { updateGameTranslation } from '@/store/slices/resultsSlice';
 
@@ -174,6 +175,27 @@ export const GameDetail = ({
     }
   }, [hasTranslation, showOriginal, handleTranslate]);
 
+  const handleShare = useCallback(async () => {
+    const url = window.location.href;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: game?.title,
+          url,
+        });
+      } catch {
+        // user cancelled or not supported
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(url);
+        toast(t('gameDetail.linkCopied'), { duration: 2000 });
+      } catch {
+        toast(t('gameDetail.linkCopied'), { duration: 2000 });
+      }
+    }
+  }, [game, t]);
+
   // Decide which text to display
   const displaySummary = (hasTranslation && !showOriginal) ? translatedSummary : game?.summary;
   const displayStoryline = (hasTranslation && !showOriginal) ? translatedStoryline : game?.storyline;
@@ -200,8 +222,16 @@ export const GameDetail = ({
       {/* Game Content */}
       <div className="bg-background border-2 border-border rounded-base shadow-shadow">
         {/* Header */}
-        <div className="p-4 border-b-2 border-border bg-main text-main-foreground">
+        <div className="p-4 border-b-2 border-border bg-main text-main-foreground flex items-center justify-between gap-2">
           <h2 className="font-heading text-xl truncate">{game.title}</h2>
+          <Button
+            size="icon"
+            onClick={handleShare}
+            className="bg-[var(--chart-3)] text-white hover:bg-[var(--chart-3)]/90 shrink-0"
+            title={t('gameDetail.shareGame')}
+          >
+            <Share2 className="w-4 h-4" />
+          </Button>
         </div>
 
         {/* Content */}
