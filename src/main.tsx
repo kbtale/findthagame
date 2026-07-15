@@ -7,6 +7,7 @@ import './config/i18n'
 import { LoadingFallback } from './components/LoadingFallback'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { routeTree } from './routeTree.gen'
+import { FavoritesProvider } from '@/hooks/useFavorites'
 
 // Initialize the router
 const router = createRouter({ routeTree })
@@ -22,7 +23,9 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider store={store}>
       <Suspense fallback={<LoadingFallback />}>
-        <RouterProvider router={router} />
+        <FavoritesProvider>
+          <RouterProvider router={router} />
+        </FavoritesProvider>
       </Suspense>
     </Provider>
   </StrictMode>,

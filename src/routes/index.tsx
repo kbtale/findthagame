@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import type { RootState } from '@/store/store';
-import { selectGame, setCurrentPage } from '@/store/slices/resultsSlice';
+import { selectGame, setCurrentPage, setSortBy } from '@/store/slices/resultsSlice';
 import { ResultsGrid } from '@/features/dashboard/ResultsGrid';
 
 export const Route = createFileRoute('/')({
@@ -16,12 +16,10 @@ function SearchResultsPage() {
   const results = useSelector((state: RootState) => state.results.items);
   const status = useSelector((state: RootState) => state.results.status);
   const currentPage = useSelector((state: RootState) => state.results.currentPage);
+  const sortBy = useSelector((state: RootState) => state.results.sortBy);
 
   const [resultsViewMode, setResultsViewModeState] = useState<'card' | 'list'>(() => {
     return (localStorage.getItem('resultsViewMode') as 'card' | 'list') || 'card';
-  });
-  const [sortBy, setSortByState] = useState<string>(() => {
-    return localStorage.getItem('sortBy') || 'relevance';
   });
 
   const setResultsViewMode = (mode: 'card' | 'list') => {
@@ -29,10 +27,9 @@ function SearchResultsPage() {
     localStorage.setItem('resultsViewMode', mode);
   };
 
-  const setSortBy = (val: string) => {
-    setSortByState(val);
-    localStorage.setItem('sortBy', val);
-  };
+  const handleSortByChange = useCallback((val: string) => {
+    dispatch(setSortBy(val));
+  }, [dispatch]);
 
   const handleSelectGame = useCallback((index: number, origin: { x: number; y: number; width: number; height: number }) => {
     const game = results[index];
@@ -60,7 +57,7 @@ function SearchResultsPage() {
         viewMode={resultsViewMode}
         onViewModeChange={setResultsViewMode}
         sortBy={sortBy}
-        onSortByChange={setSortBy}
+        onSortByChange={handleSortByChange}
       />
     </div>
   );
