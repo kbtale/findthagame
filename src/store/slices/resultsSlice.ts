@@ -16,6 +16,7 @@ interface ResultsState {
   selectedGame: GameResult | null;
   selectedIndex: number | null;
   clickOrigin: ClickOrigin | null;
+  currentPage: number;
 }
 
 const initialState: ResultsState = {
@@ -25,6 +26,7 @@ const initialState: ResultsState = {
   selectedGame: null,
   selectedIndex: null,
   clickOrigin: null,
+  currentPage: 1,
 };
 
 export const resultsSlice = createSlice({
@@ -41,6 +43,7 @@ export const resultsSlice = createSlice({
       state.selectedGame = null;
       state.selectedIndex = null;
       state.clickOrigin = null;
+      state.currentPage = 1;
     },
     setError: (state, action: PayloadAction<string>) => {
       state.status = 'error';
@@ -49,6 +52,7 @@ export const resultsSlice = createSlice({
       state.selectedGame = null;
       state.selectedIndex = null;
       state.clickOrigin = null;
+      state.currentPage = 1;
     },
     resetResults: (state) => {
       state.status = 'idle';
@@ -57,6 +61,10 @@ export const resultsSlice = createSlice({
       state.selectedGame = null;
       state.selectedIndex = null;
       state.clickOrigin = null;
+      state.currentPage = 1;
+    },
+    setCurrentPage: (state, action: PayloadAction<number>) => {
+      state.currentPage = action.payload;
     },
     // Select a game from search results by index
     selectGame: (state, action: PayloadAction<{ index: number; origin: ClickOrigin }>) => {
@@ -119,6 +127,7 @@ export const {
   setResults, 
   setError, 
   resetResults,
+  setCurrentPage,
   selectGame,
   selectExternalGame,
   clearSelection,
