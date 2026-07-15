@@ -1,6 +1,6 @@
 import { useCallback, useState, useRef, useLayoutEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { createFileRoute, useNavigate, useElementScrollRestoration } from '@tanstack/react-router';
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import type { RootState } from '@/store/store';
 import { selectGame, setCurrentPage, setSortBy } from '@/store/slices/resultsSlice';
 import { ResultsGrid } from '@/features/dashboard/ResultsGrid';
@@ -49,7 +49,6 @@ function SearchResultsPage() {
   const isLoading = status === 'loading';
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const scrollEntry = useElementScrollRestoration({ id: 'results-area' });
 
   useLayoutEffect(() => {
     if (status === 'loading') {
@@ -57,18 +56,15 @@ function SearchResultsPage() {
       return;
     }
 
-    if (!containerRef.current || results.length === 0) return;
+    if (!containerRef.current || results.length === 0 || savedScrollPosition <= 0) return;
 
-    if (scrollEntry && (scrollEntry.scrollY > 0 || scrollEntry.scrollX > 0)) {
-      containerRef.current.scrollTo({
-        left: scrollEntry.scrollX,
-        top: scrollEntry.scrollY,
-        behavior: 'instant',
-      });
-    } else if (savedScrollPosition > 0) {
-      containerRef.current.scrollTop = savedScrollPosition;
-    }
-  }, [scrollEntry, results, status]);
+    const el = containerRef.current;
+    const target = savedScrollPosition;
+
+    requestAnimationFrame(() => {
+      el.scrollTop = target;
+    });
+  }, [results, status]);
 
   return (
     <div 
