@@ -1,6 +1,6 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useRef, useLayoutEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import { createFileRoute, useNavigate, useElementScrollRestoration } from '@tanstack/react-router';
 import type { RootState } from '@/store/store';
 import { selectGame, setCurrentPage } from '@/store/slices/resultsSlice';
 import { ResultsGrid } from '@/features/dashboard/ResultsGrid';
@@ -48,8 +48,26 @@ function SearchResultsPage() {
 
   const isLoading = status === 'loading';
 
+  const containerRef = useRef<HTMLDivElement>(null);
+  const scrollEntry = useElementScrollRestoration({ id: 'results-area' });
+
+  useLayoutEffect(() => {
+    if (scrollEntry && containerRef.current) {
+      containerRef.current.scrollTo({
+        left: scrollEntry.scrollX,
+        top: scrollEntry.scrollY,
+        behavior: 'instant',
+      });
+    }
+  }, [scrollEntry]);
+
   return (
-    <div id="results-area" className="w-full h-full overflow-y-auto px-4 md:px-6 py-6">
+    <div 
+      id="results-area" 
+      ref={containerRef}
+      data-scroll-restoration-id="results-area"
+      className="w-full h-full overflow-y-auto px-4 md:px-6 py-6"
+    >
       <ResultsGrid 
         results={results}
         isLoading={isLoading}
