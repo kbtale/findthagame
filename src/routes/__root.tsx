@@ -14,6 +14,7 @@ import { useRecentSearches, RecentSearchesContext, type RecentSearch } from '@/h
 import { useFavorites } from '@/hooks/useFavorites';
 import { FavoritesDialog } from '@/components/FavoritesDialog';
 import { SavedSearchesDialog } from '@/components/SavedSearchesDialog';
+import { Toaster } from '@/components/ui/sonner';
 import { filterToSearchParams } from '@/lib/searchParams';
 import type { FilterState, GameResult } from '@/models/AppTypes';
 import { generateRandomFilters } from '@/utils/randomFilters';
@@ -202,6 +203,7 @@ function RootLayout() {
         onUnbookmark={toggleBookmark}
       />
 
+      <Toaster />
       <ScrollRestoration />
 
       <Suspense fallback={null}>
