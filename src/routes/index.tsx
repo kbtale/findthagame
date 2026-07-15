@@ -11,6 +11,7 @@ import { RecentSearchesContext } from '@/hooks/useRecentSearches';
 import type { FilterState } from '@/models/AppTypes';
 
 let savedScrollPosition = 0;
+let lastSearchedUrlKey = '';
 
 export const Route = createFileRoute('/')({
   component: SearchResultsPage,
@@ -42,16 +43,15 @@ function SearchResultsPage() {
 
   const searchKey = JSON.stringify(rawSearch);
   const latestRequestId = useRef(0);
-  const lastSearchedParams = useRef('');
 
   useEffect(() => {
     if (!hasParams) return;
-    if (searchKey === lastSearchedParams.current) return;
+    if (searchKey === lastSearchedUrlKey) return;
 
     const state = store.getState();
     if (state.results.status === 'loading') return;
 
-    lastSearchedParams.current = searchKey;
+    lastSearchedUrlKey = searchKey;
     const requestId = ++latestRequestId.current;
 
     dispatch(setAllFilters(filter as FilterState));
