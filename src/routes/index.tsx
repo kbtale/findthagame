@@ -49,14 +49,14 @@ function SearchResultsPage() {
   const scrollEntry = useElementScrollRestoration({ id: 'results-area' });
 
   useLayoutEffect(() => {
-    if (scrollEntry && containerRef.current) {
+    if (scrollEntry && containerRef.current && results.length > 0) {
       containerRef.current.scrollTo({
         left: scrollEntry.scrollX,
         top: scrollEntry.scrollY,
         behavior: 'instant',
       });
     }
-  }, [scrollEntry]);
+  }, [scrollEntry, results]);
 
   return (
     <div 
