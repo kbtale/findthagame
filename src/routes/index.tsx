@@ -42,31 +42,16 @@ function SearchResultsPage() {
 
   const searchKey = JSON.stringify(rawSearch);
   const latestRequestId = useRef(0);
+  const lastSearchedParams = useRef('');
 
   useEffect(() => {
     if (!hasParams) return;
+    if (searchKey === lastSearchedParams.current) return;
 
     const state = store.getState();
     if (state.results.status === 'loading') return;
 
-    const currentFilters = state.detective as FilterState;
-    const filtersMatch =
-      filter.search === currentFilters.search &&
-      filter.platformId === currentFilters.platformId &&
-      JSON.stringify(filter.yearRange) === JSON.stringify(currentFilters.yearRange) &&
-      JSON.stringify(filter.genreIds) === JSON.stringify(currentFilters.genreIds) &&
-      JSON.stringify(filter.themeIds) === JSON.stringify(currentFilters.themeIds) &&
-      filter.gameModeId === currentFilters.gameModeId &&
-      filter.perspectiveId === currentFilters.perspectiveId &&
-      filter.categoryId === currentFilters.categoryId &&
-      filter.statusId === currentFilters.statusId &&
-      filter.developerName === currentFilters.developerName &&
-      filter.minRating === currentFilters.minRating &&
-      filter.ageRatingOrg === currentFilters.ageRatingOrg &&
-      filter.ageRatingValue === currentFilters.ageRatingValue;
-
-    if (filtersMatch && state.results.status === 'success') return;
-
+    lastSearchedParams.current = searchKey;
     const requestId = ++latestRequestId.current;
 
     dispatch(setAllFilters(filter as FilterState));
