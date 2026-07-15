@@ -44,9 +44,9 @@ function GameDetailPage() {
     setTimeout(() => {
       dispatch(clearSelection());
       setIsExiting(false);
-      navigate({ to: '/' });
+      window.history.back();
     }, 300);
-  }, [dispatch, navigate]);
+  }, [dispatch]);
 
   const handlePrev = useCallback(() => {
     if (selectedIndex !== null && selectedIndex > 0) {
