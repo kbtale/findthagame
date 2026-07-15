@@ -1,9 +1,16 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useRef, useLayoutEffect, useContext, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import type { RootState } from '@/store/store';
-import { selectGame, setCurrentPage, setSortBy } from '@/store/slices/resultsSlice';
+import { createFileRoute, useNavigate, useElementScrollRestoration, useRouterState } from '@tanstack/react-router';
+import { store, type RootState } from '@/store/store';
+import { selectGame, setCurrentPage, setSortBy, setLoading, setResults, setError } from '@/store/slices/resultsSlice';
+import { setAllFilters } from '@/store/slices/detectiveSlice';
 import { ResultsGrid } from '@/features/dashboard/ResultsGrid';
+import { searchGames } from '@/api/client';
+import { searchParamsToFilter, hasAnyFilter } from '@/lib/searchParams';
+import { RecentSearchesContext } from '@/hooks/useRecentSearches';
+import type { FilterState } from '@/models/AppTypes';
+
+let savedScrollPosition = 0;
 
 export const Route = createFileRoute('/')({
   component: SearchResultsPage,
@@ -12,6 +19,12 @@ export const Route = createFileRoute('/')({
 function SearchResultsPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const routerState = useRouterState();
+  const recentSearchesCtx = useContext(RecentSearchesContext);
+
+  const rawSearch = (routerState.location.search as Record<string, unknown>) ?? {};
+  const hasParams = hasAnyFilter(rawSearch);
+  const filter = searchParamsToFilter(rawSearch);
 
   const results = useSelector((state: RootState) => state.results.items);
   const status = useSelector((state: RootState) => state.results.status);
@@ -27,6 +40,55 @@ function SearchResultsPage() {
     localStorage.setItem('resultsViewMode', mode);
   };
 
+  const searchKey = JSON.stringify(rawSearch);
+  const latestRequestId = useRef(0);
+
+  useEffect(() => {
+    if (!hasParams) return;
+
+    const state = store.getState();
+    if (state.results.status === 'loading') return;
+
+    const currentFilters = state.detective as FilterState;
+    const filtersMatch =
+      filter.search === currentFilters.search &&
+      filter.platformId === currentFilters.platformId &&
+      JSON.stringify(filter.yearRange) === JSON.stringify(currentFilters.yearRange) &&
+      JSON.stringify(filter.genreIds) === JSON.stringify(currentFilters.genreIds) &&
+      JSON.stringify(filter.themeIds) === JSON.stringify(currentFilters.themeIds) &&
+      filter.gameModeId === currentFilters.gameModeId &&
+      filter.perspectiveId === currentFilters.perspectiveId &&
+      filter.categoryId === currentFilters.categoryId &&
+      filter.statusId === currentFilters.statusId &&
+      filter.developerName === currentFilters.developerName &&
+      filter.minRating === currentFilters.minRating &&
+      filter.ageRatingOrg === currentFilters.ageRatingOrg &&
+      filter.ageRatingValue === currentFilters.ageRatingValue;
+
+    if (filtersMatch && state.results.status === 'success') return;
+
+    const requestId = ++latestRequestId.current;
+
+    dispatch(setAllFilters(filter as FilterState));
+    dispatch(setLoading());
+
+    searchGames(filter as FilterState)
+      .then((data) => {
+        if (requestId !== latestRequestId.current) return;
+        dispatch(setResults(data));
+        recentSearchesCtx?.addSearch(filter as FilterState, data.length);
+        setTimeout(() => {
+          document.getElementById('results-area')?.scrollIntoView({ behavior: 'smooth' });
+        }, 50);
+      })
+      .catch((err) => {
+        if (requestId !== latestRequestId.current) return;
+        console.error('Search failed:', err);
+        dispatch(setError(err instanceof Error ? err.message : 'Search failed'));
+      });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchKey, hasParams]);
+
   const handleSortByChange = useCallback((val: string) => {
     dispatch(setSortBy(val));
   }, [dispatch]);
@@ -34,6 +96,7 @@ function SearchResultsPage() {
   const handleSelectGame = useCallback((index: number, origin: { x: number; y: number; width: number; height: number }) => {
     const game = results[index];
     if (game) {
+      savedScrollPosition = containerRef.current?.scrollTop ?? 0;
       dispatch(selectGame({ index, origin }));
       navigate({ to: '/game/$gameId', params: { gameId: game.id.toString() } });
     }
@@ -45,8 +108,35 @@ function SearchResultsPage() {
 
   const isLoading = status === 'loading';
 
+  const containerRef = useRef<HTMLDivElement>(null);
+  const scrollEntry = useElementScrollRestoration({ id: 'results-area' });
+
+  useLayoutEffect(() => {
+    if (status === 'loading') {
+      savedScrollPosition = 0;
+      return;
+    }
+
+    if (!containerRef.current || results.length === 0) return;
+
+    if (scrollEntry && (scrollEntry.scrollY > 0 || scrollEntry.scrollX > 0)) {
+      containerRef.current.scrollTo({
+        left: scrollEntry.scrollX,
+        top: scrollEntry.scrollY,
+        behavior: 'instant',
+      });
+    } else if (savedScrollPosition > 0) {
+      containerRef.current.scrollTop = savedScrollPosition;
+    }
+  }, [scrollEntry, results, status]);
+
   return (
-    <div id="results-area" className="w-full h-full overflow-y-auto px-4 md:px-6 py-6">
+    <div 
+      id="results-area" 
+      ref={containerRef}
+      data-scroll-restoration-id="results-area"
+      className="w-full h-full overflow-y-auto px-4 md:px-6 py-6"
+    >
       <ResultsGrid 
         results={results}
         isLoading={isLoading}

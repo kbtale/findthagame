@@ -4,7 +4,7 @@
  * Custom hook to manage recent search history in localStorage.
  */
 
-import { useState, useCallback } from 'react';
+import { createContext, useState, useCallback } from 'react';
 import type { FilterState } from '@/models/AppTypes';
 
 const STORAGE_KEY = 'findthagame_recent_searches';
@@ -43,6 +43,10 @@ const loadSearches = (): RecentSearch[] => {
 const saveSearches = (searches: RecentSearch[]): void => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(searches));
 };
+
+export const RecentSearchesContext = createContext<{
+  addSearch: (filters: FilterState, resultCount: number) => void;
+} | null>(null);
 
 export const useRecentSearches = () => {
   // Lazy initial state to load from localStorage
