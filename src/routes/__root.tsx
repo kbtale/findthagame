@@ -1,20 +1,21 @@
-import React, { useState, Suspense } from 'react';
+import React, { useState, Suspense, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
-import { createRootRoute, Outlet, ScrollRestoration, useNavigate } from '@tanstack/react-router';
+import { createRootRoute, Outlet, ScrollRestoration, useNavigate, useRouterState } from '@tanstack/react-router';
 import type { RootState } from '@/store/store';
-import { setLoading, setResults, setError, selectExternalGame } from '@/store/slices/resultsSlice';
+import { selectExternalGame } from '@/store/slices/resultsSlice';
 import { setAllFilters, resetFilters } from '@/store/slices/detectiveSlice';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { FilterPanel } from '@/features/dashboard/filterPanel';
 import { Input } from '@/components/ui/input';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Search } from 'lucide-react';
-import { searchGames } from '@/api/client';
-import { useRecentSearches, type RecentSearch } from '@/hooks/useRecentSearches';
+import { useRecentSearches, RecentSearchesContext, type RecentSearch } from '@/hooks/useRecentSearches';
 import { useFavorites } from '@/hooks/useFavorites';
 import { FavoritesDialog } from '@/components/FavoritesDialog';
 import { SavedSearchesDialog } from '@/components/SavedSearchesDialog';
+import { Toaster } from '@/components/ui/sonner';
+import { filterToSearchParams } from '@/lib/searchParams';
 import type { FilterState, GameResult } from '@/models/AppTypes';
 import { generateRandomFilters } from '@/utils/randomFilters';
 
@@ -35,6 +36,7 @@ function RootLayout() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const routerState = useRouterState();
 
   const results = useSelector((state: RootState) => state.results.items);
   const status = useSelector((state: RootState) => state.results.status);
@@ -59,63 +61,35 @@ function RootLayout() {
 
   const isLoading = status === 'loading';
 
-  const handleSearch = async (filtersState: FilterState) => {
-    setMobileOpen(false);
-    dispatch(setLoading());
-    navigate({ to: '/' });
-
-    const fullFilters = { ...filtersState, search: searchTerm };
-
-    try {
-      const data = await searchGames(fullFilters);
-      dispatch(setResults(data));
-      addSearch(fullFilters, data.length);
-      setTimeout(() => {
-        document.getElementById('results-area')?.scrollIntoView({ behavior: 'smooth' });
-      }, 50);
-    } catch (err) {
-      console.error('Search failed:', err);
-      dispatch(setError(err instanceof Error ? err.message : 'Search failed'));
+  // Restore searchTerm from URL when navigating back to a search
+  useEffect(() => {
+    const locationSearch = routerState.location.search as Record<string, unknown>;
+    const urlQ = typeof locationSearch.q === 'string' ? locationSearch.q : '';
+    if (urlQ && urlQ !== searchTerm) {
+      setSearchTerm(urlQ);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [(routerState.location.search as Record<string, unknown>).q]);
+
+  const handleSearch = (filtersState: FilterState) => {
+    setMobileOpen(false);
+    const fullFilters = { ...filtersState, search: searchTerm };
+    navigate({ to: '/', search: filterToSearchParams(fullFilters) });
   };
 
-  const handleSelectRecentSearch = async (search: RecentSearch) => {
+  const handleSelectRecentSearch = (search: RecentSearch) => {
     setSearchTerm(search.filters.search);
     dispatch(setAllFilters(search.filters));
     setMobileOpen(false);
-    dispatch(setLoading());
-    navigate({ to: '/' });
-
-    try {
-      const data = await searchGames(search.filters);
-      dispatch(setResults(data));
-      setTimeout(() => {
-        document.getElementById('results-area')?.scrollIntoView({ behavior: 'smooth' });
-      }, 50);
-    } catch (err) {
-      console.error('Search failed:', err);
-      dispatch(setError(err instanceof Error ? err.message : 'Search failed'));
-    }
+    navigate({ to: '/', search: filterToSearchParams(search.filters) });
   };
 
-  const handleRandomize = async () => {
+  const handleRandomize = () => {
     const randomFilters = generateRandomFilters();
     dispatch(setAllFilters(randomFilters));
     setMobileOpen(false);
-    dispatch(setLoading());
-    navigate({ to: '/' });
-
-    try {
-      const data = await searchGames(randomFilters);
-      dispatch(setResults(data));
-      addSearch(randomFilters, data.length);
-      setTimeout(() => {
-        document.getElementById('results-area')?.scrollIntoView({ behavior: 'smooth' });
-      }, 50);
-    } catch (err) {
-      console.error('Random search failed:', err);
-      dispatch(setError(err instanceof Error ? err.message : 'Search failed'));
-    }
+    setSearchTerm('');
+    navigate({ to: '/', search: filterToSearchParams(randomFilters) });
   };
 
   const handleSelectFavorite = (game: GameResult) => {
@@ -189,27 +163,29 @@ function RootLayout() {
 
   return (
     <>
-      <DashboardLayout
-        brandHeader={brandHeader}
-        searchBar={searchBar}
-        mobileSearch={mobileSearch}
-        sidebar={sidebar}
-        main={<Outlet />}
-        isMobileOpen={isMobileOpen}
-        onMobileToggle={() => setMobileOpen(!isMobileOpen)}
-        isSidebarCollapsed={isSidebarCollapsed}
-        onSidebarToggle={() => setSidebarCollapsed(!isSidebarCollapsed)}
-        isLoading={isLoading}
-        resultsCount={results.length}
-        recentSearches={recentSearches}
-        onSelectSearch={handleSelectRecentSearch}
-        onDeleteSearch={removeSearch}
-        onClearHistory={clearSearchHistory}
-        onToggleBookmark={toggleBookmark}
-        onRandomize={handleRandomize}
-        onOpenFavorites={handleOpenFavorites}
-        onOpenSavedSearches={handleOpenSavedSearches}
-      />
+      <RecentSearchesContext.Provider value={{ addSearch }}>
+        <DashboardLayout
+          brandHeader={brandHeader}
+          searchBar={searchBar}
+          mobileSearch={mobileSearch}
+          sidebar={sidebar}
+          main={<Outlet />}
+          isMobileOpen={isMobileOpen}
+          onMobileToggle={() => setMobileOpen(!isMobileOpen)}
+          isSidebarCollapsed={isSidebarCollapsed}
+          onSidebarToggle={() => setSidebarCollapsed(!isSidebarCollapsed)}
+          isLoading={isLoading}
+          resultsCount={results.length}
+          recentSearches={recentSearches}
+          onSelectSearch={handleSelectRecentSearch}
+          onDeleteSearch={removeSearch}
+          onClearHistory={clearSearchHistory}
+          onToggleBookmark={toggleBookmark}
+          onRandomize={handleRandomize}
+          onOpenFavorites={handleOpenFavorites}
+          onOpenSavedSearches={handleOpenSavedSearches}
+        />
+      </RecentSearchesContext.Provider>
       
       <FavoritesDialog
         open={isFavoritesOpen}
@@ -227,6 +203,7 @@ function RootLayout() {
         onUnbookmark={toggleBookmark}
       />
 
+      <Toaster />
       <ScrollRestoration />
 
       <Suspense fallback={null}>

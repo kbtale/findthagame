@@ -1,11 +1,17 @@
-import { useCallback, useState, useRef, useLayoutEffect } from 'react';
+import { useCallback, useState, useRef, useLayoutEffect, useContext, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import type { RootState } from '@/store/store';
-import { selectGame, setCurrentPage, setSortBy } from '@/store/slices/resultsSlice';
+import { createFileRoute, useNavigate, useRouterState } from '@tanstack/react-router';
+import { store, type RootState } from '@/store/store';
+import { selectGame, setCurrentPage, setSortBy, setLoading, setResults, setError } from '@/store/slices/resultsSlice';
+import { setAllFilters } from '@/store/slices/detectiveSlice';
 import { ResultsGrid } from '@/features/dashboard/ResultsGrid';
+import { searchGames } from '@/api/client';
+import { searchParamsToFilter, hasAnyFilter } from '@/lib/searchParams';
+import { RecentSearchesContext } from '@/hooks/useRecentSearches';
+import type { FilterState } from '@/models/AppTypes';
 
 let savedScrollPosition = 0;
+let lastSearchedUrlKey = '';
 
 export const Route = createFileRoute('/')({
   component: SearchResultsPage,
@@ -14,6 +20,12 @@ export const Route = createFileRoute('/')({
 function SearchResultsPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const routerState = useRouterState();
+  const recentSearchesCtx = useContext(RecentSearchesContext);
+
+  const rawSearch = (routerState.location.search as Record<string, unknown>) ?? {};
+  const hasParams = hasAnyFilter(rawSearch);
+  const filter = searchParamsToFilter(rawSearch);
 
   const results = useSelector((state: RootState) => state.results.items);
   const status = useSelector((state: RootState) => state.results.status);
@@ -28,6 +40,39 @@ function SearchResultsPage() {
     setResultsViewModeState(mode);
     localStorage.setItem('resultsViewMode', mode);
   };
+
+  const searchKey = JSON.stringify(rawSearch);
+  const latestRequestId = useRef(0);
+
+  useEffect(() => {
+    if (!hasParams) return;
+    if (searchKey === lastSearchedUrlKey) return;
+
+    const state = store.getState();
+    if (state.results.status === 'loading') return;
+
+    lastSearchedUrlKey = searchKey;
+    const requestId = ++latestRequestId.current;
+
+    dispatch(setAllFilters(filter as FilterState));
+    dispatch(setLoading());
+
+    searchGames(filter as FilterState)
+      .then((data) => {
+        if (requestId !== latestRequestId.current) return;
+        dispatch(setResults(data));
+        recentSearchesCtx?.addSearch(filter as FilterState, data.length);
+        setTimeout(() => {
+          document.getElementById('results-area')?.scrollIntoView({ behavior: 'smooth' });
+        }, 50);
+      })
+      .catch((err) => {
+        if (requestId !== latestRequestId.current) return;
+        console.error('Search failed:', err);
+        dispatch(setError(err instanceof Error ? err.message : 'Search failed'));
+      });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchKey, hasParams]);
 
   const handleSortByChange = useCallback((val: string) => {
     dispatch(setSortBy(val));
