@@ -66,11 +66,7 @@ function SearchResultsPage() {
         behavior: 'instant',
       });
     } else if (savedScrollPosition > 0) {
-      containerRef.current.scrollTo({
-        top: savedScrollPosition,
-        behavior: 'instant',
-      });
-      savedScrollPosition = 0;
+      containerRef.current.scrollTop = savedScrollPosition;
     }
   }, [scrollEntry, results, status]);
 
