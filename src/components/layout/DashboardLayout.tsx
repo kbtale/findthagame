@@ -91,7 +91,7 @@ export const DashboardLayout = ({
 
   return (
     <div className={cn(
-      "min-h-screen w-full bg-background text-foreground font-base flex flex-col lg:grid overflow-y-auto overflow-x-hidden transition-all duration-300",
+      "min-h-screen w-full bg-background text-foreground font-base flex flex-col lg:grid overflow-hidden overflow-x-hidden transition-all duration-300",
       isSidebarCollapsed ? "lg:grid-cols-[0px_1fr]" : "lg:grid-cols-[390px_1fr]"
     )}>
       
@@ -269,7 +269,7 @@ export const DashboardLayout = ({
       {/* =========================================================================
           REGION 3: MAIN CONTENT AREA
       ========================================================================= */}
-      <main id="results-area" className="flex flex-col min-h-full h-full overflow-y-auto bg-background p-4 lg:p-8 relative z-10 scrollbar-neo">
+      <main className="flex flex-col min-h-full h-full overflow-hidden bg-background p-4 lg:p-8 relative z-10">
         {/* Main Header Slot (Desktop only) */}
         <div className="hidden lg:flex items-center justify-between mb-8">
           <div className="flex items-center">

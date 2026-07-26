@@ -62,9 +62,11 @@ function SearchResultsPage() {
         if (requestId !== latestRequestId.current) return;
         dispatch(setResults(data));
         recentSearchesCtx?.addSearch(filter as FilterState, data.length);
-        setTimeout(() => {
-          document.getElementById('results-area')?.scrollIntoView({ behavior: 'smooth' });
-        }, 50);
+        if (data.length > 0) {
+          setTimeout(() => {
+            document.getElementById('results-area')?.scrollIntoView({ behavior: 'smooth' });
+          }, 50);
+        }
       })
       .catch((err) => {
         if (requestId !== latestRequestId.current) return;

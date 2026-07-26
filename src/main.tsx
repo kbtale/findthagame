@@ -10,10 +10,8 @@ import { routeTree } from './routeTree.gen'
 import { FavoritesProvider } from '@/hooks/useFavorites'
 import { Analytics } from '@vercel/analytics/react'
 
-// Initialize the router
 const router = createRouter({ routeTree })
 
-// Register the router instance for type safety
 declare module '@tanstack/react-router' {
   interface Register {
     router: typeof router
