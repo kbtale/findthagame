@@ -43,6 +43,7 @@ interface DashboardLayoutProps {
   onRandomize?: () => void;
   onOpenFavorites?: () => void;
   onOpenSavedSearches?: () => void;
+  isGameDetail?: boolean;
 }
 
 export const DashboardLayout = ({
@@ -65,6 +66,7 @@ export const DashboardLayout = ({
   onRandomize,
   onOpenFavorites,
   onOpenSavedSearches,
+  isGameDetail = false,
 }: DashboardLayoutProps) => {
   const [isRecentSearchesOpen, setRecentSearchesOpen] = useState(false);
   const [starCount, setStarCount] = useState<number | null>(null);
@@ -311,12 +313,12 @@ export const DashboardLayout = ({
           REGION 3: MAIN CONTENT AREA
       ========================================================================= */}
       <main className="flex flex-col min-h-full h-full overflow-hidden bg-background p-4 lg:p-8 relative z-10">
-        {/* Top Progress Bar Overlay */}
+        {/* Top Progress Bar Overlay - Only visible when in game details */}
         <div 
           data-testid="search-progress-bar"
           className={cn(
             "absolute top-0 left-0 right-0 z-30 transition-opacity duration-300 pointer-events-none px-1 pt-1",
-            isLoading || (topProgress > 0 && topProgress <= 100) ? "opacity-100" : "opacity-0"
+            isGameDetail && (isLoading || (topProgress > 0 && topProgress <= 100)) ? "opacity-100" : "opacity-0"
           )}
         >
           <Progress value={topProgress} className="h-2 rounded-none border-t-0 border-x-0 border-b-2 border-border shadow-none" />

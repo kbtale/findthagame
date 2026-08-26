@@ -61,6 +61,7 @@ function RootLayout() {
   const [isSavedSearchesOpen, setSavedSearchesOpen] = useState(false);
 
   const isLoading = status === 'loading';
+  const isGameDetail = routerState.location.pathname.startsWith('/game/');
 
   // Restore searchTerm from URL when navigating back to a search
   useEffect(() => {
@@ -180,6 +181,7 @@ function RootLayout() {
           mobileSearch={mobileSearch}
           sidebar={sidebar}
           main={<Outlet />}
+          isGameDetail={isGameDetail}
           isMobileOpen={isMobileOpen}
           onMobileToggle={() => setMobileOpen(!isMobileOpen)}
           isSidebarCollapsed={isSidebarCollapsed}
