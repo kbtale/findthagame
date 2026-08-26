@@ -1,17 +1,17 @@
 import { useCallback, useState, useRef, useLayoutEffect, useContext, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { createFileRoute, useNavigate, useRouterState } from '@tanstack/react-router';
-import { store, type RootState } from '@/store/store';
+import { type RootState } from '@/store/store';
 import { selectGame, setCurrentPage, setSortBy, setLoading, setResults, setError } from '@/store/slices/resultsSlice';
 import { setAllFilters } from '@/store/slices/detectiveSlice';
 import { ResultsGrid } from '@/features/dashboard/ResultsGrid';
 import { searchGames } from '@/api/client';
 import { searchParamsToFilter, hasAnyFilter } from '@/lib/searchParams';
+import { getLastSearchedUrlKey, setLastSearchedUrlKey } from '@/lib/searchKey';
 import { RecentSearchesContext } from '@/hooks/useRecentSearches';
 import type { FilterState } from '@/models/AppTypes';
 
 let savedScrollPosition = 0;
-let lastSearchedUrlKey = '';
 
 export const Route = createFileRoute('/')({
   component: SearchResultsPage,
@@ -46,12 +46,9 @@ function SearchResultsPage() {
 
   useEffect(() => {
     if (!hasParams) return;
-    if (searchKey === lastSearchedUrlKey) return;
+    if (searchKey === getLastSearchedUrlKey() && status === 'success') return;
 
-    const state = store.getState();
-    if (state.results.status === 'loading') return;
-
-    lastSearchedUrlKey = searchKey;
+    setLastSearchedUrlKey(searchKey);
     const requestId = ++latestRequestId.current;
 
     dispatch(setAllFilters(filter as FilterState));
