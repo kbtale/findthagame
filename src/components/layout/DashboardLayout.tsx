@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { X, SlidersHorizontal, PanelLeft, PanelLeftClose, Github, History, Trash2, Heart, Bookmark, Dice5, BookmarkCheck, Info, Coffee, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import type { RecentSearch } from '@/hooks/useRecentSearches';
 import { AboutDialog } from '@/components/AboutDialog';
@@ -71,8 +72,48 @@ export const DashboardLayout = ({
   const [isReversing, setIsReversing] = useState(false);
   const [lastEasterEggTime, setLastEasterEggTime] = useState<number>(0);
   const [isAboutOpen, setAboutOpen] = useState(false);
+  const [topProgress, setTopProgress] = useState(0);
   const lottieRef = useRef<{ setDirection: (dir: number) => void; play: () => void } | null>(null);
   const { t } = useTranslation();
+
+  useEffect(() => {
+    let animationFrameId: number;
+    let finishTimer: NodeJS.Timeout;
+
+    if (isLoading) {
+      const duration = 15000;
+      const startTime = Date.now();
+
+      const animateProgress = () => {
+        const elapsed = Date.now() - startTime;
+        const rawProgress = elapsed / duration;
+        const easedProgress = 1 - Math.pow(1 - rawProgress, 3);
+        const newProgress = Math.min(easedProgress * 95, 95);
+        setTopProgress(newProgress);
+
+        if (newProgress < 95) {
+          animationFrameId = requestAnimationFrame(animateProgress);
+        }
+      };
+
+      animationFrameId = requestAnimationFrame(animateProgress);
+    } else {
+      finishTimer = setTimeout(() => {
+        setTopProgress((prev) => {
+          if (prev > 0 && prev < 100) {
+            setTimeout(() => setTopProgress(0), 300);
+            return 100;
+          }
+          return 0;
+        });
+      }, 0);
+    }
+
+    return () => {
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      if (finishTimer) clearTimeout(finishTimer);
+    };
+  }, [isLoading]);
 
   // Fetch GitHub stars on mount
   useEffect(() => {
@@ -270,6 +311,17 @@ export const DashboardLayout = ({
           REGION 3: MAIN CONTENT AREA
       ========================================================================= */}
       <main className="flex flex-col min-h-full h-full overflow-hidden bg-background p-4 lg:p-8 relative z-10">
+        {/* Top Progress Bar Overlay */}
+        <div 
+          data-testid="search-progress-bar"
+          className={cn(
+            "absolute top-0 left-0 right-0 z-30 transition-opacity duration-300 pointer-events-none px-1 pt-1",
+            isLoading || (topProgress > 0 && topProgress <= 100) ? "opacity-100" : "opacity-0"
+          )}
+        >
+          <Progress value={topProgress} className="h-2 rounded-none border-t-0 border-x-0 border-b-2 border-border shadow-none" />
+        </div>
+
         {/* Main Header Slot (Desktop only) */}
         <div className="hidden lg:flex items-center justify-between mb-8">
           <div className="flex items-center">

@@ -3,9 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import { createRootRoute, Outlet, ScrollRestoration, useNavigate, useRouterState } from '@tanstack/react-router';
 import type { RootState } from '@/store/store';
-import { selectExternalGame } from '@/store/slices/resultsSlice';
+import { selectExternalGame, clearSelection, setLoading } from '@/store/slices/resultsSlice';
 import { setAllFilters, resetFilters } from '@/store/slices/detectiveSlice';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
+import { resetLastSearchedUrlKey } from '@/lib/searchKey';
 import { FilterPanel } from '@/features/dashboard/filterPanel';
 import { Input } from '@/components/ui/input';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -74,12 +75,18 @@ function RootLayout() {
   const handleSearch = (filtersState: FilterState) => {
     setMobileOpen(false);
     const fullFilters = { ...filtersState, search: searchTerm };
+    dispatch(clearSelection());
+    dispatch(setLoading());
+    resetLastSearchedUrlKey();
     navigate({ to: '/', search: filterToSearchParams(fullFilters) });
   };
 
   const handleSelectRecentSearch = (search: RecentSearch) => {
     setSearchTerm(search.filters.search);
     dispatch(setAllFilters(search.filters));
+    dispatch(clearSelection());
+    dispatch(setLoading());
+    resetLastSearchedUrlKey();
     setMobileOpen(false);
     navigate({ to: '/', search: filterToSearchParams(search.filters) });
   };
@@ -87,6 +94,9 @@ function RootLayout() {
   const handleRandomize = () => {
     const randomFilters = generateRandomFilters();
     dispatch(setAllFilters(randomFilters));
+    dispatch(clearSelection());
+    dispatch(setLoading());
+    resetLastSearchedUrlKey();
     setMobileOpen(false);
     setSearchTerm('');
     navigate({ to: '/', search: filterToSearchParams(randomFilters) });

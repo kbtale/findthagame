@@ -7,11 +7,11 @@ import { setAllFilters } from '@/store/slices/detectiveSlice';
 import { ResultsGrid } from '@/features/dashboard/ResultsGrid';
 import { searchGames } from '@/api/client';
 import { searchParamsToFilter, hasAnyFilter } from '@/lib/searchParams';
+import { getLastSearchedUrlKey, setLastSearchedUrlKey } from '@/lib/searchKey';
 import { RecentSearchesContext } from '@/hooks/useRecentSearches';
 import type { FilterState } from '@/models/AppTypes';
 
 let savedScrollPosition = 0;
-let lastSearchedUrlKey = '';
 
 export const Route = createFileRoute('/')({
   component: SearchResultsPage,
@@ -46,12 +46,12 @@ function SearchResultsPage() {
 
   useEffect(() => {
     if (!hasParams) return;
-    if (searchKey === lastSearchedUrlKey) return;
+    if (searchKey === getLastSearchedUrlKey()) return;
 
     const state = store.getState();
     if (state.results.status === 'loading') return;
 
-    lastSearchedUrlKey = searchKey;
+    setLastSearchedUrlKey(searchKey);
     const requestId = ++latestRequestId.current;
 
     dispatch(setAllFilters(filter as FilterState));
