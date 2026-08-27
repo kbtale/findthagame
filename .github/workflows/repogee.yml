@@ -10,6 +10,10 @@ on:
   push:
     branches: [main]
 
+concurrency:
+  group: repogee-leaderboard
+  cancel-in-progress: false
+
 permissions:
   contents: write
 
@@ -20,7 +24,9 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.repository.default_branch }}
           fetch-depth: 0
 
       - name: Run Repogee Leaderboard
         uses: kbtale/repogee@main
+
