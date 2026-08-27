@@ -8,3 +8,4 @@ Gamifying repository activity using Rust, serverless architecture, and GitHub we
 | @vercel[bot] | Frontend Artisan: React/TSX Sculptor | 2 | 97 | 2026-08-27T00:20:08Z |
 | @repogee[bot] | Backend Developer: General Developer | 1 | 20 | N/A |
 | @begininvoke | Backend Developer: General Developer | 1 | 20 | 2026-08-26T02:20:37Z |
+| @sjhonn | Backend Developer: General Developer | 0 | 2 | 2026-08-27T22:35:33Z |
