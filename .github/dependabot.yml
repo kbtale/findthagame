@@ -22,6 +22,9 @@ updates:
         patterns:
           - "*"
         dependency-type: "production"
+    ignore:
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
 
   # maintain GitHub Actions workflow dependencies
   - package-ecosystem: "github-actions"
