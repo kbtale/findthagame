@@ -6,6 +6,7 @@
 
 Powered by the [IGDB API](https://api-docs.igdb.com/) and  [Groq AI](https://groq.com/).
 
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge)](./LICENSE)
 ![React](https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
@@ -137,13 +138,19 @@ Where $A_{bonus}$ contains:
 - Translations powered by [Groq AI](https://groq.com/)
 - Created by [Carlos Bolivar](https://github.com/kbtale)
 
+## Contributing
+ 
+Contributions are always welcome! Please check out the [Contributing Guide](./CONTRIBUTING.md) and [Code of Conduct](./CODE_OF_CONDUCT.md) before submitting a Pull Request.
+
+If you encounter any security issues, please refer to our [Security Policy](./SECURITY.md).
+
 ## Support
 
 If this tool helped you find a lost memory, consider [buying me a coffee](https://ko-fi.com/U7U11S2E9Q) ☕
 
 ## License
 
-MIT
+This project is licensed under the **GNU General Public License v3.0** - see the [LICENSE](./LICENSE) file for details.
 
 <div align="center">
   <i>Disclaimer: This app is not affiliated with IGDB or Twitch.</i>
