@@ -1,0 +1,63 @@
+name: 🐛 Bug Report
+description: Report a reproducible bug or unexpected behavior in FindThaGame
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report an issue and improve FindThaGame!
+  - type: input
+    id: summary
+    attributes:
+      label: Summary
+      description: A concise description of the bug.
+      placeholder: "e.g., Filtering by platform 'PlayStation 2' drops valid results with exact title matches"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: Step-by-step instructions on how to trigger the bug.
+      placeholder: |
+        1. Navigate to '...'
+        2. Enter search query '...'
+        3. Select filter '...'
+        4. Observe the error
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What you expected to happen.
+      placeholder: "e.g., The search results should display games ranked according to the selected genre."
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened.
+      placeholder: "e.g., The UI threw a React state error and showed an empty screen."
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment & Context
+      description: Details about your browser, device, and operating system.
+      value: |
+        - OS: [e.g. Windows 11, macOS Sequoia, Ubuntu 24.04]
+        - Browser: [e.g. Chrome 128, Firefox 130, Safari 18]
+        - Device: [e.g. Desktop, iPhone 15, Pixel 8]
+    validations:
+      required: false
+  - type: textarea
+    id: logs
+    attributes:
+      label: Console Logs / Screenshots
+      description: Paste any browser console error logs or drag-and-drop screenshots here.
+    validations:
+      required: false
