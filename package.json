@@ -3,6 +3,17 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "description": "A game discovery tool that helps users find video games based on fuzzy memories and partial details.",
+  "license": "GPL-3.0-only",
+  "author": "Carlos Bolívar <cebemind@hotmail.com> (https://github.com/kbtale)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kbtale/findthagame.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kbtale/findthagame/issues"
+  },
+  "homepage": "https://github.com/kbtale/findthagame#readme",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
