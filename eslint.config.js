@@ -23,8 +23,7 @@ export default defineConfig([
   {
     files: ['**/*.{ts,tsx}'],
     rules: {
-      // Allow the TanStack Router `Route` const, the favorites hook, and shadcn
-      // cva variant helpers to live alongside their components.
+      // Allow Route consts, hooks, and cva variants in component files.
       'react-refresh/only-export-components': [
         'error',
         { allowExportNames: ['Route', 'useFavorites', 'badgeVariants', 'buttonVariants'] },

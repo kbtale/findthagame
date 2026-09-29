@@ -20,8 +20,7 @@ import { filterToSearchParams } from '@/lib/searchParams';
 import type { FilterState, GameResult } from '@/models/AppTypes';
 import { generateRandomFilters } from '@/utils/randomFilters';
 
-// Route files export the `Route` constant (TanStack Router pattern); fast
-// refresh is intentionally not applicable to these components.
+// Route pattern: fast refresh intentionally skipped.
 // eslint-disable-next-line react-refresh/only-export-components
 const TanStackRouterDevtools =
   process.env.NODE_ENV === 'production'
