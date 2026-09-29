@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef, Suspense, lazy, type ReactNode, type ComponentType } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
-import { X, SlidersHorizontal, PanelLeft, PanelLeftClose, Github, History, Trash2, Heart, Bookmark, Dice5, BookmarkCheck, Info, Coffee, ExternalLink } from 'lucide-react';
+import { X, SlidersHorizontal, PanelLeft, PanelLeftClose, Heart, Bookmark, Dice5, BookmarkCheck, Info, Coffee, ExternalLink, RotateCcwClock, Trash } from 'lucide-react';
+import { GithubIcon } from '@/components/GithubIcon';
+import type { LottieHandle } from 'lottie-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
@@ -12,14 +14,14 @@ import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 // Lazy load Lottie for easter egg cats (same pattern as ResultsGrid)
 const Lottie = lazy(() => 
   import('lottie-react').then(mod => ({
-    default: (mod as unknown as { default: { default: ComponentType<{ 
-      animationData: object;
+    default: (mod as unknown as { Lottie: ComponentType<{ 
+      src: object | string;
       loop?: boolean;
       autoplay?: boolean;
       className?: string;
-      lottieRef?: React.MutableRefObject<{ setDirection: (dir: number) => void; play: () => void } | null>;
-      onComplete?: () => void;
-    }> } }).default.default
+      lottieRef?: React.MutableRefObject<LottieHandle | null>;
+      subscriptions?: { complete?: () => void };
+    }> }).Lottie
   }))
 );
 
@@ -76,7 +78,7 @@ export const DashboardLayout = ({
   const [lastEasterEggTime, setLastEasterEggTime] = useState<number>(0);
   const [isAboutOpen, setAboutOpen] = useState(false);
   const [topProgress, setTopProgress] = useState(0);
-  const lottieRef = useRef<{ setDirection: (dir: number) => void; play: () => void } | null>(null);
+  const lottieRef = useRef<LottieHandle | null>(null);
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -253,7 +255,7 @@ export const DashboardLayout = ({
             <LanguageSwitcher />
             {/* History - opens recent searches dialog */}
             <Button variant="neutral" size="icon" onClick={() => setRecentSearchesOpen(true)} title={t('dashboard.recentInquiries')}>
-              <History className="w-5 h-5" />
+              <RotateCcwClock className="w-5 h-5" />
             </Button>
             {onOpenSavedSearches && (
               <Button variant="neutral" size="icon" onClick={onOpenSavedSearches} title={t('savedSearches.title')}>
@@ -275,7 +277,7 @@ export const DashboardLayout = ({
               size="icon"
               onClick={() => window.open('https://github.com/kbtale/findthagame', '_blank')}
             >
-              <Github className="w-5 h-5" />
+              <GithubIcon className="w-5 h-5" />
             </Button>
           </div>
         </div>
@@ -374,14 +376,14 @@ export const DashboardLayout = ({
               </Button>
             )}
             <Button variant="neutral" onClick={() => setRecentSearchesOpen(true)}>
-              <History className="w-4 h-4 mr-2" />
+              <RotateCcwClock className="w-4 h-4 mr-2" />
               {t('dashboard.recentInquiries')}
             </Button>
             <Button
               variant="neutral"
               onClick={() => window.open('https://github.com/kbtale/findthagame', '_blank')}
             >
-              <Github className="w-4 h-4" />
+              <GithubIcon className="w-4 h-4" />
               {starCount !== null && starCount}
             </Button>
           </div>
@@ -448,7 +450,7 @@ export const DashboardLayout = ({
               onClick={onClearHistory}
               className="absolute top-4 right-16"
             >
-              <Trash2 className="w-4 h-4 md:mr-1" />
+              <Trash className="w-4 h-4 md:mr-1" />
               <span className="hidden md:inline">{t('dashboard.clearHistory')}</span>
             </Button>
           )}
@@ -522,17 +524,19 @@ export const DashboardLayout = ({
           <div className="fixed bottom-0 right-4 z-50">
             <Lottie
               lottieRef={lottieRef}
-              animationData={easterEggCat}
+              src={easterEggCat}
               loop={false}
               autoplay
-              onComplete={() => {
-                if (!isReversing) {
-                  setIsReversing(true);
-                  lottieRef.current?.setDirection(-1);
-                  lottieRef.current?.play();
-                } else {
-                  setEasterEggCat(null);
-                  setIsReversing(false);
+              subscriptions={{
+                complete: () => {
+                  if (!isReversing) {
+                    setIsReversing(true);
+                    lottieRef.current?.setDirection('reverse');
+                    lottieRef.current?.play();
+                  } else {
+                    setEasterEggCat(null);
+                    setIsReversing(false);
+                  }
                 }
               }}
               className="w-48 h-48"
