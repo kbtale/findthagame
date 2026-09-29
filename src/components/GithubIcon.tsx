@@ -1,7 +1,5 @@
 /**
- * src/components/GithubIcon.tsx
- * GitHub mark as inline SVG (Simple Icons path).
- * Brand icons were removed from lucide-react in v1.x.
+ * GitHub mark as inline SVG.
  */
 
 interface GithubIconProps {
