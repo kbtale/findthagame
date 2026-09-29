@@ -179,7 +179,7 @@ export const DashboardLayout = ({
             size="icon"
             className="bg-main"
             onClick={onOpenFavorites}
-            title="Favorites"
+            title={t('favorites.title')}
           >
             <Heart className="w-5 h-5" fill="currentColor" />
           </Button>
@@ -188,7 +188,7 @@ export const DashboardLayout = ({
             size="icon"
             className="bg-main"
             onClick={onOpenSavedSearches}
-            title="Saved Searches"
+            title={t('savedSearches.title')}
           >
             <Bookmark className="w-5 h-5" fill="currentColor" />
           </Button>
@@ -252,16 +252,16 @@ export const DashboardLayout = ({
             {/* Language switcher */}
             <LanguageSwitcher />
             {/* History - opens recent searches dialog */}
-            <Button variant="neutral" size="icon" onClick={() => setRecentSearchesOpen(true)} title="Search History">
+            <Button variant="neutral" size="icon" onClick={() => setRecentSearchesOpen(true)} title={t('dashboard.recentInquiries')}>
               <History className="w-5 h-5" />
             </Button>
             {onOpenSavedSearches && (
-              <Button variant="neutral" size="icon" onClick={onOpenSavedSearches} title="Saved Searches">
+              <Button variant="neutral" size="icon" onClick={onOpenSavedSearches} title={t('savedSearches.title')}>
                 <BookmarkCheck className="w-5 h-5" />
               </Button>
             )}
             {onOpenFavorites && (
-              <Button variant="neutral" size="icon" onClick={onOpenFavorites} title="Favorites">
+              <Button variant="neutral" size="icon" onClick={onOpenFavorites} title={t('favorites.title')}>
                 <Heart className="w-5 h-5" />
               </Button>
             )}
@@ -493,7 +493,7 @@ export const DashboardLayout = ({
                         e.stopPropagation();
                         onToggleBookmark?.(search.id);
                       }}
-                      title={search.isBookmarked ? 'Remove bookmark' : 'Bookmark this search'}
+                      title={search.isBookmarked ? t('savedSearches.removeBookmark') : t('savedSearches.bookmarkSearch')}
                     >
                       <Bookmark className="w-4 h-4" fill={search.isBookmarked ? "currentColor" : "none"} />
                     </Button>

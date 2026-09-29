@@ -173,6 +173,24 @@
     "239": "Blu-rayプレーヤー",
     "409": "レガシーコンピュータ"
   },
+  "favorites": {
+    "title": "お気に入りのゲーム",
+    "empty": "お気に入りはまだありません。ゲームのハートアイコンをクリックして追加してください！",
+    "unknownYear": "年不明",
+    "removeTitle": "お気に入りから削除",
+    "addTitle": "お気に入りに追加"
+  },
+  "savedSearches": {
+    "title": "保存した検索",
+    "emptyTitle": "保存した検索はまだありません。",
+    "emptyHint": "履歴から検索をブックマークしてください！",
+    "nGenres": "{{count}} ジャンル",
+    "nThemes": "{{count}} テーマ",
+    "platformFilter": "プラットフォームフィルタ",
+    "noFilters": "フィルタなし",
+    "removeBookmark": "ブックマークを削除",
+    "bookmarkSearch": "この検索をブックマーク"
+  },
   "gameStatus": {
     "0": "リリース済",
     "2": "アルファ",

@@ -173,6 +173,24 @@
     "239": "블루레이 플레이어",
     "409": "구형 컴퓨터"
   },
+  "favorites": {
+    "title": "즐겨찾는 게임",
+    "empty": "아직 즐겨찾기가 없습니다. 게임의 하트 아이콘을 클릭하여 추가하세요!",
+    "unknownYear": "연도 미상",
+    "removeTitle": "즐겨찾기에서 제거",
+    "addTitle": "즐겨찾기에 추가"
+  },
+  "savedSearches": {
+    "title": "저장된 검색",
+    "emptyTitle": "저장된 검색이 아직 없습니다.",
+    "emptyHint": "기록에서 검색을 북마크하세요!",
+    "nGenres": "장르 {{count}}개",
+    "nThemes": "테마 {{count}}개",
+    "platformFilter": "플랫폼 필터",
+    "noFilters": "필터 없음",
+    "removeBookmark": "북마크 제거",
+    "bookmarkSearch": "이 검색 북마크"
+  },
   "gameStatus": {
     "0": "출시됨",
     "2": "알파",

@@ -75,7 +75,7 @@ const NavigationHeader = memo(({
             ? "bg-red-500 text-white hover:bg-red-600" 
             : "bg-[var(--chart-3)] text-white hover:bg-[var(--chart-3)]/90"
           }
-          title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+          title={isFavorite ? t('favorites.removeTitle') : t('favorites.addTitle')}
         >
           <Heart className="w-4 h-4" fill={isFavorite ? "currentColor" : "none"} />
         </Button>

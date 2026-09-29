@@ -173,6 +173,24 @@
     "239": "Lecteur Blu-ray",
     "409": "Ancien ordinateur"
   },
+  "favorites": {
+    "title": "Jeux favoris",
+    "empty": "Pas encore de favoris. Cliquez sur l'icône cœur d'un jeu pour l'ajouter !",
+    "unknownYear": "Année inconnue",
+    "removeTitle": "Retirer des favoris",
+    "addTitle": "Ajouter aux favoris"
+  },
+  "savedSearches": {
+    "title": "Recherches enregistrées",
+    "emptyTitle": "Aucune recherche enregistrée.",
+    "emptyHint": "Marquez des recherches depuis votre historique !",
+    "nGenres": "{{count}} genres",
+    "nThemes": "{{count}} thèmes",
+    "platformFilter": "filtre de plateforme",
+    "noFilters": "Aucun filtre",
+    "removeBookmark": "Retirer le marque-page",
+    "bookmarkSearch": "Marquer cette recherche"
+  },
   "gameStatus": {
     "0": "Sorti",
     "2": "Alpha",

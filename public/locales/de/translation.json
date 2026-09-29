@@ -173,6 +173,24 @@
     "239": "Blu-ray-Player",
     "409": "Älterer Computer"
   },
+  "favorites": {
+    "title": "Favoritenspiele",
+    "empty": "Noch keine Favoriten. Klicken Sie auf das Herz-Symbol eines Spiels, um es hinzuzufügen!",
+    "unknownYear": "Unbekanntes Jahr",
+    "removeTitle": "Aus Favoriten entfernen",
+    "addTitle": "Zu Favoriten hinzufügen"
+  },
+  "savedSearches": {
+    "title": "Gespeicherte Suchanfragen",
+    "emptyTitle": "Noch keine gespeicherten Suchanfragen.",
+    "emptyHint": "Markieren Sie Suchanfragen aus Ihrem Verlauf!",
+    "nGenres": "{{count}} Genres",
+    "nThemes": "{{count}} Themen",
+    "platformFilter": "Plattformfilter",
+    "noFilters": "Keine Filter",
+    "removeBookmark": "Lesezeichen entfernen",
+    "bookmarkSearch": "Diese Suche markieren"
+  },
   "gameStatus": {
     "0": "Veröffentlicht",
     "2": "Alpha",

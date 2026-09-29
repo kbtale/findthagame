@@ -185,6 +185,24 @@
     "239": "Blu-ray Player",
     "409": "Legacy Computer"
   },
+  "favorites": {
+    "title": "Favorite Games",
+    "empty": "No favorites yet. Click the heart icon on a game to add it!",
+    "unknownYear": "Unknown year",
+    "removeTitle": "Remove from favorites",
+    "addTitle": "Add to favorites"
+  },
+  "savedSearches": {
+    "title": "Saved Searches",
+    "emptyTitle": "No saved searches yet.",
+    "emptyHint": "Bookmark searches from your history!",
+    "nGenres": "{{count}} genres",
+    "nThemes": "{{count}} themes",
+    "platformFilter": "platform filter",
+    "noFilters": "No filters",
+    "removeBookmark": "Remove bookmark",
+    "bookmarkSearch": "Bookmark this search"
+  },
   "gameStatus": {
     "0": "Released",
     "2": "Alpha",

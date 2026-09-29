@@ -173,6 +173,24 @@
     "239": "Reprodutor de Blu-ray",
     "409": "Computador antigo"
   },
+  "favorites": {
+    "title": "Jogos favoritos",
+    "empty": "Ainda não há favoritos. Clique no ícone de coração de um jogo para adicioná-lo!",
+    "unknownYear": "Ano desconhecido",
+    "removeTitle": "Remover dos favoritos",
+    "addTitle": "Adicionar aos favoritos"
+  },
+  "savedSearches": {
+    "title": "Pesquisas salvas",
+    "emptyTitle": "Nenhuma pesquisa salva ainda.",
+    "emptyHint": "Marque pesquisas do seu histórico!",
+    "nGenres": "{{count}} gêneros",
+    "nThemes": "{{count}} temas",
+    "platformFilter": "filtro de plataforma",
+    "noFilters": "Sem filtros",
+    "removeBookmark": "Remover favorito",
+    "bookmarkSearch": "Marcar esta pesquisa"
+  },
   "gameStatus": {
     "0": "Lançado",
     "2": "Alpha",

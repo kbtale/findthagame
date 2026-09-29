@@ -173,6 +173,24 @@
     "239": "蓝光播放器",
     "409": "旧式计算机"
   },
+  "favorites": {
+    "title": "收藏的游戏",
+    "empty": "还没有收藏。点击游戏上的心形图标即可添加！",
+    "unknownYear": "年份未知",
+    "removeTitle": "从收藏中移除",
+    "addTitle": "添加到收藏"
+  },
+  "savedSearches": {
+    "title": "已保存的搜索",
+    "emptyTitle": "还没有已保存的搜索。",
+    "emptyHint": "从历史记录中收藏搜索！",
+    "nGenres": "{{count}} 个类型",
+    "nThemes": "{{count}} 个题材",
+    "platformFilter": "平台筛选",
+    "noFilters": "无筛选",
+    "removeBookmark": "移除书签",
+    "bookmarkSearch": "收藏此搜索"
+  },
   "gameStatus": {
     "0": "已发布",
     "2": "Alpha",

@@ -173,6 +173,24 @@
     "239": "Reproductor de Blu-ray",
     "409": "Ordenador heredado"
   },
+  "favorites": {
+    "title": "Juegos favoritos",
+    "empty": "Aún no hay favoritos. ¡Haz clic en el icono de corazón de un juego para añadirlo!",
+    "unknownYear": "Año desconocido",
+    "removeTitle": "Quitar de favoritos",
+    "addTitle": "Añadir a favoritos"
+  },
+  "savedSearches": {
+    "title": "Búsquedas guardadas",
+    "emptyTitle": "Aún no hay búsquedas guardadas.",
+    "emptyHint": "¡Marca búsquedas desde tu historial!",
+    "nGenres": "{{count}} géneros",
+    "nThemes": "{{count}} temas",
+    "platformFilter": "filtro de plataforma",
+    "noFilters": "Sin filtros",
+    "removeBookmark": "Quitar marcador",
+    "bookmarkSearch": "Marcar esta búsqueda"
+  },
   "gameStatus": {
     "0": "Publicado",
     "2": "Alpha",
