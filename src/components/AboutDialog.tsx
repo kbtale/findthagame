@@ -5,7 +5,8 @@
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Github, Coffee, ExternalLink } from 'lucide-react';
+import { Coffee, ExternalLink } from 'lucide-react';
+import { GithubIcon } from '@/components/GithubIcon';
 import { useTranslation } from 'react-i18next';
 
 interface AboutDialogProps {
@@ -93,7 +94,7 @@ export const AboutDialog = ({ open, onOpenChange }: AboutDialogProps) => {
                 onClick={() => window.open('https://github.com/kbtale/findthagame', '_blank')}
                 className="gap-2"
               >
-                <Github className="w-4 h-4" />
+                <GithubIcon className="w-4 h-4" />
                 GitHub
               </Button>
             </div>

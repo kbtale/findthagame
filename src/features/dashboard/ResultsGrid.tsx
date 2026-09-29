@@ -24,7 +24,7 @@ import {
 
 const Lottie = lazy(() => 
   import('lottie-react').then(mod => ({
-    default: (mod as unknown as { default: { default: ComponentType<{ animationData: object; loop?: boolean; autoplay?: boolean; className?: string }> } }).default.default
+    default: (mod as unknown as { Lottie: ComponentType<{ src: object | string; loop?: boolean; autoplay?: boolean; className?: string }> }).Lottie
   }))
 );
 
@@ -170,7 +170,7 @@ export const ResultsGrid = ({
         <Suspense fallback={<div className="w-48 h-48" />}>
           {animationData && (
             <Lottie
-              animationData={animationData}
+              src={animationData}
               loop
               autoplay
               className="w-48 h-48 mb-[-1rem]"
