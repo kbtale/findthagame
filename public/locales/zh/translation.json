@@ -17,7 +17,10 @@
     "noRecentSearches": "暂无最近搜索。",
     "clearHistory": "清除",
     "noSearchTerm": "(无搜索词)",
-    "results": "结果"
+    "results": "结果",
+    "about": "关于",
+    "randomizeFilters": "随机筛选",
+    "randomSearch": "随机搜索"
   },
   "filters": {
     "search": "搜索",
@@ -190,6 +193,61 @@
     "noFilters": "无筛选",
     "removeBookmark": "移除书签",
     "bookmarkSearch": "收藏此搜索"
+  },
+  "about": {
+    "intro1": "你是否曾在童年玩过某款游戏（比如在 PS2 或 GameBoy 上），却怎么也想不起它的名字？这就是我创建",
+    "intro2": "的原因。这款工具帮你从游戏历史中搜索，重新发现那些失落的童年珍宝。",
+    "howItWorks": "使用方法",
+    "howItWorksBody": "只需输入你记住的关键词、类型或平台。网站会在数千条记录中搜索，找到符合你描述的游戏。",
+    "dataCredits": "数据与致谢",
+    "dataCredits1": "本应用由",
+    "dataCredits2": "提供支持。所有游戏数据和图片由 Internet Game Database 提供。翻译由",
+    "dataCredits3": "提供。",
+    "supportTitle": "支持本项目",
+    "supportBody": "这是一个免费的开源项目，由我在业余时间维护。如果这个工具帮你找回了遗失的记忆，请考虑支持我！",
+    "supportButton": "在 Ko-fi 上支持我",
+    "createdBy": "创建者",
+    "disclaimer": "免责声明：本应用与 IGDB 或 Twitch 无关联。",
+    "poweredBy": "基于以下服务",
+    "notAffiliated": "与 IGDB 或 Twitch 无关联"
+  },
+  "errors": {
+    "gameNotFound": "未找到游戏",
+    "gameNotFoundDesc": "您寻找的游戏不存在或无法加载。",
+    "backToSearch": "返回搜索",
+    "failedToLoad": "加载游戏失败"
+  },
+  "searchLoading": {
+    "0": "正在扫描多元宇宙寻找你的游戏...",
+    "1": "正在询问NPC是否见过它...",
+    "2": "正在检查沙发垫后面...",
+    "3": "加载中...请投币继续",
+    "4": "正在查阅古老的游戏卷轴...",
+    "5": "正在贿赂数据库精灵...",
+    "6": "正在为搜索结果掷D20骰子...",
+    "7": "正在速通本次查询...",
+    "8": "正在解锁秘密关卡...",
+    "9": "正在预热通量电容器...",
+    "10": "正在下载更多内存...",
+    "11": "正在教AI欣赏好游戏...",
+    "12": "正在击败卡顿的最终Boss...",
+    "13": "满怀热情地解析像素...",
+    "14": "正在重生搜索结果...",
+    "15": "成就解锁：耐心！",
+    "16": "缓冲中...仿佛回到2005年",
+    "17": "正在说服电子加快移动...",
+    "18": "正在召集游戏界的复仇者...",
+    "19": "快好了...只剩最后一个加载画面..."
+  },
+  "sorting": {
+    "title": "排序方式",
+    "relevance": "相关性",
+    "nameAsc": "名称 (A-Z)",
+    "nameDesc": "名称 (Z-A)",
+    "newest": "发布日期 (最新)",
+    "oldest": "发布日期 (最旧)",
+    "ratingDesc": "评分 (最高)",
+    "ratingAsc": "评分 (最低)"
   },
   "gameStatus": {
     "0": "已发布",

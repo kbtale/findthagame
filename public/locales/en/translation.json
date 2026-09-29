@@ -17,7 +17,10 @@
     "noRecentSearches": "No recent searches yet.",
     "clearHistory": "Clear",
     "noSearchTerm": "(No search term)",
-    "results": "results"
+    "results": "results",
+    "about": "About",
+    "randomizeFilters": "Randomize Filters",
+    "randomSearch": "Random Search"
   },
   "filters": {
     "search": "Search",
@@ -202,6 +205,51 @@
     "noFilters": "No filters",
     "removeBookmark": "Remove bookmark",
     "bookmarkSearch": "Bookmark this search"
+  },
+  "about": {
+    "intro1": "Have you ever had a flashback of a game you played as a kid, maybe on the PS2 or GameBoy, but couldn't remember the name? That's why I built",
+    "intro2": "This tool is designed to help you filter through history and rediscover those lost childhood gems.",
+    "howItWorks": "How it Works",
+    "howItWorksBody": "Simply enter the keywords, genres, or platforms you remember. The site searches through thousands of records to find matches that fit your description.",
+    "dataCredits": "Data & Credits",
+    "dataCredits1": "This application is powered by the",
+    "dataCredits2": ". All game data and imagery are provided by the Internet Game Database. Translations are powered by",
+    "dataCredits3": ".",
+    "supportTitle": "Support the Project",
+    "supportBody": "This is a free, open-source project maintained in my spare time. If this tool helped you find a lost memory, consider supporting me!",
+    "supportButton": "Support me on Ko-fi",
+    "createdBy": "Created by",
+    "disclaimer": "Disclaimer: This app is not affiliated with IGDB or Twitch.",
+    "poweredBy": "Powered by the",
+    "notAffiliated": "Not affiliated with IGDB or Twitch"
+  },
+  "errors": {
+    "gameNotFound": "Game Not Found",
+    "gameNotFoundDesc": "The game you're looking for doesn't exist or couldn't be loaded.",
+    "backToSearch": "Back to Search",
+    "failedToLoad": "Failed to load game"
+  },
+  "searchLoading": {
+    "0": "Scanning the multiverse for your game...",
+    "1": "Asking NPCs if they've seen it...",
+    "2": "Checking behind the couch cushions...",
+    "3": "Loading... please insert coin to continue",
+    "4": "Consulting the ancient game scrolls...",
+    "5": "Bribing the database elves...",
+    "6": "Rolling a D20 for search results...",
+    "7": "Speedrunning this query...",
+    "8": "Unlocking the secret level...",
+    "9": "Warming up the flux capacitor...",
+    "10": "Downloading more RAM...",
+    "11": "Teaching AI to appreciate good games...",
+    "12": "Defeating the final boss of lag...",
+    "13": "Parsing pixels with passion...",
+    "14": "Respawning search results...",
+    "15": "Achievement unlocked: Patience!",
+    "16": "Buffering... like it's 2005 again",
+    "17": "Convincing electrons to move faster...",
+    "18": "Assembling the Avengers of gaming...",
+    "19": "Almost there... just one more loading screen..."
   },
   "gameStatus": {
     "0": "Released",

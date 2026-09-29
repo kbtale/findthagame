@@ -197,7 +197,7 @@ export const DashboardLayout = ({
             size="icon"
             className="bg-main"
             onClick={onRandomize}
-            title="Randomize Filters"
+            title={t('dashboard.randomizeFilters')}
           >
             <Dice5 className="w-5 h-5" />
           </Button>
@@ -206,7 +206,7 @@ export const DashboardLayout = ({
             size="icon"
             className="bg-main"
             onClick={() => setAboutOpen(true)}
-            title="About"
+            title={t('dashboard.about')}
           >
             <Info className="w-5 h-5" />
           </Button>
@@ -242,7 +242,7 @@ export const DashboardLayout = ({
               variant="neutral"
               size="icon"
               onClick={() => setAboutOpen(true)}
-              title="About"
+              title={t('dashboard.about')}
               className="h-8 w-8"
             >
               <Info className="w-4 h-4" />
@@ -266,7 +266,7 @@ export const DashboardLayout = ({
               </Button>
             )}
             {onRandomize && (
-              <Button variant="neutral" size="icon" onClick={onRandomize} title="Random Search">
+              <Button variant="neutral" size="icon" onClick={onRandomize} title={t('dashboard.randomSearch')}>
                 <Dice5 className="w-5 h-5" />
               </Button>
             )}
@@ -395,7 +395,7 @@ export const DashboardLayout = ({
         {/* Footer */}
         <footer className="hidden lg:block mt-auto mx-0 mb-0 p-4 border-2 border-border bg-main shadow-shadow rounded-base">
           <div className="flex items-center justify-center gap-4 flex-wrap">
-            <span className="text-sm text-main-foreground">Powered by the</span>
+            <span className="text-sm text-main-foreground">{t('about.poweredBy')}</span>
             <Button 
               variant="neutral" 
               size="sm" 
@@ -423,14 +423,14 @@ export const DashboardLayout = ({
                 Groq AI
               </a>
             </Button>
-            <span className="text-sm text-main-foreground italic">Not affiliated with IGDB or Twitch</span>
+            <span className="text-sm text-main-foreground italic">{t('about.notAffiliated')}</span>
             <Button 
               size="sm"
               onClick={() => window.open('https://ko-fi.com/U7U11S2E9Q', '_blank')}
               className="gap-2 bg-[var(--chart-3)] text-white hover:bg-[var(--chart-3)]/90 border-2 border-border shadow-shadow"
             >
               <Coffee className="w-4 h-4" />
-              Support me on Ko-fi
+              {t('about.supportButton')}
               <ExternalLink className="w-3 h-3 opacity-50" />
             </Button>
           </div>

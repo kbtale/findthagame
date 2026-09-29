@@ -17,7 +17,10 @@
     "noRecentSearches": "Noch keine Suchanfragen.",
     "clearHistory": "Löschen",
     "noSearchTerm": "(Kein Suchbegriff)",
-    "results": "ergebnisse"
+    "results": "ergebnisse",
+    "about": "Über",
+    "randomizeFilters": "Filter zufällig wählen",
+    "randomSearch": "Zufällige Suche"
   },
   "filters": {
     "search": "Suchen",
@@ -190,6 +193,61 @@
     "noFilters": "Keine Filter",
     "removeBookmark": "Lesezeichen entfernen",
     "bookmarkSearch": "Diese Suche markieren"
+  },
+  "about": {
+    "intro1": "Hatten Sie schon einmal eine Erinnerung an ein Spiel, das Sie als Kind gespielt haben, vielleicht auf der PS2 oder dem GameBoy, aber der Name fiel Ihnen nicht ein? Deshalb habe ich",
+    "intro2": "entwickelt. Dieses Tool hilft Ihnen, die Geschichte zu durchsuchen und diese verlorenen Schätze Ihrer Kindheit wiederzuentdecken.",
+    "howItWorks": "So funktioniert es",
+    "howItWorksBody": "Geben Sie einfach die Schlüsselwörter, Genres oder Plattformen ein, an die Sie sich erinnern. Die Seite durchsucht tausende Einträge nach Übereinstimmungen mit Ihrer Beschreibung.",
+    "dataCredits": "Daten & Credits",
+    "dataCredits1": "Diese Anwendung wird betrieben mit",
+    "dataCredits2": ". Alle Spieldaten und Bilder stammen von der Internet Game Database. Übersetzungen werden unterstützt von",
+    "dataCredits3": ".",
+    "supportTitle": "Projekt unterstützen",
+    "supportBody": "Dies ist ein kostenloses Open-Source-Projekt, das ich in meiner Freizeit pflege. Wenn dieses Tool Ihnen geholfen hat, eine verlorene Erinnerung zu finden, unterstützen Sie mich doch!",
+    "supportButton": "Unterstützen Sie mich auf Ko-fi",
+    "createdBy": "Erstellt von",
+    "disclaimer": "Hinweis: Diese App ist nicht mit IGDB oder Twitch verbunden.",
+    "poweredBy": "Unterstützt durch",
+    "notAffiliated": "Nicht mit IGDB oder Twitch verbunden"
+  },
+  "errors": {
+    "gameNotFound": "Spiel nicht gefunden",
+    "gameNotFoundDesc": "Das gesuchte Spiel existiert nicht oder konnte nicht geladen werden.",
+    "backToSearch": "Zurück zur Suche",
+    "failedToLoad": "Spiel konnte nicht geladen werden"
+  },
+  "searchLoading": {
+    "0": "Ich durchsuche das Multiversum nach Ihrem Spiel...",
+    "1": "Ich frage NPCs, ob sie es gesehen haben...",
+    "2": "Ich schaue hinter die Sofakissen...",
+    "3": "Laden... bitte Münze einwerfen",
+    "4": "Ich konsultiere die uralten Spiel-Schriftrollen...",
+    "5": "Ich besteche die Datenbank-Elfen...",
+    "6": "Ich würfle einen D20 für die Suchergebnisse...",
+    "7": "Ich speedrunne diese Abfrage...",
+    "8": "Ich schalte das geheime Level frei...",
+    "9": "Ich wärme den Fluxkompensator auf...",
+    "10": "Ich lade mehr RAM herunter...",
+    "11": "Ich bringe der KI bei, gute Spiele zu schätzen...",
+    "12": "Ich besiege den Endboss der Latenz...",
+    "13": "Ich analysiere Pixel mit Leidenschaft...",
+    "14": "Ich lasse die Suchergebnisse wieder erscheinen...",
+    "15": "Erfolg freigeschaltet: Geduld!",
+    "16": "Puffere... wie 2005",
+    "17": "Ich überzeuge Elektronen, sich schneller zu bewegen...",
+    "18": "Ich versammle die Avengers der Spielewelt...",
+    "19": "Fast geschafft... nur noch ein Ladebildschirm..."
+  },
+  "sorting": {
+    "title": "Sortieren nach",
+    "relevance": "Relevanz",
+    "nameAsc": "Name (A-Z)",
+    "nameDesc": "Name (Z-A)",
+    "newest": "Erscheinungsdatum (Neueste)",
+    "oldest": "Erscheinungsdatum (Älteste)",
+    "ratingDesc": "Bewertung (Höchste)",
+    "ratingAsc": "Bewertung (Niedrigste)"
   },
   "gameStatus": {
     "0": "Veröffentlicht",

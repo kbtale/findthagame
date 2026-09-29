@@ -17,7 +17,10 @@
     "noRecentSearches": "Nenhuma pesquisa recente.",
     "clearHistory": "Limpar",
     "noSearchTerm": "(Sem termo de busca)",
-    "results": "resultados"
+    "results": "resultados",
+    "about": "Sobre",
+    "randomizeFilters": "Filtros aleatórios",
+    "randomSearch": "Busca aleatória"
   },
   "filters": {
     "search": "Pesquisar",
@@ -190,6 +193,61 @@
     "noFilters": "Sem filtros",
     "removeBookmark": "Remover favorito",
     "bookmarkSearch": "Marcar esta pesquisa"
+  },
+  "about": {
+    "intro1": "Você já teve um flashback de um jogo que jogava quando criança, talvez no PS2 ou GameBoy, mas não conseguia lembrar o nome? Foi por isso que criei",
+    "intro2": "Essa ferramenta foi feita para ajudá-lo a buscar na história e redescobrir essas joias perdidas da sua infância.",
+    "howItWorks": "Como funciona",
+    "howItWorksBody": "Basta inserir as palavras-chave, gêneros ou plataformas que você lembra. O site pesquisa milhares de registros para encontrar jogos que correspondam à sua descrição.",
+    "dataCredits": "Dados e créditos",
+    "dataCredits1": "Este aplicativo é alimentado pela",
+    "dataCredits2": ". Todos os dados e imagens de jogos são fornecidos pela Internet Game Database. As traduções são alimentadas por",
+    "dataCredits3": ".",
+    "supportTitle": "Apoie o projeto",
+    "supportBody": "Este é um projeto gratuito e de código aberto mantido no meu tempo livre. Se essa ferramenta ajudou você a encontrar uma memória perdida, considere me apoiar!",
+    "supportButton": "Apoie-me no Ko-fi",
+    "createdBy": "Criado por",
+    "disclaimer": "Aviso: este aplicativo não é afiliado à IGDB ou Twitch.",
+    "poweredBy": "Funciona com",
+    "notAffiliated": "Não afiliado à IGDB ou Twitch"
+  },
+  "errors": {
+    "gameNotFound": "Jogo não encontrado",
+    "gameNotFoundDesc": "O jogo que você procura não existe ou não pôde ser carregado.",
+    "backToSearch": "Voltar à busca",
+    "failedToLoad": "Falha ao carregar o jogo"
+  },
+  "searchLoading": {
+    "0": "Escaneando o multiverso em busca do seu jogo...",
+    "1": "Perguntando aos NPCs se eles o viram...",
+    "2": "Verificando atrás das almofadas do sofá...",
+    "3": "Carregando... insira uma moeda para continuar",
+    "4": "Consultando os antigos pergaminhos de jogos...",
+    "5": "Subornando os elfos do banco de dados...",
+    "6": "Rolando um D20 para os resultados da busca...",
+    "7": "Fazendo speedrun desta consulta...",
+    "8": "Desbloqueando o nível secreto...",
+    "9": "Aquecendo o capacitor de fluxo...",
+    "10": "Baixando mais RAM...",
+    "11": "Ensinando a IA a apreciar bons jogos...",
+    "12": "Derrotando o chefão final do lag...",
+    "13": "Analisando pixels com paixão...",
+    "14": "Ressurgindo os resultados da busca...",
+    "15": "Conquista desbloqueada: Paciência!",
+    "16": "Bufferizando... como em 2005",
+    "17": "Convencendo os elétrons a se moverem mais rápido...",
+    "18": "Reunindo os Vingadores dos games...",
+    "19": "Quase lá... só mais uma tela de carregamento..."
+  },
+  "sorting": {
+    "title": "Ordenar por",
+    "relevance": "Relevância",
+    "nameAsc": "Nome (A-Z)",
+    "nameDesc": "Nome (Z-A)",
+    "newest": "Data de lançamento (Mais novos)",
+    "oldest": "Data de lançamento (Mais antigos)",
+    "ratingDesc": "Nota (Maior)",
+    "ratingAsc": "Nota (Menor)"
   },
   "gameStatus": {
     "0": "Lançado",

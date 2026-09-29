@@ -1,6 +1,8 @@
 import { useCallback, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import { useTranslation } from 'react-i18next';
+import i18n from '@/config/i18n';
 import { store, type RootState } from '@/store/store';
 import { selectPrevious, selectNext, clearSelection } from '@/store/slices/resultsSlice';
 import { GameDetail } from '@/features/dashboard/GameDetail';
@@ -21,7 +23,7 @@ export const Route = createFileRoute('/game/$gameId')({
       const fetched = await fetchGameById(gameId);
       return { game: fetched, error: null };
     } catch (err) {
-      return { game: null, error: err instanceof Error ? err.message : 'Failed to load game' };
+      return { game: null, error: err instanceof Error ? err.message : i18n.t('errors.failedToLoad') };
     }
   },
   component: GameDetailPage,
@@ -29,6 +31,7 @@ export const Route = createFileRoute('/game/$gameId')({
 
 function GameDetailPage() {
   const { game, error } = Route.useLoaderData();
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -74,15 +77,15 @@ function GameDetailPage() {
   if (error || !game) {
     return (
       <div className="flex flex-col items-center justify-center py-20 px-8 text-center space-y-4">
-        <h2 className="text-2xl font-heading text-destructive">Game Not Found</h2>
+        <h2 className="text-2xl font-heading text-destructive">{t('errors.gameNotFound')}</h2>
         <p className="text-sm font-base opacity-70">
-          {error || "The game you're looking for doesn't exist or couldn't be loaded."}
+          {error || t('errors.gameNotFoundDesc')}
         </p>
         <button 
           onClick={() => navigate({ to: '/' })}
           className="px-4 py-2 bg-main text-main-foreground rounded-base border-2 border-border font-heading hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all shadow-shadow"
         >
-          Back to Search
+          {t('errors.backToSearch')}
         </button>
       </div>
     );
