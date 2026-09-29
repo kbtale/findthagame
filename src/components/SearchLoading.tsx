@@ -1,30 +1,11 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Progress } from './ui/progress';
 
-const LOADING_MESSAGES = [
-  "Scanning the multiverse for your game...",
-  "Asking NPCs if they've seen it...",
-  "Checking behind the couch cushions...",
-  "Loading... please insert coin to continue",
-  "Consulting the ancient game scrolls...",
-  "Bribing the database elves...",
-  "Rolling a D20 for search results...",
-  "Speedrunning this query...",
-  "Unlocking the secret level...",
-  "Warming up the flux capacitor...",
-  "Downloading more RAM...",
-  "Teaching AI to appreciate good games...",
-  "Defeating the final boss of lag...",
-  "Parsing pixels with passion...",
-  "Respawning search results...",
-  "Achievement unlocked: Patience!",
-  "Buffering... like it's 2005 again",
-  "Convincing electrons to move faster...",
-  "Assembling the Avengers of gaming...",
-  "Almost there... just one more loading screen...",
-];
+const LOADING_KEYS = Array.from({ length: 20 }, (_, i) => `searchLoading.${i}`);
 
 export const SearchLoading = () => {
+  const { t } = useTranslation();
   const [progress, setProgress] = useState(0);
   const [messageIndex, setMessageIndex] = useState(0);
 
@@ -50,7 +31,7 @@ export const SearchLoading = () => {
     
     // Rotate messages every 3 seconds
     const messageInterval = setInterval(() => {
-      setMessageIndex(prev => (prev + 1) % LOADING_MESSAGES.length);
+      setMessageIndex(prev => (prev + 1) % LOADING_KEYS.length);
     }, 3000);
     
     return () => clearInterval(messageInterval);
@@ -60,7 +41,7 @@ export const SearchLoading = () => {
     <div className="flex flex-col items-center justify-center py-20 px-8 text-center">
       <div className="w-full max-w-md space-y-6">
         <p className="text-lg font-base text-text animate-pulse min-h-[2rem]">
-          {LOADING_MESSAGES[messageIndex]}
+          {t(LOADING_KEYS[messageIndex])}
         </p>
         <Progress value={progress} />
       </div>

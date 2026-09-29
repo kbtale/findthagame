@@ -120,17 +120,17 @@ export const FilterPanel = ({ onSearch, onClearAll, isLoading = false, searchTer
   const TAGS_OPTIONS = useMemo(() => {
     const genreOptions = GENRES.map(g => ({ 
       value: `G-${g.id}`, 
-      label: g.name, 
+      label: t(`genres.${g.id}`, g.name), 
       type: 'Genre' 
     }));
-    const themeOptions = THEMES.map(t => ({ 
-      value: `T-${t.id}`, 
-      label: t.name, 
+    const themeOptions = THEMES.map(th => ({ 
+      value: `T-${th.id}`, 
+      label: t(`themes.${th.id}`, th.name), 
       type: 'Theme' 
     }));
     
     return [...genreOptions, ...themeOptions].sort((a, b) => a.label.localeCompare(b.label));
-  }, []);
+  }, [t]);
 
   // Calculate current selected tags from separate Redux states
   const currentTags = useMemo(() => [
@@ -183,7 +183,7 @@ export const FilterPanel = ({ onSearch, onClearAll, isLoading = false, searchTer
           <div className="space-y-1.5">
             <Label className="text-xs uppercase font-heading">{t('filters.category')}</Label>
             <Combobox
-              options={GAME_CATEGORIES.map(c => ({ value: c.id.toString(), label: c.name }))}
+              options={GAME_CATEGORIES.map(c => ({ value: c.id.toString(), label: t(`gameCategory.${c.id}`, c.name) }))}
               value={filters.categoryId?.toString() ?? null}
               onValueChange={(val) => dispatch(setCategoryId(val ? Number(val) : null))}
               placeholder={t('filters.anyCategory')}
@@ -197,7 +197,7 @@ export const FilterPanel = ({ onSearch, onClearAll, isLoading = false, searchTer
           <div className="space-y-1.5">
             <Label className="text-xs uppercase font-heading">{t('filters.status')}</Label>
             <Combobox
-              options={GAME_STATUSES.map(s => ({ value: s.id.toString(), label: s.name }))}
+              options={GAME_STATUSES.map(s => ({ value: s.id.toString(), label: t(`gameStatus.${s.id}`, s.name) }))}
               value={filters.statusId?.toString() ?? null}
               onValueChange={(val) => dispatch(setStatusId(val ? Number(val) : null))}
               placeholder={t('filters.anyStatus')}
@@ -223,7 +223,7 @@ export const FilterPanel = ({ onSearch, onClearAll, isLoading = false, searchTer
         <div className="space-y-1.5">
           <Label className="text-xs uppercase font-heading">{t('filters.platform')}</Label>
           <Combobox
-            options={PLATFORMS.map(p => ({ value: p.id.toString(), label: p.name }))}
+            options={PLATFORMS.map(p => ({ value: p.id.toString(), label: t(`platforms.${p.id}`, p.name) }))}
             value={filters.platformId?.toString() ?? null}
             onValueChange={(val) => dispatch(setPlatformId(val ? Number(val) : null))}
             placeholder={t('filters.anyPlatform')}
@@ -328,7 +328,7 @@ export const FilterPanel = ({ onSearch, onClearAll, isLoading = false, searchTer
           <div className="space-y-1.5">
             <Label className="text-xs uppercase font-heading">{t('filters.mode')}</Label>
             <Combobox
-              options={GAME_MODES.map(m => ({ value: m.id.toString(), label: m.name }))}
+              options={GAME_MODES.map(m => ({ value: m.id.toString(), label: t(`gameModes.${m.id}`, m.name) }))}
               value={filters.gameModeId?.toString() ?? null}
               onValueChange={(val) => dispatch(setGameModeId(val ? Number(val) : null))}
               placeholder={t('filters.anyMode')}
@@ -342,7 +342,7 @@ export const FilterPanel = ({ onSearch, onClearAll, isLoading = false, searchTer
           <div className="space-y-1.5">
             <Label className="text-xs uppercase font-heading">{t('filters.view')}</Label>
             <Combobox
-              options={PERSPECTIVES.map(p => ({ value: p.id.toString(), label: p.name }))}
+              options={PERSPECTIVES.map(p => ({ value: p.id.toString(), label: t(`perspectives.${p.id}`, p.name) }))}
               value={filters.perspectiveId?.toString() ?? null}
               onValueChange={(val) => dispatch(setPerspectiveId(val ? Number(val) : null))}
               placeholder={t('filters.anyView')}

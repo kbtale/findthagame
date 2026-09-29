@@ -20,4 +20,14 @@ export default defineConfig([
       globals: globals.browser,
     },
   },
+  {
+    files: ['**/*.{ts,tsx}'],
+    rules: {
+      // Allow Route consts, hooks, and cva variants in component files.
+      'react-refresh/only-export-components': [
+        'error',
+        { allowExportNames: ['Route', 'useFavorites', 'badgeVariants', 'buttonVariants'] },
+      ],
+    },
+  },
 ])

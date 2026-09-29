@@ -6,6 +6,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { BookmarkX } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import type { RecentSearch } from '@/hooks/useRecentSearches';
 
 interface SavedSearchesDialogProps {
@@ -23,6 +24,7 @@ export const SavedSearchesDialog = ({
   onSelectSearch,
   onUnbookmark,
 }: SavedSearchesDialogProps) => {
+  const { t } = useTranslation();
   const handleSelect = (search: RecentSearch) => {
     onSelectSearch(search);
     onOpenChange(false);
@@ -35,32 +37,32 @@ export const SavedSearchesDialog = ({
       parts.push(`"${search.filters.search}"`);
     }
     if (search.filters.genreIds?.length) {
-      parts.push(`${search.filters.genreIds.length} genres`);
+      parts.push(t('savedSearches.nGenres', { count: search.filters.genreIds.length }));
     }
     if (search.filters.themeIds?.length) {
-      parts.push(`${search.filters.themeIds.length} themes`);
+      parts.push(t('savedSearches.nThemes', { count: search.filters.themeIds.length }));
     }
     if (search.filters.platformId) {
-      parts.push('platform filter');
+      parts.push(t('savedSearches.platformFilter'));
     }
     if (search.filters.yearRange && 
         (search.filters.yearRange[0] !== 1970 || search.filters.yearRange[1] !== 2026)) {
       parts.push(`${search.filters.yearRange[0]}-${search.filters.yearRange[1]}`);
     }
     
-    return parts.length > 0 ? parts.join(' • ') : 'No filters';
+    return parts.length > 0 ? parts.join(' • ') : t('savedSearches.noFilters');
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-lg max-h-[80vh] overflow-hidden flex flex-col">
         <DialogHeader>
-          <DialogTitle className="font-heading text-xl">Saved Searches</DialogTitle>
+          <DialogTitle className="font-heading text-xl">{t('savedSearches.title')}</DialogTitle>
         </DialogHeader>
         
         {bookmarkedSearches.length === 0 ? (
           <div className="flex-1 flex items-center justify-center py-12 text-muted-foreground text-center">
-            <p>No saved searches yet.<br />Bookmark searches from your history!</p>
+            <p>{t('savedSearches.emptyTitle')}<br />{t('savedSearches.emptyHint')}</p>
           </div>
         ) : (
           <div className="flex-1 overflow-y-auto space-y-2 pr-2 scrollbar-neo">
@@ -75,7 +77,7 @@ export const SavedSearchesDialog = ({
                     {getSearchLabel(search)}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {search.resultCount} results • {new Date(search.timestamp).toLocaleDateString()}
+                    {search.resultCount} {t('dashboard.results')} • {new Date(search.timestamp).toLocaleDateString()}
                   </p>
                 </div>
 
@@ -87,7 +89,7 @@ export const SavedSearchesDialog = ({
                     e.stopPropagation();
                     onUnbookmark(search.id);
                   }}
-                  title="Remove bookmark"
+                  title={t('savedSearches.removeBookmark')}
                 >
                   <BookmarkX className="w-4 h-4" />
                 </Button>

@@ -6,7 +6,9 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import type { GameResult } from '@/models/AppTypes';
+import { optionLabel } from '@/lib/optionLabels';
 
 interface FavoritesDialogProps {
   open: boolean;
@@ -23,6 +25,7 @@ export const FavoritesDialog = ({
   onSelectGame,
   onRemoveFavorite,
 }: FavoritesDialogProps) => {
+  const { t } = useTranslation();
   const handleSelectGame = (game: GameResult) => {
     onSelectGame(game);
     onOpenChange(false);
@@ -32,12 +35,12 @@ export const FavoritesDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[80vh] overflow-hidden flex flex-col">
         <DialogHeader>
-          <DialogTitle className="font-heading text-xl">Favorite Games</DialogTitle>
+          <DialogTitle className="font-heading text-xl">{t('favorites.title')}</DialogTitle>
         </DialogHeader>
         
         {favorites.length === 0 ? (
           <div className="flex-1 flex items-center justify-center py-12 text-muted-foreground">
-            <p>No favorites yet. Click the heart icon on a game to add it!</p>
+            <p>{t('favorites.empty')}</p>
           </div>
         ) : (
           <div className="flex-1 overflow-y-auto space-y-2 pr-2 scrollbar-neo">
@@ -64,7 +67,7 @@ export const FavoritesDialog = ({
                 <div className="flex-1 min-w-0">
                   <h3 className="font-heading text-sm truncate">{game.title}</h3>
                   <p className="text-xs text-muted-foreground">
-                    {game.year ?? 'Unknown year'} • {game.platforms?.slice(0, 2).join(', ')}
+                    {game.year ?? t('favorites.unknownYear')} • {game.platforms?.slice(0, 2).map((p) => optionLabel(t, 'platforms', p)).join(', ')}
                   </p>
                 </div>
 
@@ -77,7 +80,7 @@ export const FavoritesDialog = ({
                     e.stopPropagation();
                     onRemoveFavorite(game.id);
                   }}
-                  title="Remove from favorites"
+                  title={t('favorites.removeTitle')}
                 >
                   <X className="w-4 h-4" />
                 </Button>

@@ -17,6 +17,8 @@ export const Route = createFileRoute('/')({
   component: SearchResultsPage,
 });
 
+// Route pattern: fast refresh intentionally skipped.
+// eslint-disable-next-line react-refresh/only-export-components
 function SearchResultsPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
