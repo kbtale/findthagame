@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, ChevronLeft, ChevronRight, Languages, Heart, Share2 } from 'lucide-react';
 import { toast } from 'sonner';
 import type { GameResult } from '@/models/AppTypes';
+import { optionLabel } from '@/lib/optionLabels';
 import { updateGameTranslation } from '@/store/slices/resultsSlice';
 
 interface NavigationHeaderProps {
@@ -339,7 +340,7 @@ export const GameDetail = ({
                 <div className="flex flex-wrap gap-1 mt-1">
                   {game.genres.map((genre) => (
                     <Badge key={genre} variant="neutral">
-                      {genre}
+                      {optionLabel(t, 'genres', genre)}
                     </Badge>
                   ))}
                 </div>
@@ -353,7 +354,7 @@ export const GameDetail = ({
                 <div className="flex flex-wrap gap-1 mt-1">
                   {game.themes.map((theme) => (
                     <Badge key={theme} variant="neutral">
-                      {theme}
+                      {optionLabel(t, 'themes', theme)}
                     </Badge>
                   ))}
                 </div>
@@ -367,7 +368,7 @@ export const GameDetail = ({
                 <div className="flex flex-wrap gap-1 mt-1">
                   {game.platforms.map((platform) => (
                     <Badge key={platform} variant="neutral">
-                      {platform}
+                      {optionLabel(t, 'platforms', platform)}
                     </Badge>
                   ))}
                 </div>
@@ -381,7 +382,7 @@ export const GameDetail = ({
                 <div className="flex flex-wrap gap-1 mt-1">
                   {game.gameModes.map((mode) => (
                     <Badge key={mode} variant="neutral">
-                      {mode}
+                      {optionLabel(t, 'gameModes', mode)}
                     </Badge>
                   ))}
                 </div>
@@ -395,7 +396,7 @@ export const GameDetail = ({
                 <div className="flex flex-wrap gap-1 mt-1">
                   {game.perspectives.map((perspective) => (
                     <Badge key={perspective} variant="neutral">
-                      {perspective}
+                      {optionLabel(t, 'perspectives', perspective)}
                     </Badge>
                   ))}
                 </div>
