@@ -7,6 +7,7 @@ import { Progress } from '@/components/ui/progress';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import type { RecentSearch } from '@/hooks/useRecentSearches';
 import { AboutDialog } from '@/components/AboutDialog';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
 // Lazy load Lottie for easter egg cats (same pattern as ResultsGrid)
 const Lottie = lazy(() => 
@@ -248,6 +249,8 @@ export const DashboardLayout = ({
             </Button>
           </div>
           <div className="flex items-center gap-1">
+            {/* Language switcher */}
+            <LanguageSwitcher />
             {/* History - opens recent searches dialog */}
             <Button variant="neutral" size="icon" onClick={() => setRecentSearchesOpen(true)} title="Search History">
               <History className="w-5 h-5" />
@@ -349,6 +352,8 @@ export const DashboardLayout = ({
           
           {/* Right: Menu Buttons */}
           <div className="flex items-center gap-2">
+            {/* Language Switcher */}
+            <LanguageSwitcher />
             {/* Results Count Button - clickable for easter egg */}
             {getResultText() && (
               <Button 

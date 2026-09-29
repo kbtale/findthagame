@@ -6,8 +6,24 @@ import HttpBackend from 'i18next-http-backend';
 
 // Detect browser language and validate against supported languages
 const supportedLanguages = ['en', 'es', 'fr', 'de', 'it', 'pt', 'ja', 'ko', 'zh', 'ru', 'ar'];
-const browserLang = navigator.language.split('-')[0];
-const detectedLang = supportedLanguages.includes(browserLang) ? browserLang : 'en';
+const storageKey = 'ftg-language';
+
+// Use persisted preference first, then fall back to browser detection
+const getInitialLanguage = (): string => {
+  try {
+    const stored = localStorage.getItem(storageKey);
+    if (stored && supportedLanguages.includes(stored)) return stored;
+  } catch {
+    // localStorage unavailable (e.g. privacy mode)
+  }
+  const browserLang = navigator.language.split('-')[0];
+  return supportedLanguages.includes(browserLang) ? browserLang : 'en';
+};
+
+const applyDocumentLanguage = (lng: string) => {
+  document.documentElement.lang = lng;
+  document.documentElement.dir = lng === 'ar' ? 'rtl' : 'ltr';
+};
 
 i18n
   // Register the HttpBackend plugin (loads JSON files via fetch).
@@ -15,7 +31,7 @@ i18n
   // Register the React plugin (connects i18n to React's component tree).
   .use(initReactI18next)
   .init({
-    lng: detectedLang,
+    lng: getInitialLanguage(),
     fallbackLng: 'en',
     
     debug: false,
@@ -29,5 +45,17 @@ i18n
       loadPath: '/locales/{{lng}}/{{ns}}.json',
     },
   });
+
+// Persist the chosen language and keep <html lang>/dir in sync
+i18n.on('languageChanged', (lng) => {
+  try {
+    localStorage.setItem(storageKey, lng);
+  } catch {
+    // localStorage unavailable
+  }
+  applyDocumentLanguage(lng);
+});
+
+applyDocumentLanguage(i18n.language);
 
 export default i18n;
