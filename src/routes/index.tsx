@@ -17,6 +17,9 @@ export const Route = createFileRoute('/')({
   component: SearchResultsPage,
 });
 
+// Route files export the `Route` constant (TanStack Router pattern); fast
+// refresh is intentionally not applicable to them.
+// eslint-disable-next-line react-refresh/only-export-components
 function SearchResultsPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();

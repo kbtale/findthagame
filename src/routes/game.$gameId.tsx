@@ -29,6 +29,9 @@ export const Route = createFileRoute('/game/$gameId')({
   component: GameDetailPage,
 });
 
+// Route files export the `Route` constant (TanStack Router pattern); fast
+// refresh is intentionally not applicable to them.
+// eslint-disable-next-line react-refresh/only-export-components
 function GameDetailPage() {
   const { game, error } = Route.useLoaderData();
   const { t } = useTranslation();

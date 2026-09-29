@@ -20,6 +20,9 @@ import { filterToSearchParams } from '@/lib/searchParams';
 import type { FilterState, GameResult } from '@/models/AppTypes';
 import { generateRandomFilters } from '@/utils/randomFilters';
 
+// Route files export the `Route` constant (TanStack Router pattern); fast
+// refresh is intentionally not applicable to these components.
+// eslint-disable-next-line react-refresh/only-export-components
 const TanStackRouterDevtools =
   process.env.NODE_ENV === 'production'
     ? () => null
@@ -33,6 +36,7 @@ export const Route = createRootRoute({
   component: RootLayout,
 });
 
+// eslint-disable-next-line react-refresh/only-export-components
 function RootLayout() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -68,6 +72,9 @@ function RootLayout() {
     const locationSearch = routerState.location.search as Record<string, unknown>;
     const urlQ = typeof locationSearch.q === 'string' ? locationSearch.q : '';
     if (urlQ && urlQ !== searchTerm) {
+      // Sync the URL query into search state only when it actually changes;
+      // a render-phase sync would reset the field on every keystroke.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSearchTerm(urlQ);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
