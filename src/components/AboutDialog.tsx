@@ -6,6 +6,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Github, Coffee, ExternalLink } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface AboutDialogProps {
   open: boolean;
@@ -13,6 +14,7 @@ interface AboutDialogProps {
 }
 
 export const AboutDialog = ({ open, onOpenChange }: AboutDialogProps) => {
+  const { t } = useTranslation();
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto scrollbar-neo">
@@ -27,23 +29,23 @@ export const AboutDialog = ({ open, onOpenChange }: AboutDialogProps) => {
           {/* Story */}
           <section>
             <p className="text-foreground leading-relaxed">
-              Have you ever had a flashback of a game you played as a kid, maybe on the PS2 or GameBoy, but couldn't remember the name? That's why I built <strong>FindThaGame</strong>. This tool is designed to help you filter through history and rediscover those lost childhood gems.
+              {t('about.intro1')} <strong>FindThaGame</strong>. {t('about.intro2')}
             </p>
           </section>
 
           {/* How it works */}
           <section>
-            <h3 className="font-heading text-base mb-1.5">How it Works</h3>
+            <h3 className="font-heading text-base mb-1.5">{t('about.howItWorks')}</h3>
             <p className="text-muted-foreground leading-relaxed">
-              Simply enter the keywords, genres, or platforms you remember. The site searches through thousands of records to find matches that fit your description.
+              {t('about.howItWorksBody')}
             </p>
           </section>
 
           {/* Data & Credits */}
           <section>
-            <h3 className="font-heading text-base mb-1.5">Data & Credits</h3>
+            <h3 className="font-heading text-base mb-1.5">{t('about.dataCredits')}</h3>
             <p className="text-muted-foreground leading-relaxed">
-              This application is powered by the{' '}
+              {t('about.dataCredits1')}{' '}
               <a
                 href="https://www.igdb.com/"
                 target="_blank"
@@ -52,7 +54,7 @@ export const AboutDialog = ({ open, onOpenChange }: AboutDialogProps) => {
               >
                 IGDB API
               </a>
-              . All game data and imagery are provided by the Internet Game Database. Translations are powered by{' '}
+              {t('about.dataCredits2')}{' '}
               <a
                 href="https://groq.com/"
                 target="_blank"
@@ -60,15 +62,16 @@ export const AboutDialog = ({ open, onOpenChange }: AboutDialogProps) => {
                 className="text-main hover:underline font-medium"
               >
                 Groq AI
-              </a>.
+              </a>
+              {t('about.dataCredits3')}
             </p>
           </section>
 
           {/* Support */}
           <section>
-            <h3 className="font-heading text-base mb-1.5">Support the Project</h3>
+            <h3 className="font-heading text-base mb-1.5">{t('about.supportTitle')}</h3>
             <p className="text-muted-foreground leading-relaxed mb-3">
-              This is a free, open-source project maintained in my spare time. If this tool helped you find a lost memory, consider supporting me!
+              {t('about.supportBody')}
             </p>
             <Button
               size="sm"
@@ -76,7 +79,7 @@ export const AboutDialog = ({ open, onOpenChange }: AboutDialogProps) => {
               className="gap-2 bg-[var(--chart-3)] text-white hover:bg-[var(--chart-3)]/90 border-2 border-border shadow-shadow"
             >
               <Coffee className="w-4 h-4" />
-              Support me on Ko-fi
+              {t('about.supportButton')}
               <ExternalLink className="w-3 h-3 opacity-50" />
             </Button>
           </section>
@@ -99,7 +102,7 @@ export const AboutDialog = ({ open, onOpenChange }: AboutDialogProps) => {
           {/* Creator */}
           <section className="pt-2">
             <p className="text-muted-foreground text-xs">
-              Created by{' '}
+              {t('about.createdBy')}{' '}
               <a
                 href="https://github.com/kbtale"
                 target="_blank"
@@ -113,7 +116,7 @@ export const AboutDialog = ({ open, onOpenChange }: AboutDialogProps) => {
 
           {/* Disclaimer */}
           <section className="text-xs text-muted-foreground/70 italic">
-            <p>Disclaimer: This app is not affiliated with IGDB or Twitch.</p>
+            <p>{t('about.disclaimer')}</p>
           </section>
         </div>
       </DialogContent>

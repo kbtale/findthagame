@@ -428,3 +428,14 @@ export const GAME_STATUSES = [
   { id: 7, name: 'Rumored' },
   { id: 8, name: 'Delisted' },
 ];
+
+// Reverse lookups by (lowercased) name, used to resolve i18n keys (`genres.2`, `platforms.82`, ...)
+// for data that arrives from IGDB as English names (e.g. game detail badges).
+const buildNameMap = (list: { id: number; name: string }[]): Map<string, number> =>
+  new Map(list.map((item) => [item.name.toLowerCase().trim(), item.id]));
+
+export const GENRES_BY_NAME = buildNameMap(GENRES);
+export const THEMES_BY_NAME = buildNameMap(THEMES);
+export const GAME_MODES_BY_NAME = buildNameMap(GAME_MODES);
+export const PERSPECTIVES_BY_NAME = buildNameMap(PERSPECTIVES);
+export const PLATFORMS_BY_NAME = buildNameMap(PLATFORMS);

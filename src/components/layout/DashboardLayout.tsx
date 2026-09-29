@@ -7,6 +7,7 @@ import { Progress } from '@/components/ui/progress';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import type { RecentSearch } from '@/hooks/useRecentSearches';
 import { AboutDialog } from '@/components/AboutDialog';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
 // Lazy load Lottie for easter egg cats (same pattern as ResultsGrid)
 const Lottie = lazy(() => 
@@ -178,7 +179,7 @@ export const DashboardLayout = ({
             size="icon"
             className="bg-main"
             onClick={onOpenFavorites}
-            title="Favorites"
+            title={t('favorites.title')}
           >
             <Heart className="w-5 h-5" fill="currentColor" />
           </Button>
@@ -187,7 +188,7 @@ export const DashboardLayout = ({
             size="icon"
             className="bg-main"
             onClick={onOpenSavedSearches}
-            title="Saved Searches"
+            title={t('savedSearches.title')}
           >
             <Bookmark className="w-5 h-5" fill="currentColor" />
           </Button>
@@ -196,7 +197,7 @@ export const DashboardLayout = ({
             size="icon"
             className="bg-main"
             onClick={onRandomize}
-            title="Randomize Filters"
+            title={t('dashboard.randomizeFilters')}
           >
             <Dice5 className="w-5 h-5" />
           </Button>
@@ -205,7 +206,7 @@ export const DashboardLayout = ({
             size="icon"
             className="bg-main"
             onClick={() => setAboutOpen(true)}
-            title="About"
+            title={t('dashboard.about')}
           >
             <Info className="w-5 h-5" />
           </Button>
@@ -241,29 +242,31 @@ export const DashboardLayout = ({
               variant="neutral"
               size="icon"
               onClick={() => setAboutOpen(true)}
-              title="About"
+              title={t('dashboard.about')}
               className="h-8 w-8"
             >
               <Info className="w-4 h-4" />
             </Button>
           </div>
           <div className="flex items-center gap-1">
+            {/* Language switcher */}
+            <LanguageSwitcher />
             {/* History - opens recent searches dialog */}
-            <Button variant="neutral" size="icon" onClick={() => setRecentSearchesOpen(true)} title="Search History">
+            <Button variant="neutral" size="icon" onClick={() => setRecentSearchesOpen(true)} title={t('dashboard.recentInquiries')}>
               <History className="w-5 h-5" />
             </Button>
             {onOpenSavedSearches && (
-              <Button variant="neutral" size="icon" onClick={onOpenSavedSearches} title="Saved Searches">
+              <Button variant="neutral" size="icon" onClick={onOpenSavedSearches} title={t('savedSearches.title')}>
                 <BookmarkCheck className="w-5 h-5" />
               </Button>
             )}
             {onOpenFavorites && (
-              <Button variant="neutral" size="icon" onClick={onOpenFavorites} title="Favorites">
+              <Button variant="neutral" size="icon" onClick={onOpenFavorites} title={t('favorites.title')}>
                 <Heart className="w-5 h-5" />
               </Button>
             )}
             {onRandomize && (
-              <Button variant="neutral" size="icon" onClick={onRandomize} title="Random Search">
+              <Button variant="neutral" size="icon" onClick={onRandomize} title={t('dashboard.randomSearch')}>
                 <Dice5 className="w-5 h-5" />
               </Button>
             )}
@@ -349,6 +352,8 @@ export const DashboardLayout = ({
           
           {/* Right: Menu Buttons */}
           <div className="flex items-center gap-2">
+            {/* Language Switcher */}
+            <LanguageSwitcher />
             {/* Results Count Button - clickable for easter egg */}
             {getResultText() && (
               <Button 
@@ -390,7 +395,7 @@ export const DashboardLayout = ({
         {/* Footer */}
         <footer className="hidden lg:block mt-auto mx-0 mb-0 p-4 border-2 border-border bg-main shadow-shadow rounded-base">
           <div className="flex items-center justify-center gap-4 flex-wrap">
-            <span className="text-sm text-main-foreground">Powered by the</span>
+            <span className="text-sm text-main-foreground">{t('about.poweredBy')}</span>
             <Button 
               variant="neutral" 
               size="sm" 
@@ -418,14 +423,14 @@ export const DashboardLayout = ({
                 Groq AI
               </a>
             </Button>
-            <span className="text-sm text-main-foreground italic">Not affiliated with IGDB or Twitch</span>
+            <span className="text-sm text-main-foreground italic">{t('about.notAffiliated')}</span>
             <Button 
               size="sm"
               onClick={() => window.open('https://ko-fi.com/U7U11S2E9Q', '_blank')}
               className="gap-2 bg-[var(--chart-3)] text-white hover:bg-[var(--chart-3)]/90 border-2 border-border shadow-shadow"
             >
               <Coffee className="w-4 h-4" />
-              Support me on Ko-fi
+              {t('about.supportButton')}
               <ExternalLink className="w-3 h-3 opacity-50" />
             </Button>
           </div>
@@ -488,7 +493,7 @@ export const DashboardLayout = ({
                         e.stopPropagation();
                         onToggleBookmark?.(search.id);
                       }}
-                      title={search.isBookmarked ? 'Remove bookmark' : 'Bookmark this search'}
+                      title={search.isBookmarked ? t('savedSearches.removeBookmark') : t('savedSearches.bookmarkSearch')}
                     >
                       <Bookmark className="w-4 h-4" fill={search.isBookmarked ? "currentColor" : "none"} />
                     </Button>
