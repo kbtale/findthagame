@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { describeGame } from '@/api/client';
-import type { DescribeGameResponse } from '@/models/DescribeGame';
+import { findFilters } from '@/api/client';
+import type { FiltersResponse } from '@/models/SearchFilters';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Sparkles } from 'lucide-react';
 
 interface DescribeGameProps {
-  onDescribed: (result: DescribeGameResponse) => void;
+  onDescribed: (result: FiltersResponse) => void;
 }
 
 export const DescribeGame = ({ onDescribed }: DescribeGameProps) => {
@@ -24,7 +23,7 @@ export const DescribeGame = ({ onDescribed }: DescribeGameProps) => {
     setError(null);
 
     try {
-      const result = await describeGame(text);
+      const result = await findFilters(text);
       onDescribed(result);
     } catch {
       setError(t('describe.error'));
@@ -48,16 +47,14 @@ export const DescribeGame = ({ onDescribed }: DescribeGameProps) => {
         className="resize-y shadow-shadow"
       />
 
-      <div className="mt-2 flex flex-col gap-2">
+      <div className="mt-2">
         <Button
           onClick={handleDescribe}
           disabled={isParsing || description.trim().length === 0}
           className="w-full"
         >
-          <Sparkles className="w-4 h-4" />
-          {isParsing ? t('describe.loading') : t('describe.button')}
+          {t('describe.button')}
         </Button>
-        <p className="text-xs text-muted-foreground">{t('describe.hint')}</p>
       </div>
 
       {error && <p className="mt-2 text-sm font-heading">{error}</p>}

@@ -1,5 +1,5 @@
 /**
- * api/describe.ts
+ * api/filters.ts
  *
  * Turns a free-text memory of a game ("I played it as a kid on PS2, it was a
  * racing game with a clown...") into structured search filters using Groq.
@@ -19,7 +19,7 @@ import {
   GAME_STATUSES,
 } from '../src/config/constants.js';
 import { needsTranslation, translateToEnglish } from './_utils/translateSearch.js';
-import type { DescribeFilters } from '../src/models/DescribeGame.js';
+import type { SearchFilters } from '../src/models/SearchFilters.js';
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
@@ -111,8 +111,8 @@ const idList = (value: unknown, validIds: Set<number>): number[] => {
   )];
 };
 
-const normalize = (payload: RawPayload): DescribeFilters => {
-  const filters: DescribeFilters = {};
+const normalize = (payload: RawPayload): SearchFilters => {
+  const filters: SearchFilters = {};
 
   if (typeof payload.search === 'string' && payload.search.trim().length > 0) {
     filters.search = payload.search.trim().split(/\s+/).slice(0, 10).join(' ');
@@ -226,7 +226,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     try {
       payload = JSON.parse(raw) as ModelFilterPayload;
     } catch {
-      console.error('Describe: model returned invalid JSON:', raw);
+      console.error('filters: model returned invalid JSON:', raw);
     }
 
     const filters = normalize(payload);
@@ -236,7 +236,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       search: typeof filters.search === 'string' ? filters.search : '',
     });
   } catch (error) {
-    console.error('Describe error:', error);
+    console.error('filters endpoint error:', error);
     return res.status(500).json({ error: 'Failed to parse description' });
   }
 }

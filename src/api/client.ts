@@ -6,7 +6,7 @@
 
 import axios, { AxiosError } from 'axios';
 import type { FilterState, GameResult } from '@/models/AppTypes';
-import type { DescribeGameResponse } from '@/models/DescribeGame';
+import type { FiltersResponse } from '@/models/SearchFilters';
 import type { IGDBGame } from '@/models/IGDBTypes';
 import i18n from '@/config/i18n';
 
@@ -124,8 +124,8 @@ export const fetchGameById = async (id: number): Promise<GameResult> => {
   return mapIGDBGameToGameResult(data);
 };
 
-export const describeGame = async (description: string): Promise<DescribeGameResponse> => {
-  const { data } = await agent.post<DescribeGameResponse>('/describe', {
+export const findFilters = async (description: string): Promise<FiltersResponse> => {
+  const { data } = await agent.post<FiltersResponse>('/filters', {
     description,
     uiLanguage: i18n.language || 'en',
   });

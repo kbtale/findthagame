@@ -11,7 +11,7 @@ import { FilterPanel } from '@/features/dashboard/filterPanel';
 import { DescribeGame } from '@/features/dashboard/DescribeGame';
 import { Input } from '@/components/ui/input';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Search, Sparkles } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { toast } from 'sonner';
 import { useRecentSearches, RecentSearchesContext, type RecentSearch } from '@/hooks/useRecentSearches';
 import { useFavorites } from '@/hooks/useFavorites';
@@ -20,7 +20,7 @@ import { SavedSearchesDialog } from '@/components/SavedSearchesDialog';
 import { Toaster } from '@/components/ui/sonner';
 import { filterToSearchParams } from '@/lib/searchParams';
 import type { FilterState, GameResult } from '@/models/AppTypes';
-import type { DescribeGameResponse } from '@/models/DescribeGame';
+import type { FiltersResponse } from '@/models/SearchFilters';
 import { generateRandomFilters } from '@/utils/randomFilters';
 
 // Route pattern: fast refresh intentionally skipped.
@@ -117,7 +117,7 @@ function RootLayout() {
 
   // Applies the filters extracted from a free-text description to the filter
   // panel (and the keywords box), so the user can review them before searching.
-  const handleDescribed = (result: DescribeGameResponse) => {
+  const handleDescribed = (result: FiltersResponse) => {
     const filledFilters = { ...filters, ...result.filters };
 
     if (result.search) {
@@ -125,9 +125,7 @@ function RootLayout() {
     }
 
     dispatch(setAllFilters(filledFilters));
-    toast(t('describe.filled'), {
-      icon: React.createElement(Sparkles, { className: 'w-4 h-4' }),
-    });
+    toast(t('describe.filled'));
   };
 
   const handleSelectFavorite = (game: GameResult) => {
