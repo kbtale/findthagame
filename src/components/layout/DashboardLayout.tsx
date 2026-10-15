@@ -174,7 +174,7 @@ export const DashboardLayout = ({
             >
               {brandHeader}
 
-              {/* Ko-fi Support Badge - corner of the logo */}
+              {/* Ko-fi Support Badge - bottom-right corner of the logo */}
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -184,7 +184,7 @@ export const DashboardLayout = ({
                       rel="noopener noreferrer"
                       aria-label={t('about.supportButton')}
                       onClick={(e) => e.stopPropagation()}
-                      className="absolute -top-3 -right-3 z-20 flex items-center justify-center w-8 h-8 rounded-full bg-[var(--chart-3)] text-white border-2 border-border shadow-shadow hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all cursor-pointer"
+                      className="absolute -bottom-3 -right-3 z-20 flex items-center justify-center w-8 h-8 rounded-full bg-[var(--chart-3)] text-white border-2 border-border shadow-shadow hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all cursor-pointer"
                     >
                       <Coffee className="w-4 h-4" />
                     </a>
