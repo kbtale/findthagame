@@ -226,7 +226,7 @@
   "describe": {
     "title": "Describe what you remember",
     "placeholder": "I played it as a kid in 2005 on the PS2. It was a racing game with clowns and monster trucks, and you could play split screen with a friend...",
-    "button": "Find game",
+    "button": "Search",
     "error": "Couldn't read your description. Please try again.",
     "filled": "Filters filled from your description. Review them on the left."
   },

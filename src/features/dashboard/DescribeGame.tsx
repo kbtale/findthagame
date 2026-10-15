@@ -33,7 +33,7 @@ export const DescribeGame = ({ onDescribed }: DescribeGameProps) => {
   };
 
   return (
-    <div className="w-full max-w-xl text-left">
+    <div className="w-full max-w-4xl text-left">
       <label className="text-xs font-heading uppercase tracking-widest mb-2 block">
         {t('describe.title')}
       </label>

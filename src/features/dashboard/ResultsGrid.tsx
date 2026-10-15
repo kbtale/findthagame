@@ -195,7 +195,7 @@ export const ResultsGrid = ({
         </div>
 
         {describeSlot && (
-          <div className="mt-8 flex justify-center">
+          <div className="mt-8 flex w-full justify-center">
             {describeSlot}
           </div>
         )}
