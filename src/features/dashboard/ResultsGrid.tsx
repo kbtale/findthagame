@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, lazy, Suspense, type ComponentType } from 'react';
+import { useState, useEffect, useMemo, lazy, Suspense, type ComponentType, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { GameResult } from '@/models/AppTypes';
 import type { MouseEvent } from 'react';
@@ -56,6 +56,7 @@ interface ResultsGridProps {
   onViewModeChange?: (mode: 'card' | 'list') => void;
   sortBy?: string;
   onSortByChange?: (sortBy: string) => void;
+  describeSlot?: ReactNode;
 }
 
 export const ResultsGrid = ({ 
@@ -68,7 +69,8 @@ export const ResultsGrid = ({
   viewMode = 'card',
   onViewModeChange,
   sortBy = 'relevance',
-  onSortByChange
+  onSortByChange,
+  describeSlot
 }: ResultsGridProps) => {
   const { t } = useTranslation();
   
@@ -191,6 +193,12 @@ export const ResultsGrid = ({
             {t('dashboard.optionalFieldsHint')}
           </p>
         </div>
+
+        {describeSlot && (
+          <div className="mt-8 flex justify-center">
+            {describeSlot}
+          </div>
+        )}
       </div>
     );
   }

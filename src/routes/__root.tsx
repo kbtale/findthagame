@@ -1,4 +1,4 @@
-import React, { useState, Suspense, useEffect } from 'react';
+import React, { useState, Suspense, useEffect, createContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import { createRootRoute, Outlet, ScrollRestoration, useNavigate, useRouterState } from '@tanstack/react-router';
@@ -8,9 +8,11 @@ import { setAllFilters, resetFilters } from '@/store/slices/detectiveSlice';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { resetLastSearchedUrlKey } from '@/lib/searchKey';
 import { FilterPanel } from '@/features/dashboard/filterPanel';
+import { DescribeGame } from '@/features/dashboard/DescribeGame';
 import { Input } from '@/components/ui/input';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Search } from 'lucide-react';
+import { Search, Sparkles } from 'lucide-react';
+import { toast } from 'sonner';
 import { useRecentSearches, RecentSearchesContext, type RecentSearch } from '@/hooks/useRecentSearches';
 import { useFavorites } from '@/hooks/useFavorites';
 import { FavoritesDialog } from '@/components/FavoritesDialog';
@@ -18,6 +20,7 @@ import { SavedSearchesDialog } from '@/components/SavedSearchesDialog';
 import { Toaster } from '@/components/ui/sonner';
 import { filterToSearchParams } from '@/lib/searchParams';
 import type { FilterState, GameResult } from '@/models/AppTypes';
+import type { DescribeGameResponse } from '@/models/DescribeGame';
 import { generateRandomFilters } from '@/utils/randomFilters';
 
 // Route pattern: fast refresh intentionally skipped.
@@ -30,6 +33,9 @@ const TanStackRouterDevtools =
           default: res.TanStackRouterDevtools,
         })),
       );
+
+// Slot rendered by the home route inside the "welcome" hero. Null on other routes.
+export const DescribeSlotContext = createContext<React.ReactNode>(null);
 
 export const Route = createRootRoute({
   component: RootLayout,
@@ -109,6 +115,21 @@ function RootLayout() {
     navigate({ to: '/', search: filterToSearchParams(randomFilters) });
   };
 
+  // Applies the filters extracted from a free-text description to the filter
+  // panel (and the keywords box), so the user can review them before searching.
+  const handleDescribed = (result: DescribeGameResponse) => {
+    const filledFilters = { ...filters, ...result.filters };
+
+    if (result.search) {
+      setSearchTerm(result.search);
+    }
+
+    dispatch(setAllFilters(filledFilters));
+    toast(t('describe.filled'), {
+      icon: React.createElement(Sparkles, { className: 'w-4 h-4' }),
+    });
+  };
+
   const handleSelectFavorite = (game: GameResult) => {
     dispatch(selectExternalGame({ game, origin: { x: 0, y: 0, width: 0, height: 0 } }));
     setFavoritesOpen(false);
@@ -180,6 +201,7 @@ function RootLayout() {
 
   return (
     <>
+      <DescribeSlotContext.Provider value={<DescribeGame onDescribed={handleDescribed} />}>
       <RecentSearchesContext.Provider value={{ addSearch }}>
         <DashboardLayout
           brandHeader={brandHeader}
@@ -204,6 +226,7 @@ function RootLayout() {
           onOpenSavedSearches={handleOpenSavedSearches}
         />
       </RecentSearchesContext.Provider>
+      </DescribeSlotContext.Provider>
       
       <FavoritesDialog
         open={isFavoritesOpen}

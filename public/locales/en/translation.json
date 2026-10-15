@@ -223,6 +223,15 @@
     "poweredBy": "Powered by the",
     "notAffiliated": "Not affiliated with IGDB or Twitch"
   },
+  "describe": {
+    "title": "Describe what you remember",
+    "placeholder": "I played it as a kid in 2005 on the PS2. It was a racing game with clowns and monster trucks, and you could play split screen with a friend...",
+    "button": "Find it with AI",
+    "loading": "Reading your memory...",
+    "hint": "Write everything you remember. The AI fills the filters on the left for you.",
+    "error": "Couldn't read your description. Please try again.",
+    "filled": "Filters filled from your description. Review them on the left."
+  },
   "errors": {
     "gameNotFound": "Game Not Found",
     "gameNotFoundDesc": "The game you're looking for doesn't exist or couldn't be loaded.",
