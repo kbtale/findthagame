@@ -14,12 +14,31 @@ interface DescribeGameProps {
   onSearch?: (filters: Partial<FilterState>, search: string) => void;
 }
 
+const DRAFT_KEY = 'ftg-describe-draft';
+
+const readDraft = () => {
+  try {
+    return sessionStorage.getItem(DRAFT_KEY) ?? '';
+  } catch {
+    return '';
+  }
+};
+
 export const DescribeGame = ({ onDescribed, compact = false, onSearch }: DescribeGameProps) => {
   const { t } = useTranslation();
-  const [description, setDescription] = useState('');
+  const [description, setDescription] = useState(readDraft);
   const [isParsing, setIsParsing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setModalOpen] = useState(false);
+
+  const handleDescriptionChange = (value: string) => {
+    setDescription(value);
+    try {
+      sessionStorage.setItem(DRAFT_KEY, value);
+    } catch {
+      // storage unavailable, the draft simply will not survive navigation
+    }
+  };
 
   const handleDescribe = async () => {
     const text = description.trim();
@@ -31,7 +50,6 @@ export const DescribeGame = ({ onDescribed, compact = false, onSearch }: Describ
     try {
       const result = await findFilters(text);
       onDescribed(result);
-      setDescription('');
       setModalOpen(false);
 
       // Parsing finished, so run the search right away. The user pressed
@@ -54,7 +72,7 @@ export const DescribeGame = ({ onDescribed, compact = false, onSearch }: Describ
 
       <Textarea
         value={description}
-        onChange={(e) => setDescription(e.target.value)}
+        onChange={(e) => handleDescriptionChange(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
@@ -86,9 +104,9 @@ export const DescribeGame = ({ onDescribed, compact = false, onSearch }: Describ
     return (
       <Dialog open={isModalOpen} onOpenChange={setModalOpen}>
         <DialogTrigger asChild>
-          <Button variant="neutral" size="sm" className="px-2 md:px-3" title={t('describe.trigger')}>
+          <Button variant="neutral" size="sm" className="w-full md:w-auto md:px-3" title={t('describe.trigger')}>
             <PencilLine className="h-4 w-4" />
-            <span className="hidden md:inline">{t('describe.trigger')}</span>
+            {t('describe.trigger')}
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-2xl">

@@ -227,7 +227,7 @@ export const ResultsGrid = ({
     <div className="flex flex-col gap-6 pb-20">
       <div className="flex flex-wrap gap-2">
         {describeHandler && (
-          <div className="w-full md:order-3 md:w-auto">
+          <div className="w-full md:order-2 md:mr-auto md:w-auto">
             <DescribeGame
               onDescribed={describeHandler}
               onSearch={onSearchFilters}
@@ -235,7 +235,7 @@ export const ResultsGrid = ({
             />
           </div>
         )}
-        <div className="flex gap-2 items-center w-full justify-end md:ml-auto md:w-auto md:order-2">
+        <div className="flex gap-2 items-center w-full justify-end md:ml-auto md:w-auto md:order-3">
         <Select value={sortBy} onValueChange={onSortByChange}>
           <SelectTrigger className="h-9 w-[180px] md:w-[220px] bg-secondary-background text-foreground shadow-shadow hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none transition-all cursor-pointer">
             <SelectValue placeholder={t('sorting.title')} />
