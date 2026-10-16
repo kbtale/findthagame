@@ -8,7 +8,6 @@ import { setAllFilters, resetFilters } from '@/store/slices/detectiveSlice';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { resetLastSearchedUrlKey } from '@/lib/searchKey';
 import { FilterPanel } from '@/features/dashboard/filterPanel';
-import { DescribeGame } from '@/features/dashboard/DescribeGame';
 import { Input } from '@/components/ui/input';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Search } from 'lucide-react';
@@ -34,8 +33,9 @@ const TanStackRouterDevtools =
         })),
       );
 
-// Slot rendered by the home route inside the "welcome" hero. Null on other routes.
-export const DescribeSlotContext = createContext<React.ReactNode>(null);
+// Handler for the free-text describe feature. The home route renders the box
+// itself (welcome hero and results toolbar). Null on other routes.
+export const DescribeHandlerContext = createContext<((result: FiltersResponse) => void) | null>(null);
 
 export const Route = createRootRoute({
   component: RootLayout,
@@ -199,7 +199,7 @@ function RootLayout() {
 
   return (
     <>
-      <DescribeSlotContext.Provider value={<DescribeGame onDescribed={handleDescribed} />}>
+      <DescribeHandlerContext.Provider value={handleDescribed}>
       <RecentSearchesContext.Provider value={{ addSearch }}>
         <DashboardLayout
           brandHeader={brandHeader}
@@ -224,7 +224,7 @@ function RootLayout() {
           onOpenSavedSearches={handleOpenSavedSearches}
         />
       </RecentSearchesContext.Provider>
-      </DescribeSlotContext.Provider>
+      </DescribeHandlerContext.Provider>
       
       <FavoritesDialog
         open={isFavoritesOpen}

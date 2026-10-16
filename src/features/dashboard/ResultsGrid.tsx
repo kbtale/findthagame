@@ -1,10 +1,12 @@
-import { useState, useEffect, useMemo, lazy, Suspense, type ComponentType, type ReactNode } from 'react';
+import { useState, useEffect, useMemo, lazy, Suspense, type ComponentType } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { GameResult } from '@/models/AppTypes';
+import type { FiltersResponse } from '@/models/SearchFilters';
 import type { MouseEvent } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { LayoutGrid, List, Star } from 'lucide-react';
+import { DescribeGame } from '@/features/dashboard/DescribeGame';
+import { LayoutGrid, List, Search, Star } from 'lucide-react';
 import {
   Pagination,
   PaginationContent,
@@ -56,7 +58,8 @@ interface ResultsGridProps {
   onViewModeChange?: (mode: 'card' | 'list') => void;
   sortBy?: string;
   onSortByChange?: (sortBy: string) => void;
-  describeSlot?: ReactNode;
+  describeHandler?: ((result: FiltersResponse) => void) | null;
+  searchTerm?: string;
 }
 
 export const ResultsGrid = ({ 
@@ -70,7 +73,8 @@ export const ResultsGrid = ({
   onViewModeChange,
   sortBy = 'relevance',
   onSortByChange,
-  describeSlot
+  describeHandler,
+  searchTerm = ''
 }: ResultsGridProps) => {
   const { t } = useTranslation();
   
@@ -194,9 +198,9 @@ export const ResultsGrid = ({
           </p>
         </div>
 
-        {describeSlot && (
+        {describeHandler && (
           <div className="mt-8 flex w-full justify-center">
-            {describeSlot}
+            <DescribeGame onDescribed={describeHandler} />
           </div>
         )}
       </div>
@@ -221,7 +225,20 @@ export const ResultsGrid = ({
 
   return (
     <div className="flex flex-col gap-6 pb-20">
-      <div className="flex justify-end gap-2 items-center">
+      <div className="flex justify-between gap-2 items-center flex-wrap">
+        <div className="flex items-center gap-2 min-w-0">
+          {searchTerm && (
+            <span
+              className="inline-flex h-9 items-center gap-2 max-w-[200px] md:max-w-[320px] shrink-0 border-2 border-border rounded-base bg-secondary-background px-3 text-sm font-base text-foreground shadow-shadow"
+              title={searchTerm}
+            >
+              <Search className="h-4 w-4 shrink-0" />
+              <span className="truncate">{searchTerm}</span>
+            </span>
+          )}
+          {describeHandler && <DescribeGame onDescribed={describeHandler} compact />}
+        </div>
+        <div className="flex gap-2 items-center">
         <Select value={sortBy} onValueChange={onSortByChange}>
           <SelectTrigger className="h-9 w-[180px] md:w-[220px] bg-secondary-background text-foreground shadow-shadow hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none transition-all cursor-pointer">
             <SelectValue placeholder={t('sorting.title')} />
@@ -255,6 +272,7 @@ export const ResultsGrid = ({
           <List className="h-4 w-4" />
           {t('results.listView')}
         </Button>
+        </div>
       </div>
 
       <div className={viewMode === 'card' ? 'grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6' : 'flex flex-col gap-3'}>

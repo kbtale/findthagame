@@ -4,16 +4,20 @@ import { findFilters } from '@/api/client';
 import type { FiltersResponse } from '@/models/SearchFilters';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { WandSparkles } from 'lucide-react';
 
 interface DescribeGameProps {
   onDescribed: (result: FiltersResponse) => void;
+  compact?: boolean;
 }
 
-export const DescribeGame = ({ onDescribed }: DescribeGameProps) => {
+export const DescribeGame = ({ onDescribed, compact = false }: DescribeGameProps) => {
   const { t } = useTranslation();
   const [description, setDescription] = useState('');
   const [isParsing, setIsParsing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isModalOpen, setModalOpen] = useState(false);
 
   const handleDescribe = async () => {
     const text = description.trim();
@@ -25,6 +29,8 @@ export const DescribeGame = ({ onDescribed }: DescribeGameProps) => {
     try {
       const result = await findFilters(text);
       onDescribed(result);
+      setDescription('');
+      setModalOpen(false);
     } catch {
       setError(t('describe.error'));
     } finally {
@@ -32,11 +38,13 @@ export const DescribeGame = ({ onDescribed }: DescribeGameProps) => {
     }
   };
 
-  return (
-    <div className="w-full max-w-4xl text-left">
-      <label className="text-xs font-heading uppercase tracking-widest mb-2 block">
-        {t('describe.title')}
-      </label>
+  const form = (
+    <>
+      {!compact && (
+        <label className="text-xs font-heading uppercase tracking-widest mb-2 block">
+          {t('describe.title')}
+        </label>
+      )}
 
       <Textarea
         value={description}
@@ -44,6 +52,7 @@ export const DescribeGame = ({ onDescribed }: DescribeGameProps) => {
         placeholder={t('describe.placeholder')}
         disabled={isParsing}
         rows={4}
+        autoFocus={compact}
         className="resize-y shadow-shadow"
       />
 
@@ -58,6 +67,28 @@ export const DescribeGame = ({ onDescribed }: DescribeGameProps) => {
       </div>
 
       {error && <p className="mt-2 text-sm font-heading">{error}</p>}
-    </div>
+    </>
   );
+
+  if (compact) {
+    return (
+      <Dialog open={isModalOpen} onOpenChange={setModalOpen}>
+        <DialogTrigger asChild>
+          <Button variant="neutral" size="sm" className="px-2 md:px-3" title={t('describe.trigger')}>
+            <WandSparkles className="h-4 w-4" />
+            <span className="hidden md:inline">{t('describe.trigger')}</span>
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="font-heading">{t('describe.titleCompact')}</DialogTitle>
+            <DialogDescription>{t('describe.description')}</DialogDescription>
+          </DialogHeader>
+          <div className="text-left">{form}</div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+  return <div className="w-full max-w-4xl text-left">{form}</div>;
 };

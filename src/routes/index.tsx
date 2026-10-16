@@ -9,7 +9,7 @@ import { searchGames } from '@/api/client';
 import { searchParamsToFilter, hasAnyFilter } from '@/lib/searchParams';
 import { getLastSearchedUrlKey, setLastSearchedUrlKey } from '@/lib/searchKey';
 import { RecentSearchesContext } from '@/hooks/useRecentSearches';
-import { DescribeSlotContext } from './__root';
+import { DescribeHandlerContext } from './__root';
 import type { FilterState } from '@/models/AppTypes';
 
 let savedScrollPosition = 0;
@@ -25,7 +25,7 @@ function SearchResultsPage() {
   const navigate = useNavigate();
   const routerState = useRouterState();
   const recentSearchesCtx = useContext(RecentSearchesContext);
-  const describeSlot = useContext(DescribeSlotContext);
+  const describeHandler = useContext(DescribeHandlerContext);
 
   const rawSearch = (routerState.location.search as Record<string, unknown>) ?? {};
   const hasParams = hasAnyFilter(rawSearch);
@@ -35,6 +35,7 @@ function SearchResultsPage() {
   const status = useSelector((state: RootState) => state.results.status);
   const currentPage = useSelector((state: RootState) => state.results.currentPage);
   const sortBy = useSelector((state: RootState) => state.results.sortBy);
+  const searchedTerm = useSelector((state: RootState) => state.detective.search);
 
   const [resultsViewMode, setResultsViewModeState] = useState<'card' | 'list'>(() => {
     return (localStorage.getItem('resultsViewMode') as 'card' | 'list') || 'card';
@@ -132,7 +133,8 @@ function SearchResultsPage() {
         onViewModeChange={setResultsViewMode}
         sortBy={sortBy}
         onSortByChange={handleSortByChange}
-        describeSlot={describeSlot}
+        describeHandler={describeHandler}
+        searchTerm={searchedTerm}
       />
     </div>
   );
