@@ -68,9 +68,15 @@ export const DescribeGame = ({ onDescribed, compact = false, onSearch }: Describ
         className="resize-y shadow-shadow"
       />
 
-      <p className="mt-2 text-xs text-muted-foreground">
-        {isParsing ? t('describe.parsing') : t('describe.enterHint')}
-      </p>
+      <div className="mt-2">
+        <Button
+          onClick={handleDescribe}
+          disabled={isParsing || description.trim().length === 0}
+          className="w-full"
+        >
+          {isParsing ? t('describe.parsing') : t('describe.button')}
+        </Button>
+      </div>
 
       {error && <p className="mt-2 text-sm font-heading">{error}</p>}
     </>
