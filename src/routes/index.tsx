@@ -35,7 +35,6 @@ function SearchResultsPage() {
   const status = useSelector((state: RootState) => state.results.status);
   const currentPage = useSelector((state: RootState) => state.results.currentPage);
   const sortBy = useSelector((state: RootState) => state.results.sortBy);
-  const searchedTerm = useSelector((state: RootState) => state.detective.search);
 
   const [resultsViewMode, setResultsViewModeState] = useState<'card' | 'list'>(() => {
     return (localStorage.getItem('resultsViewMode') as 'card' | 'list') || 'card';
@@ -135,7 +134,6 @@ function SearchResultsPage() {
         onSortByChange={handleSortByChange}
         describeHandler={describeHandlers?.describe ?? null}
         onSearchFilters={describeHandlers?.search}
-        searchTerm={searchedTerm}
       />
     </div>
   );

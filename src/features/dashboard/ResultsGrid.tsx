@@ -6,7 +6,7 @@ import type { MouseEvent } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DescribeGame } from '@/features/dashboard/DescribeGame';
-import { LayoutGrid, List, Search, Star } from 'lucide-react';
+import { LayoutGrid, List, Star } from 'lucide-react';
 import {
   Pagination,
   PaginationContent,
@@ -60,7 +60,6 @@ interface ResultsGridProps {
   onSortByChange?: (sortBy: string) => void;
   describeHandler?: ((result: FiltersResponse) => void) | null;
   onSearchFilters?: (filters: Partial<FilterState>, search: string) => void;
-  searchTerm?: string;
 }
 
 export const ResultsGrid = ({ 
@@ -75,8 +74,7 @@ export const ResultsGrid = ({
   sortBy = 'relevance',
   onSortByChange,
   describeHandler,
-  onSearchFilters,
-  searchTerm = ''
+  onSearchFilters
 }: ResultsGridProps) => {
   const { t } = useTranslation();
   
@@ -228,27 +226,16 @@ export const ResultsGrid = ({
   return (
     <div className="flex flex-col gap-6 pb-20">
       <div className="flex flex-wrap gap-2">
-        <div className="w-full md:order-3 md:w-auto md:ml-auto">
-          <div className="flex items-center gap-2 min-w-0">
-            {searchTerm && (
-              <span
-                className="inline-flex h-9 items-center gap-2 max-w-[200px] md:max-w-[320px] shrink-0 border-2 border-border rounded-base bg-secondary-background px-3 text-sm font-base text-foreground shadow-shadow"
-                title={searchTerm}
-              >
-                <Search className="h-4 w-4 shrink-0" />
-                <span className="truncate">{searchTerm}</span>
-              </span>
-            )}
-            {describeHandler && (
-              <DescribeGame
-                onDescribed={describeHandler}
-                onSearch={onSearchFilters}
-                compact
-              />
-            )}
+        {describeHandler && (
+          <div className="w-full md:order-3 md:w-auto">
+            <DescribeGame
+              onDescribed={describeHandler}
+              onSearch={onSearchFilters}
+              compact
+            />
           </div>
-        </div>
-        <div className="flex gap-2 items-center md:order-2 md:ml-auto">
+        )}
+        <div className="flex gap-2 items-center w-full justify-end md:ml-auto md:w-auto md:order-2">
         <Select value={sortBy} onValueChange={onSortByChange}>
           <SelectTrigger className="h-9 w-[180px] md:w-[220px] bg-secondary-background text-foreground shadow-shadow hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none transition-all cursor-pointer">
             <SelectValue placeholder={t('sorting.title')} />
