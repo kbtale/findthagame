@@ -55,22 +55,22 @@ export const DescribeGame = ({ onDescribed, compact = false, onSearch }: Describ
       <Textarea
         value={description}
         onChange={(e) => setDescription(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            void handleDescribe();
+          }
+        }}
         placeholder={t('describe.placeholder')}
         disabled={isParsing}
-        rows={4}
+        rows={compact ? 3 : 4}
         autoFocus={compact}
         className="resize-y shadow-shadow"
       />
 
-      <div className="mt-2">
-        <Button
-          onClick={handleDescribe}
-          disabled={isParsing || description.trim().length === 0}
-          className="w-full"
-        >
-          {t('describe.button')}
-        </Button>
-      </div>
+      <p className="mt-2 text-xs text-muted-foreground">
+        {isParsing ? t('describe.parsing') : t('describe.enterHint')}
+      </p>
 
       {error && <p className="mt-2 text-sm font-heading">{error}</p>}
     </>
