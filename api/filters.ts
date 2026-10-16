@@ -48,8 +48,8 @@ ${CATALOG}
 
 Rules:
 1. Extract a field ONLY when the text gives clear evidence. It is better to omit a field than to guess.
-2. platformId: platform the user played on. Pick the most specific match (prefer "Nintendo Entertainment System" over "Family Computer").
-3. yearRange: only when the user mentions when they played or when it came out. Convert to a range of +/- 2 years (e.g. "I played it in 2005" -> [2003, 2007]). When they give only a decade (e.g. "in the 90s") -> [1990, 1999]. Use integers only.
+2. platformIds: an array of platform IDs the user might have played on. WHENEVER the platform is not exact, include the whole family so nothing is missed. If the user names one exact machine ("PS2", "Game Boy Advance") return just that one ID. If the user names a family or brand without a model ("a PlayStation", "my Xbox", "the Nintendo", "a Sega console") return every ID in that family. If they name a family and a year or era, return the whole family ("PlayStation in 2009" -> PS1, PS2, PS3, PSP and every other PlayStation id). Never return more than one family unless the text supports it.
+3. yearRange: use it only when the user mentions when they played or when it came out, and keep it LOOSE. "I played it in 2009" means it can only have come out up to 2009, so return [1970, 2009]. "I played it around 2009" -> [2000, 2012]. A decade ("in the 90s") -> [1990, 1999]. "early 2000s" -> [2000, 2005], "mid 2000s" -> [2003, 2007], "late 90s" -> [1995, 1999]. Only narrow to the exact release year when the user explicitly states it ("it came out in 1998" -> [1998, 1998]). Use integers only.
 4. genreIds / themeIds: array of IDs for every matching genre/theme (e.g. "survival horror" -> horror theme + survival theme).
 5. developerName: studio or publisher name exactly as written by the user.
 6. categoryId / statusId: only if the user explicitly describes a remaster, remake, DLC, beta, cancelled game, etc.
@@ -60,7 +60,7 @@ Rules:
 Respond with ONLY a JSON object (no markdown, no code fences) using this shape, omitting fields that do not apply:
 {
   "search": "english keywords",
-  "platformId": <id>,
+  "platformIds": [<ids>],
   "yearRange": [<from year>, <to year>],
   "genreIds": [<ids>],
   "themeIds": [<ids>],
@@ -74,7 +74,7 @@ Respond with ONLY a JSON object (no markdown, no code fences) using this shape, 
 
 interface RawPayload {
   search?: unknown;
-  platformId?: unknown;
+  platformIds?: unknown;
   yearRange?: unknown;
   genreIds?: unknown;
   themeIds?: unknown;
@@ -118,8 +118,8 @@ const normalize = (payload: RawPayload): SearchFilters => {
     filters.search = payload.search.trim().split(/\s+/).slice(0, 10).join(' ');
   }
 
-  const platformId = firstId(payload.platformId, new Set(PLATFORMS.map((p) => p.id)));
-  if (platformId !== undefined) filters.platformId = platformId;
+  const platformIds = idList(payload.platformIds, new Set(PLATFORMS.map((p) => p.id)));
+  if (platformIds.length > 0) filters.platformIds = platformIds;
 
   if (Array.isArray(payload.yearRange) && payload.yearRange.length >= 1) {
     const years = payload.yearRange

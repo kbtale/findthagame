@@ -4,6 +4,7 @@ export interface QueryParams {
   search?: string;
 
   platformId?: number;
+  platformIds?: number[];
   yearRange?: [number, number];
 
   genreIds?: number[];
@@ -75,7 +76,7 @@ const buildFilterClauses = (params: QueryParams): string[] => {
   }
 
   const filterMap: FilterRule[] = [
-    { key: 'platformId', build: (v) => `platforms = (${v})` },
+    { key: 'platformIds', build: (v) => `platforms = (${(v as number[]).join(',')})` },
     { key: 'genreIds', build: (v) => `genres = (${(v as number[]).join(',')})` },
     { key: 'themeIds', build: (v) => `themes = (${(v as number[]).join(',')})` },
     { key: 'gameModeId', build: (v) => `game_modes = (${v})` },

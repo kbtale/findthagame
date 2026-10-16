@@ -35,7 +35,7 @@ export interface GameResult {
 export interface FilterState {
   search: string;
 
-  platformId: number | null;
+  platformIds: number[];
   yearRange: [number, number];
 
   genreIds: number[];

@@ -53,7 +53,7 @@ export function generateRandomFilters(): FilterState {
     developerName: '',
     
     // Single selects (60% empty)
-    platformId: maybeEmpty(() => randomFrom(PLATFORMS).id),
+    platformIds: Math.random() < 0.6 ? [] : [randomFrom(PLATFORMS).id],
     gameModeId: maybeEmpty(() => randomFrom(GAME_MODES).id),
     perspectiveId: maybeEmpty(() => randomFrom(PERSPECTIVES).id),
     categoryId: maybeEmpty(() => randomFrom(GAME_CATEGORIES).id),

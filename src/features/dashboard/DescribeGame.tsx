@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { findFilters } from '@/api/client';
 import type { FiltersResponse } from '@/models/SearchFilters';
+import type { FilterState } from '@/models/AppTypes';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -10,9 +11,11 @@ import { WandSparkles } from 'lucide-react';
 interface DescribeGameProps {
   onDescribed: (result: FiltersResponse) => void;
   compact?: boolean;
+  currentFilters?: FilterState;
+  onSearch?: (filters: FilterState) => void;
 }
 
-export const DescribeGame = ({ onDescribed, compact = false }: DescribeGameProps) => {
+export const DescribeGame = ({ onDescribed, compact = false, currentFilters, onSearch }: DescribeGameProps) => {
   const { t } = useTranslation();
   const [description, setDescription] = useState('');
   const [isParsing, setIsParsing] = useState(false);
@@ -31,6 +34,16 @@ export const DescribeGame = ({ onDescribed, compact = false }: DescribeGameProps
       onDescribed(result);
       setDescription('');
       setModalOpen(false);
+
+      // In the compact (results) flow there is nothing to review first, so the
+      // search runs right away instead of making the user click twice.
+      if (onSearch && currentFilters) {
+        onSearch({
+          ...currentFilters,
+          ...result.filters,
+          search: result.search || result.filters.search || '',
+        });
+      }
     } catch {
       setError(t('describe.error'));
     } finally {

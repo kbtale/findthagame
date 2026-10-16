@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, lazy, Suspense, type ComponentType } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { GameResult } from '@/models/AppTypes';
+import type { GameResult, FilterState } from '@/models/AppTypes';
 import type { FiltersResponse } from '@/models/SearchFilters';
 import type { MouseEvent } from 'react';
 import { Badge } from '@/components/ui/badge';
@@ -59,6 +59,8 @@ interface ResultsGridProps {
   sortBy?: string;
   onSortByChange?: (sortBy: string) => void;
   describeHandler?: ((result: FiltersResponse) => void) | null;
+  currentFilters?: FilterState;
+  onSearchFilters?: (filters: FilterState) => void;
   searchTerm?: string;
 }
 
@@ -74,6 +76,8 @@ export const ResultsGrid = ({
   sortBy = 'relevance',
   onSortByChange,
   describeHandler,
+  currentFilters,
+  onSearchFilters,
   searchTerm = ''
 }: ResultsGridProps) => {
   const { t } = useTranslation();
@@ -236,7 +240,14 @@ export const ResultsGrid = ({
               <span className="truncate">{searchTerm}</span>
             </span>
           )}
-          {describeHandler && <DescribeGame onDescribed={describeHandler} compact />}
+          {describeHandler && (
+            <DescribeGame
+              onDescribed={describeHandler}
+              currentFilters={currentFilters}
+              onSearch={onSearchFilters}
+              compact
+            />
+          )}
         </div>
         <div className="flex gap-2 items-center">
         <Select value={sortBy} onValueChange={onSortByChange}>

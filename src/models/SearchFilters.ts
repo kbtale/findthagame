@@ -9,7 +9,7 @@
 // Everything is optional: only what the text supports is returned.
 export interface SearchFilters {
   search?: string;
-  platformId?: number;
+  platformIds?: number[];
   yearRange?: [number, number];
   genreIds?: number[];
   themeIds?: number[];
