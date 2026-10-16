@@ -128,7 +128,7 @@ function RootLayout() {
     }
 
     dispatch(setAllFilters(filledFilters));
-    toast(t('describe.filled'));
+    toast(t('describe.filled'), { className: 'bg-white text-foreground' });
   };
 
   // Runs a search straight from a parsed description, merging it over the
