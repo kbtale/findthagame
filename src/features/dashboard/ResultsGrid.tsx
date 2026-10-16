@@ -59,8 +59,7 @@ interface ResultsGridProps {
   sortBy?: string;
   onSortByChange?: (sortBy: string) => void;
   describeHandler?: ((result: FiltersResponse) => void) | null;
-  currentFilters?: FilterState;
-  onSearchFilters?: (filters: FilterState) => void;
+  onSearchFilters?: (filters: Partial<FilterState>, search: string) => void;
   searchTerm?: string;
 }
 
@@ -76,7 +75,6 @@ export const ResultsGrid = ({
   sortBy = 'relevance',
   onSortByChange,
   describeHandler,
-  currentFilters,
   onSearchFilters,
   searchTerm = ''
 }: ResultsGridProps) => {
@@ -204,7 +202,7 @@ export const ResultsGrid = ({
 
         {describeHandler && (
           <div className="mt-8 flex w-full justify-center">
-            <DescribeGame onDescribed={describeHandler} />
+            <DescribeGame onDescribed={describeHandler} onSearch={onSearchFilters} />
           </div>
         )}
       </div>
@@ -243,7 +241,6 @@ export const ResultsGrid = ({
           {describeHandler && (
             <DescribeGame
               onDescribed={describeHandler}
-              currentFilters={currentFilters}
               onSearch={onSearchFilters}
               compact
             />

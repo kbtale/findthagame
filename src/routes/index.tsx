@@ -2,12 +2,12 @@ import { useCallback, useState, useRef, useLayoutEffect, useContext, useEffect }
 import { useSelector, useDispatch } from 'react-redux';
 import { createFileRoute, useNavigate, useRouterState } from '@tanstack/react-router';
 import { type RootState } from '@/store/store';
-import { selectGame, clearSelection, setCurrentPage, setSortBy, setLoading, setResults, setError } from '@/store/slices/resultsSlice';
+import { selectGame, setCurrentPage, setSortBy, setLoading, setResults, setError } from '@/store/slices/resultsSlice';
 import { setAllFilters } from '@/store/slices/detectiveSlice';
 import { ResultsGrid } from '@/features/dashboard/ResultsGrid';
 import { searchGames } from '@/api/client';
-import { searchParamsToFilter, hasAnyFilter, filterToSearchParams } from '@/lib/searchParams';
-import { getLastSearchedUrlKey, setLastSearchedUrlKey, resetLastSearchedUrlKey } from '@/lib/searchKey';
+import { searchParamsToFilter, hasAnyFilter } from '@/lib/searchParams';
+import { getLastSearchedUrlKey, setLastSearchedUrlKey } from '@/lib/searchKey';
 import { RecentSearchesContext } from '@/hooks/useRecentSearches';
 import { DescribeHandlerContext } from './__root';
 import type { FilterState } from '@/models/AppTypes';
@@ -25,7 +25,7 @@ function SearchResultsPage() {
   const navigate = useNavigate();
   const routerState = useRouterState();
   const recentSearchesCtx = useContext(RecentSearchesContext);
-  const describeHandler = useContext(DescribeHandlerContext);
+  const describeHandlers = useContext(DescribeHandlerContext);
 
   const rawSearch = (routerState.location.search as Record<string, unknown>) ?? {};
   const hasParams = hasAnyFilter(rawSearch);
@@ -36,7 +36,6 @@ function SearchResultsPage() {
   const currentPage = useSelector((state: RootState) => state.results.currentPage);
   const sortBy = useSelector((state: RootState) => state.results.sortBy);
   const searchedTerm = useSelector((state: RootState) => state.detective.search);
-  const currentFilters = useSelector((state: RootState) => state.detective);
 
   const [resultsViewMode, setResultsViewModeState] = useState<'card' | 'list'>(() => {
     return (localStorage.getItem('resultsViewMode') as 'card' | 'list') || 'card';
@@ -82,15 +81,6 @@ function SearchResultsPage() {
   const handleSortByChange = useCallback((val: string) => {
     dispatch(setSortBy(val));
   }, [dispatch]);
-
-  // Runs a search directly from the compact describe modal, using the filters
-  // that were just extracted instead of waiting for the sidebar button.
-  const handleSearchFromDescription = useCallback((filtersState: FilterState) => {
-    dispatch(clearSelection());
-    dispatch(setLoading());
-    resetLastSearchedUrlKey();
-    navigate({ to: '/', search: filterToSearchParams(filtersState) });
-  }, [dispatch, navigate]);
 
   const handleSelectGame = useCallback((index: number, origin: { x: number; y: number; width: number; height: number }) => {
     const game = results[index];
@@ -143,9 +133,8 @@ function SearchResultsPage() {
         onViewModeChange={setResultsViewMode}
         sortBy={sortBy}
         onSortByChange={handleSortByChange}
-        describeHandler={describeHandler}
-        currentFilters={currentFilters}
-        onSearchFilters={handleSearchFromDescription}
+        describeHandler={describeHandlers?.describe ?? null}
+        onSearchFilters={describeHandlers?.search}
         searchTerm={searchedTerm}
       />
     </div>

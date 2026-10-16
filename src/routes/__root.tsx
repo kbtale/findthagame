@@ -33,9 +33,12 @@ const TanStackRouterDevtools =
         })),
       );
 
-// Handler for the free-text describe feature. The home route renders the box
-// itself (welcome hero and results toolbar). Null on other routes.
-export const DescribeHandlerContext = createContext<((result: FiltersResponse) => void) | null>(null);
+// Handlers for the free-text describe feature. `describe` fills the filter panel
+// from a parsed description, `search` runs a search from parsed filters.
+export const DescribeHandlerContext = createContext<{
+  describe: (result: FiltersResponse) => void;
+  search: (filters: Partial<FilterState>, search: string) => void;
+} | null>(null);
 
 export const Route = createRootRoute({
   component: RootLayout,
@@ -115,17 +118,29 @@ function RootLayout() {
     navigate({ to: '/', search: filterToSearchParams(randomFilters) });
   };
 
-  // Applies the filters extracted from a free-text description to the filter
-  // panel (and the keywords box), so the user can review them before searching.
+  // Fills the filter panel (and the keywords box) from a parsed description.
   const handleDescribed = (result: FiltersResponse) => {
     const filledFilters = { ...filters, ...result.filters };
 
     if (result.search) {
       setSearchTerm(result.search);
+      filledFilters.search = result.search;
     }
 
     dispatch(setAllFilters(filledFilters));
     toast(t('describe.filled'));
+  };
+
+  // Runs a search straight from a parsed description, merging it over the
+  // filters that are already in the panel.
+  const handleSearchFromDescription = (parsed: Partial<FilterState>, search: string) => {
+    const merged: FilterState = { ...filters, ...parsed, search };
+    setMobileOpen(false);
+    dispatch(setAllFilters(merged));
+    dispatch(clearSelection());
+    dispatch(setLoading());
+    resetLastSearchedUrlKey();
+    navigate({ to: '/', search: filterToSearchParams(merged) });
   };
 
   const handleSelectFavorite = (game: GameResult) => {
@@ -199,7 +214,7 @@ function RootLayout() {
 
   return (
     <>
-      <DescribeHandlerContext.Provider value={handleDescribed}>
+      <DescribeHandlerContext.Provider value={{ describe: handleDescribed, search: handleSearchFromDescription }}>
       <RecentSearchesContext.Provider value={{ addSearch }}>
         <DashboardLayout
           brandHeader={brandHeader}

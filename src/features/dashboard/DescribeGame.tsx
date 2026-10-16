@@ -6,16 +6,15 @@ import type { FilterState } from '@/models/AppTypes';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { WandSparkles } from 'lucide-react';
+import { PencilLine } from 'lucide-react';
 
 interface DescribeGameProps {
   onDescribed: (result: FiltersResponse) => void;
   compact?: boolean;
-  currentFilters?: FilterState;
-  onSearch?: (filters: FilterState) => void;
+  onSearch?: (filters: Partial<FilterState>, search: string) => void;
 }
 
-export const DescribeGame = ({ onDescribed, compact = false, currentFilters, onSearch }: DescribeGameProps) => {
+export const DescribeGame = ({ onDescribed, compact = false, onSearch }: DescribeGameProps) => {
   const { t } = useTranslation();
   const [description, setDescription] = useState('');
   const [isParsing, setIsParsing] = useState(false);
@@ -35,15 +34,9 @@ export const DescribeGame = ({ onDescribed, compact = false, currentFilters, onS
       setDescription('');
       setModalOpen(false);
 
-      // In the compact (results) flow there is nothing to review first, so the
-      // search runs right away instead of making the user click twice.
-      if (onSearch && currentFilters) {
-        onSearch({
-          ...currentFilters,
-          ...result.filters,
-          search: result.search || result.filters.search || '',
-        });
-      }
+      // Parsing finished, so run the search right away. The user pressed
+      // Search, so they get a search, wherever the box is rendered.
+      onSearch?.(result.filters, result.search || result.filters.search || '');
     } catch {
       setError(t('describe.error'));
     } finally {
@@ -88,7 +81,7 @@ export const DescribeGame = ({ onDescribed, compact = false, currentFilters, onS
       <Dialog open={isModalOpen} onOpenChange={setModalOpen}>
         <DialogTrigger asChild>
           <Button variant="neutral" size="sm" className="px-2 md:px-3" title={t('describe.trigger')}>
-            <WandSparkles className="h-4 w-4" />
+            <PencilLine className="h-4 w-4" />
             <span className="hidden md:inline">{t('describe.trigger')}</span>
           </Button>
         </DialogTrigger>
