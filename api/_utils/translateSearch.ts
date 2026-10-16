@@ -46,7 +46,7 @@ Preserve game names, proper nouns, and abbreviations.`
           content: text,
         },
       ],
-      model: "llama-3.1-8b-instant",
+      model: "openai/gpt-oss-120b",
       temperature: 0.1,
       max_tokens: 100,
     });

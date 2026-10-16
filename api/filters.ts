@@ -214,7 +214,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         { role: 'system', content: SYSTEM_PROMPT },
         { role: 'user', content: text },
       ],
-      model: 'llama-3.3-70b-versatile',
+      model: 'openai/gpt-oss-120b',
       temperature: 0,
       max_tokens: 800,
       response_format: { type: 'json_object' },
