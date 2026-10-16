@@ -9,6 +9,7 @@ import { searchGames } from '@/api/client';
 import { searchParamsToFilter, hasAnyFilter } from '@/lib/searchParams';
 import { getLastSearchedUrlKey, setLastSearchedUrlKey } from '@/lib/searchKey';
 import { RecentSearchesContext } from '@/hooks/useRecentSearches';
+import { DescribeHandlerContext } from './__root';
 import type { FilterState } from '@/models/AppTypes';
 
 let savedScrollPosition = 0;
@@ -24,6 +25,7 @@ function SearchResultsPage() {
   const navigate = useNavigate();
   const routerState = useRouterState();
   const recentSearchesCtx = useContext(RecentSearchesContext);
+  const describeHandlers = useContext(DescribeHandlerContext);
 
   const rawSearch = (routerState.location.search as Record<string, unknown>) ?? {};
   const hasParams = hasAnyFilter(rawSearch);
@@ -130,6 +132,8 @@ function SearchResultsPage() {
         onViewModeChange={setResultsViewMode}
         sortBy={sortBy}
         onSortByChange={handleSortByChange}
+        describeHandler={describeHandlers?.describe ?? null}
+        onSearchFilters={describeHandlers?.search}
       />
     </div>
   );

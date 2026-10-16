@@ -129,8 +129,14 @@ const scoreMeta = (game: IGDBGame, query: QueryParams): number =>
 const calculateMultiplier = (game: IGDBGame, query: QueryParams): number => {
   const { multipliers: m } = Weights;
 
-  const platform = !query.platformId ? 1 :
-    game.platforms?.some(p => p.id === query.platformId) ? m.platform.match : m.platform.mismatch;
+  const platformFilter = query.platformIds?.length
+    ? query.platformIds
+    : query.platformId !== undefined
+      ? [query.platformId]
+      : [];
+
+  const platform = platformFilter.length === 0 ? 1 :
+    game.platforms?.some(p => platformFilter.includes(p.id)) ? m.platform.match : m.platform.mismatch;
 
   const category = (game.category === 1 && query.categoryId !== 1) ? m.unwantedDLC : 1;
 

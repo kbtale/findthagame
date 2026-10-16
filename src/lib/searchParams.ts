@@ -36,7 +36,7 @@ export const filterToSearchParams = (filter: FilterState): Record<string, string
   const params: Record<string, string> = {};
 
   if (filter.search) params.q = filter.search;
-  if (filter.platformId !== null) params.p = String(filter.platformId);
+  if (filter.platformIds.length > 0) params.p = filter.platformIds.join(',');
   if (filter.yearRange[0] !== 1970) params.yr0 = String(filter.yearRange[0]);
   if (filter.yearRange[1] !== 2026) params.yr1 = String(filter.yearRange[1]);
   const g = numArrayToString(filter.genreIds);
@@ -59,7 +59,7 @@ export const searchParamsToFilter = (params: Record<string, unknown>): FilterSta
   const raw = params as RawSearchParams;
   return {
     search: raw.q ?? '',
-    platformId: optNum(raw.p),
+    platformIds: parseNumArray(raw.p),
     yearRange: [
       raw.yr0 !== undefined ? (parseInt(raw.yr0, 10) || 1970) : 1970,
       raw.yr1 !== undefined ? (parseInt(raw.yr1, 10) || 2026) : 2026,

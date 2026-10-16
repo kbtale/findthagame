@@ -1,4 +1,4 @@
-import React, { useState, Suspense, useEffect } from 'react';
+import React, { useState, Suspense, useEffect, createContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import { createRootRoute, Outlet, ScrollRestoration, useNavigate, useRouterState } from '@tanstack/react-router';
@@ -11,6 +11,7 @@ import { FilterPanel } from '@/features/dashboard/filterPanel';
 import { Input } from '@/components/ui/input';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Search } from 'lucide-react';
+import { toast } from 'sonner';
 import { useRecentSearches, RecentSearchesContext, type RecentSearch } from '@/hooks/useRecentSearches';
 import { useFavorites } from '@/hooks/useFavorites';
 import { FavoritesDialog } from '@/components/FavoritesDialog';
@@ -18,6 +19,7 @@ import { SavedSearchesDialog } from '@/components/SavedSearchesDialog';
 import { Toaster } from '@/components/ui/sonner';
 import { filterToSearchParams } from '@/lib/searchParams';
 import type { FilterState, GameResult } from '@/models/AppTypes';
+import type { FiltersResponse } from '@/models/SearchFilters';
 import { generateRandomFilters } from '@/utils/randomFilters';
 
 // Route pattern: fast refresh intentionally skipped.
@@ -30,6 +32,13 @@ const TanStackRouterDevtools =
           default: res.TanStackRouterDevtools,
         })),
       );
+
+// Handlers for the free-text describe feature. `describe` fills the filter panel
+// from a parsed description, `search` runs a search from parsed filters.
+export const DescribeHandlerContext = createContext<{
+  describe: (result: FiltersResponse) => void;
+  search: (filters: Partial<FilterState>, search: string) => void;
+} | null>(null);
 
 export const Route = createRootRoute({
   component: RootLayout,
@@ -109,6 +118,31 @@ function RootLayout() {
     navigate({ to: '/', search: filterToSearchParams(randomFilters) });
   };
 
+  // Fills the filter panel (and the keywords box) from a parsed description.
+  const handleDescribed = (result: FiltersResponse) => {
+    const filledFilters = { ...filters, ...result.filters };
+
+    if (result.search) {
+      setSearchTerm(result.search);
+      filledFilters.search = result.search;
+    }
+
+    dispatch(setAllFilters(filledFilters));
+    toast(t('describe.filled'), { className: 'bg-white text-foreground' });
+  };
+
+  // Runs a search straight from a parsed description, merging it over the
+  // filters that are already in the panel.
+  const handleSearchFromDescription = (parsed: Partial<FilterState>, search: string) => {
+    const merged: FilterState = { ...filters, ...parsed, search };
+    setMobileOpen(false);
+    dispatch(setAllFilters(merged));
+    dispatch(clearSelection());
+    dispatch(setLoading());
+    resetLastSearchedUrlKey();
+    navigate({ to: '/', search: filterToSearchParams(merged) });
+  };
+
   const handleSelectFavorite = (game: GameResult) => {
     dispatch(selectExternalGame({ game, origin: { x: 0, y: 0, width: 0, height: 0 } }));
     setFavoritesOpen(false);
@@ -180,6 +214,7 @@ function RootLayout() {
 
   return (
     <>
+      <DescribeHandlerContext.Provider value={{ describe: handleDescribed, search: handleSearchFromDescription }}>
       <RecentSearchesContext.Provider value={{ addSearch }}>
         <DashboardLayout
           brandHeader={brandHeader}
@@ -204,6 +239,7 @@ function RootLayout() {
           onOpenSavedSearches={handleOpenSavedSearches}
         />
       </RecentSearchesContext.Provider>
+      </DescribeHandlerContext.Provider>
       
       <FavoritesDialog
         open={isFavoritesOpen}

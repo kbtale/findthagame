@@ -42,7 +42,7 @@ export const SavedSearchesDialog = ({
     if (search.filters.themeIds?.length) {
       parts.push(t('savedSearches.nThemes', { count: search.filters.themeIds.length }));
     }
-    if (search.filters.platformId) {
+    if (search.filters.platformIds?.length) {
       parts.push(t('savedSearches.platformFilter'));
     }
     if (search.filters.yearRange && 

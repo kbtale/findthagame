@@ -1,9 +1,11 @@
 import { useState, useEffect, useMemo, lazy, Suspense, type ComponentType } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { GameResult } from '@/models/AppTypes';
+import type { GameResult, FilterState } from '@/models/AppTypes';
+import type { FiltersResponse } from '@/models/SearchFilters';
 import type { MouseEvent } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { DescribeGame } from '@/features/dashboard/DescribeGame';
 import { LayoutGrid, List, Star } from 'lucide-react';
 import {
   Pagination,
@@ -56,6 +58,8 @@ interface ResultsGridProps {
   onViewModeChange?: (mode: 'card' | 'list') => void;
   sortBy?: string;
   onSortByChange?: (sortBy: string) => void;
+  describeHandler?: ((result: FiltersResponse) => void) | null;
+  onSearchFilters?: (filters: Partial<FilterState>, search: string) => void;
 }
 
 export const ResultsGrid = ({ 
@@ -68,7 +72,9 @@ export const ResultsGrid = ({
   viewMode = 'card',
   onViewModeChange,
   sortBy = 'relevance',
-  onSortByChange
+  onSortByChange,
+  describeHandler,
+  onSearchFilters
 }: ResultsGridProps) => {
   const { t } = useTranslation();
   
@@ -191,6 +197,12 @@ export const ResultsGrid = ({
             {t('dashboard.optionalFieldsHint')}
           </p>
         </div>
+
+        {describeHandler && (
+          <div className="mt-8 flex w-full justify-center">
+            <DescribeGame onDescribed={describeHandler} onSearch={onSearchFilters} />
+          </div>
+        )}
       </div>
     );
   }
@@ -213,7 +225,17 @@ export const ResultsGrid = ({
 
   return (
     <div className="flex flex-col gap-6 pb-20">
-      <div className="flex justify-end gap-2 items-center">
+      <div className="flex flex-wrap gap-2">
+        {describeHandler && (
+          <div className="w-full md:order-2 md:mr-auto md:w-auto">
+            <DescribeGame
+              onDescribed={describeHandler}
+              onSearch={onSearchFilters}
+              compact
+            />
+          </div>
+        )}
+        <div className="flex gap-2 items-center w-full justify-end md:ml-auto md:w-auto md:order-3">
         <Select value={sortBy} onValueChange={onSortByChange}>
           <SelectTrigger className="h-9 w-[180px] md:w-[220px] bg-secondary-background text-foreground shadow-shadow hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none transition-all cursor-pointer">
             <SelectValue placeholder={t('sorting.title')} />
@@ -247,6 +269,7 @@ export const ResultsGrid = ({
           <List className="h-4 w-4" />
           {t('results.listView')}
         </Button>
+        </div>
       </div>
 
       <div className={viewMode === 'card' ? 'grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6' : 'flex flex-col gap-3'}>

@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '@/store/store';
 import type { FilterState } from '@/models/AppTypes';
 import {
-  setPlatformId,
+  setPlatformIds,
   setYearRange,
   setGenreIds,
   setThemeIds,
@@ -95,7 +95,7 @@ export const FilterPanel = ({ onSearch, onClearAll, isLoading = false, searchTer
   const handleResetCore = () => {
     dispatch(setCategoryId(null));
     dispatch(setStatusId(null));
-    dispatch(setPlatformId(null));
+    dispatch(setPlatformIds([]));
     dispatch(setDeveloperId(''));
   };
 
@@ -150,6 +150,20 @@ export const FilterPanel = ({ onSearch, onClearAll, isLoading = false, searchTer
 
     dispatch(setGenreIds(newGenreIds));
     dispatch(setThemeIds(newThemeIds));
+  };
+
+  // Prepare options for the Platform multiselect
+  const PLATFORM_OPTIONS = useMemo(() => {
+    return PLATFORMS.map(p => ({
+      value: p.id.toString(),
+      label: t(`platforms.${p.id}`, p.name),
+      type: 'Platform'
+    })).sort((a, b) => a.label.localeCompare(b.label));
+  }, [t]);
+
+  // Handle changes by mapping the selected platform values back to IDs
+  const handlePlatformsChange = (newValues: string[]) => {
+    dispatch(setPlatformIds(newValues.map(v => Number(v))));
   };
 
   return (
@@ -219,17 +233,18 @@ export const FilterPanel = ({ onSearch, onClearAll, isLoading = false, searchTer
           />
         </div>
         
-        {/* Platform - Combobox */}
+        {/* Platform - Multiselect (a family can be selected at once) */}
         <div className="space-y-1.5">
           <Label className="text-xs uppercase font-heading">{t('filters.platform')}</Label>
-          <Combobox
-            options={PLATFORMS.map(p => ({ value: p.id.toString(), label: t(`platforms.${p.id}`, p.name) }))}
-            value={filters.platformId?.toString() ?? null}
-            onValueChange={(val) => dispatch(setPlatformId(val ? Number(val) : null))}
+          <Multiselect
+            options={PLATFORM_OPTIONS}
+            value={filters.platformIds.map(id => id.toString())}
+            onValueChange={handlePlatformsChange}
             placeholder={t('filters.anyPlatform')}
             searchPlaceholder={t('filters.searchPlatforms')}
             emptyText={t('filters.noPlatformFound')}
-            className="h-9 shadow-shadow"
+            maxDisplayItems={3}
+            className="shadow-shadow"
           />
         </div>
       </section>

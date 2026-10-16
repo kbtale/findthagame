@@ -5,7 +5,7 @@ import type { FilterState } from '@/models/AppTypes';
 const initialState: FilterState = {
   search: '',
 
-  platformId: null,
+  platformIds: [],
   yearRange: [1970, 2026],
 
   genreIds: [],
@@ -30,8 +30,8 @@ export const detectiveSlice = createSlice({
       state.search = action.payload;
     },
 
-    setPlatformId: (state, action: PayloadAction<number | null>) => {
-      state.platformId = action.payload;
+    setPlatformIds: (state, action: PayloadAction<number[]>) => {
+      state.platformIds = action.payload;
     },
     setYearRange: (state, action: PayloadAction<[number, number]>) => {
       state.yearRange = action.payload;
@@ -100,7 +100,7 @@ export const detectiveSlice = createSlice({
 export const {
   setSearch,
 
-  setPlatformId,
+  setPlatformIds,
   setYearRange,
 
   toggleGenreId,

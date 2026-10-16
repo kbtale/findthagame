@@ -36,7 +36,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           content: text,
         },
       ],
-      model: "llama-3.1-8b-instant", 
+      model: "openai/gpt-oss-20b", 
       temperature: 0.1,
     });
 
