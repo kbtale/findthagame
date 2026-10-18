@@ -98,6 +98,8 @@
     "welcomeTitle": "Encuentra los videojuegos que tu mente no recuerda",
     "welcomeFilters": "Usa los filtros a la izquierda para refinar tu búsqueda.",
     "welcomeSearch": "Presiona Buscar cuando estés listo para explorar.",
+    "cardView": "Tarjetas",
+    "listView": "Lista",
     "noResultsTitle": "No se encontraron juegos",
     "noResultsDescription": "Intenta ajustar tus filtros o término de búsqueda para encontrar más juegos."
   },
@@ -211,6 +213,17 @@
     "poweredBy": "Impulsado por",
     "notAffiliated": "No afiliado con IGDB ni Twitch"
   },
+  "describe": {
+    "title": "Describe lo que recuerdas",
+    "placeholder": "Lo jugué de niño en 2005 en PS2. Era un juego de carreras con payasos y monster trucks, y podías jugar en pantalla dividida con un amigo...",
+    "button": "Buscar",
+    "parsing": "Leyendo tu descripción...",
+    "titleCompact": "Buscar a partir de una descripción",
+    "trigger": "Describir",
+    "description": "Escribe lo que recuerdas y los filtros de la izquierda se completarán automáticamente.",
+    "error": "No se pudo leer tu descripción. Por favor intenta de nuevo.",
+    "filled": "Filtros completados a partir de tu descripción. Revísalos a la izquierda."
+  },
   "errors": {
     "gameNotFound": "Juego no encontrado",
     "gameNotFoundDesc": "El juego que buscas no existe o no se pudo cargar.",
@@ -288,6 +301,8 @@
     "storyline": "Historia",
     "keywords": "Palabras clave",
     "screenshots": "Capturas",
+    "shareGame": "Compartir juego",
+    "linkCopied": "Enlace copiado al portapapeles",
     "translate": "Traducir",
     "translating": "Traduciendo...",
     "seeOriginal": "Ver Original"

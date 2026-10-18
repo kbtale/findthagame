@@ -98,6 +98,8 @@
     "welcomeTitle": "思い出せないゲームを見つけよう",
     "welcomeFilters": "左側のフィルタを使用して検索を絞り込んでください。",
     "welcomeSearch": "準備ができたら「検索」を押してください。",
+    "cardView": "カード",
+    "listView": "リスト",
     "noResultsTitle": "ゲームが見つかりません",
     "noResultsDescription": "フィルタや検索語を調整して再度お試しください。"
   },
@@ -211,6 +213,17 @@
     "poweredBy": "動作環境",
     "notAffiliated": "IGDBおよびTwitchとは無関係です"
   },
+  "describe": {
+    "title": "覚えている内容を入力",
+    "placeholder": "2005年頃、子どもの頃にPS2で遊んでいました。ピエロやモンスタートラックが出てくるレースゲームで、友達と画面分割でプレイできました…",
+    "button": "検索",
+    "parsing": "説明を読み取っています...",
+    "titleCompact": "説明から検索",
+    "trigger": "説明する",
+    "description": "覚えている特徴を入力すると、左側のフィルターが自動で設定されます。",
+    "error": "説明を読み取れませんでした。もう一度お試しください。",
+    "filled": "説明に基づいてフィルターを設定しました。左側でご確認ください。"
+  },
   "errors": {
     "gameNotFound": "ゲームが見つかりません",
     "gameNotFoundDesc": "お探しのゲームは存在しないか、読み込めませんでした。",
@@ -288,6 +301,8 @@
     "storyline": "ストーリー",
     "keywords": "キーワード",
     "screenshots": "スクリーンショット",
+    "shareGame": "ゲームを共有",
+    "linkCopied": "リンクをクリップボードにコピーしました",
     "translate": "翻訳",
     "translating": "翻訳中...",
     "seeOriginal": "原文を見る"

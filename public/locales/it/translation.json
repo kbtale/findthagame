@@ -98,6 +98,8 @@
     "welcomeTitle": "Trova i videogiochi che la mente dimentica",
     "welcomeFilters": "Usa i filtri a sinistra per restringere la ricerca.",
     "welcomeSearch": "Premi Cerca quando sei pronto.",
+    "cardView": "Schede",
+    "listView": "Elenco",
     "noResultsTitle": "Nessun gioco trovato",
     "noResultsDescription": "Modifica i filtri per trovare più giochi."
   },
@@ -211,6 +213,17 @@
     "poweredBy": "Alimentato da",
     "notAffiliated": "Non affiliato a IGDB o Twitch"
   },
+  "describe": {
+    "title": "Descrivi cosa ricordi",
+    "placeholder": "Ci giocavo da piccolo nel 2005 su PS2. Era un gioco di corse con clown e monster truck, e si poteva giocare a schermo diviso con un amico...",
+    "button": "Cerca",
+    "parsing": "Lettura della descrizione in corso...",
+    "titleCompact": "Cerca da una descrizione",
+    "trigger": "Descrivi",
+    "description": "Scrivi ciò che ricordi e i filtri a sinistra verranno compilati per te.",
+    "error": "Impossibile leggere la descrizione. Riprova.",
+    "filled": "Filtri compilati in base alla tua descrizione. Controllali a sinistra."
+  },
   "errors": {
     "gameNotFound": "Gioco non trovato",
     "gameNotFoundDesc": "Il gioco che cerchi non esiste o non è stato possibile caricarlo.",
@@ -288,6 +301,8 @@
     "storyline": "Trama",
     "keywords": "Parole chiave",
     "screenshots": "Screenshot",
+    "shareGame": "Condividi gioco",
+    "linkCopied": "Link copiato negli appunti",
     "translate": "Traduci",
     "translating": "Traduzione...",
     "seeOriginal": "Vedi originale"
