@@ -98,6 +98,8 @@
     "welcomeTitle": "Trouvez les jeux que votre esprit oublie",
     "welcomeFilters": "Utilisez les filtres à gauche pour affiner.",
     "welcomeSearch": "Appuyez sur Rechercher pour explorer.",
+    "cardView": "Cartes",
+    "listView": "Liste",
     "noResultsTitle": "Aucun jeu trouvé",
     "noResultsDescription": "Ajustez vos filtres pour trouver plus de jeux."
   },
@@ -211,6 +213,17 @@
     "poweredBy": "Propulsé par",
     "notAffiliated": "Non affilié à IGDB ou Twitch"
   },
+  "describe": {
+    "title": "Décrivez vos souvenirs",
+    "placeholder": "J'y jouais enfant en 2005 sur PS2. C'était un jeu de course avec des clowns et des monster trucks, et on pouvait jouer en écran partagé avec un ami...",
+    "button": "Rechercher",
+    "parsing": "Lecture de votre description...",
+    "titleCompact": "Rechercher à partir d'une description",
+    "trigger": "Décrire",
+    "description": "Écrivez ce dont vous vous souvenez et les filtres à gauche seront remplis pour vous.",
+    "error": "Impossible de lire votre description. Veuillez réessayer.",
+    "filled": "Filtres renseignés à partir de votre description. Vérifiez-les à gauche."
+  },
   "errors": {
     "gameNotFound": "Jeu introuvable",
     "gameNotFoundDesc": "Le jeu que vous cherchez n'existe pas ou n'a pas pu être chargé.",
@@ -288,6 +301,8 @@
     "storyline": "Scénario",
     "keywords": "Mots-clés",
     "screenshots": "Captures d'écran",
+    "shareGame": "Partager le jeu",
+    "linkCopied": "Lien copié dans le presse-papiers",
     "translate": "Traduire",
     "translating": "Traduction...",
     "seeOriginal": "Voir l'original"

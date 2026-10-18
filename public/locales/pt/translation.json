@@ -98,6 +98,8 @@
     "welcomeTitle": "Encontre os jogos que sua mente esquece",
     "welcomeFilters": "Use os filtros à esquerda para refinar a busca.",
     "welcomeSearch": "Clique em Pesquisar quando estiver pronto.",
+    "cardView": "Cartões",
+    "listView": "Lista",
     "noResultsTitle": "Nenhum jogo encontrado",
     "noResultsDescription": "Ajuste os filtros para encontrar mais jogos."
   },
@@ -211,6 +213,17 @@
     "poweredBy": "Funciona com",
     "notAffiliated": "Não afiliado à IGDB ou Twitch"
   },
+  "describe": {
+    "title": "Descreva o que você lembra",
+    "placeholder": "Eu jogava quando criança em 2005 no PS2. Era um jogo de corrida com palhaços e monster trucks, e dava para jogar em tela dividida com um amigo...",
+    "button": "Buscar",
+    "parsing": "Lendo sua descrição...",
+    "titleCompact": "Buscar a partir de uma descrição",
+    "trigger": "Descrever",
+    "description": "Escreva o que você lembra e os filtros à esquerda serão preenchidos para você.",
+    "error": "Não foi possível ler sua descrição. Tente novamente.",
+    "filled": "Filtros preenchidos a partir da sua descrição. Revise-os à esquerda."
+  },
   "errors": {
     "gameNotFound": "Jogo não encontrado",
     "gameNotFoundDesc": "O jogo que você procura não existe ou não pôde ser carregado.",
@@ -288,6 +301,8 @@
     "storyline": "Enredo",
     "keywords": "Palavras-chave",
     "screenshots": "Capturas de Tela",
+    "shareGame": "Compartilhar jogo",
+    "linkCopied": "Link copiado para a área de transferência",
     "translate": "Traduzir",
     "translating": "Traduzindo...",
     "seeOriginal": "Ver Original"

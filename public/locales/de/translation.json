@@ -98,6 +98,8 @@
     "welcomeTitle": "Finde die Spiele, die dein Verstand vergisst",
     "welcomeFilters": "Nutzen Sie die Filter links zur Eingrenzung.",
     "welcomeSearch": "Drücken Sie Suchen, um zu beginnen.",
+    "cardView": "Karten",
+    "listView": "Liste",
     "noResultsTitle": "Keine Spiele gefunden",
     "noResultsDescription": "Passen Sie Filter oder Suchbegriff an."
   },
@@ -211,6 +213,17 @@
     "poweredBy": "Unterstützt durch",
     "notAffiliated": "Nicht mit IGDB oder Twitch verbunden"
   },
+  "describe": {
+    "title": "Beschreibe, woran du dich erinnerst",
+    "placeholder": "Ich habe es als Kind 2005 auf der PS2 gespielt. Es war ein Rennspiel mit Clowns und Monster-Trucks, und man konnte im Splitscreen mit einem Freund spielen...",
+    "button": "Suchen",
+    "parsing": "Deine Beschreibung wird gelesen...",
+    "titleCompact": "Aus Beschreibung suchen",
+    "trigger": "Beschreiben",
+    "description": "Schreibe auf, woran du dich erinnerst, und die Filter auf der linken Seite werden für dich ausgefüllt.",
+    "error": "Deine Beschreibung konnte nicht gelesen werden. Bitte versuche es erneut.",
+    "filled": "Filter anhand deiner Beschreibung ausgefüllt. Überprüfe sie links."
+  },
   "errors": {
     "gameNotFound": "Spiel nicht gefunden",
     "gameNotFoundDesc": "Das gesuchte Spiel existiert nicht oder konnte nicht geladen werden.",
@@ -288,6 +301,8 @@
     "storyline": "Handlung",
     "keywords": "Schlüsselwörter",
     "screenshots": "Screenshots",
+    "shareGame": "Spiel teilen",
+    "linkCopied": "Link in die Zwischenablage kopiert",
     "translate": "Übersetzen",
     "translating": "Übersetzen...",
     "seeOriginal": "Original anzeigen"

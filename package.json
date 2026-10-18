@@ -18,6 +18,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "test:i18n": "node scripts/check-i18n.js",
     "preview": "vite preview"
   },
   "dependencies": {

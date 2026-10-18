@@ -98,6 +98,8 @@
     "welcomeTitle": "寻找你记忆中遗忘的游戏",
     "welcomeFilters": "使用左侧的筛选器来缩小搜索范围。",
     "welcomeSearch": "准备好后点击搜索。",
+    "cardView": "卡片",
+    "listView": "列表",
     "noResultsTitle": "未找到游戏",
     "noResultsDescription": "尝试调整筛选条件或搜索词以找到更多游戏。"
   },
@@ -211,6 +213,17 @@
     "poweredBy": "基于以下服务",
     "notAffiliated": "与 IGDB 或 Twitch 无关联"
   },
+  "describe": {
+    "title": "描述你记得的细节",
+    "placeholder": "我小时候在2005年用PS2玩过。那是一款有小丑和大脚怪卡车的赛车游戏，还可以和朋友分屏游玩……",
+    "button": "搜索",
+    "parsing": "正在分析你的描述...",
+    "titleCompact": "通过描述搜索",
+    "trigger": "描述",
+    "description": "写下你记得的内容，左侧的筛选器将自动为你填写。",
+    "error": "无法识别你的描述，请重试。",
+    "filled": "已根据你的描述填充筛选器，请在左侧查看。"
+  },
   "errors": {
     "gameNotFound": "未找到游戏",
     "gameNotFoundDesc": "您寻找的游戏不存在或无法加载。",
@@ -288,6 +301,8 @@
     "storyline": "剧情",
     "keywords": "关键词",
     "screenshots": "截图",
+    "shareGame": "分享游戏",
+    "linkCopied": "链接已复制到剪贴板",
     "translate": "翻译",
     "translating": "翻译中...",
     "seeOriginal": "查看原文"
