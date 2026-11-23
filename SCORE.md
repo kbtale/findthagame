@@ -5,7 +5,7 @@ Gamifying repository activity using Rust, serverless architecture, and GitHub we
 | Username | Class | Level | XP | Last Active |
 | --- | --- | --- | --- | --- |
 | @kbtale | Chronicler: Markdown Scribe | 14 | 3203 | 2026-10-18T03:37:41Z |
-| @dependabot[bot] | Chronicler: Markdown Scribe | 10 | 1891 | 2026-11-16T09:31:18Z |
+| @dependabot[bot] | Code Sanitarian: Git/Linter Purifier | 11 | 1996 | 2026-11-23T01:24:45Z |
 | @vercel[bot] | Frontend Artisan: React/TSX Sculptor | 2 | 137 | 2026-11-09T09:33:02Z |
 | @repogee[bot] | Backend Developer: General Developer | 1 | 20 | N/A |
 | @begininvoke | Backend Developer: General Developer | 1 | 20 | 2026-08-26T02:20:37Z |
